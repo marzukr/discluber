@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import pymongo
+# import pymongo
+from elasticsearch import Elasticsearch
+import requests
+import json
 #import tweepy
 #import time
 #import sys
@@ -13,6 +16,49 @@ client = MongoClient()
 db = client.clubsDatabase
 collection = db.followersList
 tweetsCollection = db.tweetsList
+tweetsUsers = db.tweetsUsers
+
+es = Elasticsearch()
+
+def search(uri, term):
+    """Simple Elasticsearch Query"""
+    query = json.dumps({
+        "query": {
+            "match": {
+                "content": term
+            }
+        }
+    })
+    response = requests.get(uri, data=query)
+    results = json.loads(response.text)
+    return results
+
+def format_results(results):
+    """Print results nicely:
+    doc_id) content
+    """
+    data = [doc for doc in results['hits']['hits']]
+    for doc in data:
+        pretty = "%s) %s" % (doc['_id'], doc['_source'] ['content'])
+        print(pretty)
+
+def create_doc(uri, doc_data):
+    """Create new document."""
+    query = json.dumps(doc_data)
+    response = requests.post(uri, data=query)
+    print(response)
+
+# create_doc(uri="http://localhost:9200/test/articles", doc_data={"content": "lazy brown fox"})
+king = search(uri="http://localhost:9200/test/articles/_search?", term="lazy")
+print(format_results(results=king))
+
+# cursor = tweetsCollection.find({})
+#
+# for item in cursor:
+#     print(item["Club Name"])
+#     for tweets in item["TweetsString"]:
+#         dbData = {"Tweets": tweets, "Club Name": item["Club Name"]}
+#         tweetsUsers.insert_one(dbData)
 
 #consumer_key = "LsAwFJvshsac0oV1MWPT5SPdP"
 #consumer_secret = "HtOBG7Lv66RUIvmtffEe5LYN0RRVncuQp7p1bXoyGdNu3coYkw"
@@ -79,7 +125,6 @@ tweetsCollection = db.tweetsList
 #    tweetsCollection.insert_one(data)
 #    n = n + 1
 #    print("\n" + str(n) + " Clubs Processed" + "\n")
-
 
 #time.sleep(60*15)
 
@@ -175,15 +220,15 @@ tweetsCollection = db.tweetsList
 #clubsWithoutTwitter = 0
 #
 #text_file = open("foundTwitter.txt", "w")
-#other_text_file = open("twitterName.txt", "w")
+# other_text_file = open("twitterName.txt", "w")
 #
-#privateAccounts = []
+# privateAccounts = []
 #
-#cursorDB = collection.find({})
+# cursorDB = collection.find({})
 #
-#n = 0
+# n = 0
 #
-#for item in cursorDB:
+# for item in cursorDB:
 #    followers = item.get("Followers")
 #    for follower in followers:
 #        url = "https://twitter.com/" + follower
@@ -202,9 +247,9 @@ tweetsCollection = db.tweetsList
 #    n = n + 1
 #    print str(n) + " Clubs Processed"
 #
-#print privateAccounts
-
-#for club in lines:
+# print privateAccounts
+#
+# for club in lines:
 #    input = club.replace(" ", "%20")
 #
 #    url = "https://twitter.com/search?f=users&vertical=default&q="+input+"&src=typd"
@@ -230,5 +275,5 @@ tweetsCollection = db.tweetsList
 #other_text_file.close()
 
 #398 Clubs with Twitter
-#182 Clubs without Twitter
+#182 Clubs with out Twitter
 #598 Total Clubs
