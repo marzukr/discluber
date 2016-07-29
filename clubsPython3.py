@@ -1,16 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# import pymongo
-from elasticsearch import Elasticsearch
-import requests
-import json
-#import tweepy
-#import time
-#import sys
-#import bson
-#import urllib.request
-#from bs4 import BeautifulSoup
-
 from pymongo import MongoClient
 client = MongoClient()
 db = client.clubsDatabase
@@ -18,14 +7,89 @@ collection = db.followersList
 tweetsCollection = db.tweetsList
 tweetsUsers = db.tweetsUsers
 
-es = Elasticsearch()
+# from elasticsearch import Elasticsearch, exceptions
+from pyelasticsearch import ElasticSearch
+import requests
+import json
+import tweepy
+
+# import time
+# import sys
+# import bson
+# import urllib.request
+# from bs4 import BeautifulSoup
+
+# cursor = tweetsCollection.find({"Club Name": "Alexander Hamilton Society"})
+#
+# for item in cursor:
+#     print(item["Followers"])
+
+es = ElasticSearch()
+
+
+# _INDEX_NAME = "club"
+# _USER_DOC_TYPE = 'tweet'
+#
+# def get_user_mapping():
+#     return {
+#         _USER_DOC_TYPE : {
+#           'properties' : {
+#               'Tweets' : {
+#                   'type' : 'string',
+#                   'store' : 'no',
+#                   'index_options' : 'freqs',
+#                   'omit_norms' : 'true',
+#                   'analyzer' : 'whitespace_tokenizer'
+#               },
+#               'Club Name' : { 'type' : 'string' }
+#           }
+#       }
+#   }
+#
+#
+# def recreate_index():
+#   #delete_index()
+#     settings = {
+#       'analysis' : {
+#           'analyzer' : {
+#               'whitespace_tokenizer' : {
+#                   'tokenizer' : 'whitespace'
+#               }
+#           }
+#       }
+#   }
+#     es.create_index(_INDEX_NAME, settings=settings)
+#     es.put_mapping(_INDEX_NAME, _USER_DOC_TYPE, get_user_mapping())
+#
+#
+# recreate_index()
+
+consumer_key = "LsAwFJvshsac0oV1MWPT5SPdP"
+consumer_secret = "HtOBG7Lv66RUIvmtffEe5LYN0RRVncuQp7p1bXoyGdNu3coYkw"
+
+access_key = "2183673402-AvddwhaVAuB8lngOqVbtX31kQMpnTnbfhSOs7iO"
+access_secret = "1Ar33ZPEeyEOs1gdn7aZLYq5tTyW4E3JyQaQBJyo4gUzf"
+
+auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+auth.set_access_token(access_key, access_secret)
+
+api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
+
+tweepyCursor = tweepy.Cursor(api.user_timeline, screen_name="billgates", count=200).items()
+hola = ""
+n = 0
+for tweet in tweepyCursor:
+    hola = hola + tweet.text
+    n = n + 1
+    if n >= 200:
+        break
 
 def search(uri, term):
     """Simple Elasticsearch Query"""
     query = json.dumps({
         "query": {
             "match": {
-                "content": term
+                "Tweets": term
             }
         }
     })
@@ -39,7 +103,7 @@ def format_results(results):
     """
     data = [doc for doc in results['hits']['hits']]
     for doc in data:
-        pretty = "%s) %s" % (doc['_id'], doc['_source'] ['content'])
+        pretty = "%s) %s" % (doc['_id'], doc['_source'] ['Club Name'])
         print(pretty)
 
 def create_doc(uri, doc_data):
@@ -49,16 +113,18 @@ def create_doc(uri, doc_data):
     print(response)
 
 # create_doc(uri="http://localhost:9200/test/articles", doc_data={"content": "lazy brown fox"})
-king = search(uri="http://localhost:9200/test/articles/_search?", term="lazy")
-print(format_results(results=king))
 
-# cursor = tweetsCollection.find({})
-#
+king = search(uri="http://localhost:9200/elvis/tweets/_search?", term=hola)
+print(format_results(results=king))
+# print(king)
+
+# cursor = tweetsUsers.find({})
+# #
 # for item in cursor:
+#     dataToSearch = {"Tweets": item["Tweets"], "Club Name": item["Club Name"]}
+#     es.index_op(dataToSearch, _USER_DOC_TYPE, True)
 #     print(item["Club Name"])
-#     for tweets in item["TweetsString"]:
-#         dbData = {"Tweets": tweets, "Club Name": item["Club Name"]}
-#         tweetsUsers.insert_one(dbData)
+#     create_doc(uri="http://localhost:9200/clubs/tweets/", doc_data=dataToSearch)
 
 #consumer_key = "LsAwFJvshsac0oV1MWPT5SPdP"
 #consumer_secret = "HtOBG7Lv66RUIvmtffEe5LYN0RRVncuQp7p1bXoyGdNu3coYkw"
