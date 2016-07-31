@@ -75,14 +75,14 @@ auth.set_access_token(access_key, access_secret)
 
 api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
-tweepyCursor = tweepy.Cursor(api.user_timeline, screen_name="billgates", count=200).items()
-hola = ""
-n = 0
-for tweet in tweepyCursor:
-    hola = hola + tweet.text
-    n = n + 1
-    if n >= 200:
-        break
+# tweepyCursor = tweepy.Cursor(api.user_timeline, screen_name="billgates", count=200).items()
+# hola = ""
+# n = 0
+# for tweet in tweepyCursor:
+#     hola = hola + tweet.text
+#     n = n + 1
+#     if n >= 200:
+#         break
 
 def search(uri, term):
     """Simple Elasticsearch Query"""
@@ -102,9 +102,11 @@ def format_results(results):
     doc_id) content
     """
     data = [doc for doc in results['hits']['hits']]
+    prettyA = []
     for doc in data:
-        pretty = "%s) %s" % (doc['_id'], doc['_source'] ['Club Name'])
-        print(pretty)
+        pretty = "%s" % (doc['_source'] ['Club Name'])
+        prettyA.append(pretty)
+    return prettyA
 
 def create_doc(uri, doc_data):
     """Create new document."""
@@ -114,9 +116,40 @@ def create_doc(uri, doc_data):
 
 # create_doc(uri="http://localhost:9200/test/articles", doc_data={"content": "lazy brown fox"})
 
-king = search(uri="http://localhost:9200/elvis/tweets/_search?", term=hola)
-print(format_results(results=king))
+# king = search(uri="http://localhost:9200/elvis/tweets/_search?", term=hola)
+# print(format_results(results=king))
 # print(king)
+
+def returnResults(user):
+    tweepyCursor = tweepy.Cursor(api.user_timeline, screen_name=user, count=200).items()
+    hola = ""
+    n = 0
+    for tweet in tweepyCursor:
+        hola = hola + tweet.text
+        n = n + 1
+        if n >= 200:
+            break
+    king = search(uri="http://localhost:9200/elvis/tweets/_search?", term=hola)
+    points = []
+    uPoints = []
+    uniqueClubs = []
+    clubsArray = format_results(results=king)
+    for n in range(0,len(clubsArray)):
+        points.append(len(clubsArray) - n)
+    for club in clubsArray:
+        if club not in uniqueClubs:
+            uniqueClubs.append(club)
+    for uClub in uniqueClubs:
+        for rClub in clubsArray:
+            if rClub == uClub:
+                uIndex = uniqueClubs.index(uClub)
+                index = clubsArray.index(rClub)
+                if 0 <= uIndex < len(uPoints):
+                    uPoints[uIndex] = uPoints[uIndex] + points[index]
+                else:
+                    uPoints.append(points[index])
+    sortedArray = [x for (y, x) in sorted(zip(uPoints, uniqueClubs), reverse=True)]
+    return sortedArray
 
 # cursor = tweetsUsers.find({})
 # #

@@ -1,0 +1,2 @@
+WTF_CSRF_ENABLED = True
+SECRET_KEY = '9zL6d<hj/(0jl%>n^D10r%.05LM[:8'
