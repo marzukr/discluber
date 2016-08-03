@@ -16,8 +16,8 @@ import tweepy
 # import time
 # import sys
 # import bson
-# import urllib.request
-# from bs4 import BeautifulSoup
+import urllib.request
+from bs4 import BeautifulSoup
 
 # cursor = tweetsCollection.find({"Club Name": "Alexander Hamilton Society"})
 #
@@ -114,7 +114,7 @@ def create_doc(uri, doc_data):
     response = requests.post(uri, data=query)
     print(response)
 
-# create_doc(uri="http://localhost:9200/test/articles", doc_data={"content": "lazy brown fox"})
+# create_doc(uri="http://localhost:9200/elvis/tweets", doc_data={"content": "lazy brown fox"})
 
 # king = search(uri="http://localhost:9200/elvis/tweets/_search?", term=hola)
 # print(format_results(results=king))
@@ -150,6 +150,60 @@ def returnResults(user):
                     uPoints.append(points[index])
     sortedArray = [x for (y, x) in sorted(zip(uPoints, uniqueClubs), reverse=True)]
     return sortedArray
+
+def addTwitterUser(user, clubName):
+    followersCursor = tweepy.Cursor(api.followers, screen_name=user, count=300).items()
+    followers = []
+    clubTweets = []
+    for followerH in followersCursor:
+        follower = followerH.screen_name
+        url = "https://twitter.com/%s" % follower
+        tweetConCat = ""
+        tweetsA = []
+        try:
+            with urllib.request.urlopen(url) as url:
+                f = url.read()
+        except urllib.error.HTTPError as e:
+            print("Skipping(1) " + follower)
+            continue
+        soup = BeautifulSoup(f, 'html.parser')
+        def do_it():
+            print("Adding %s Tweets" % follower)
+            tweepyCursor = tweepy.Cursor(api.user_timeline, screen_name=follower, count=200).items()
+            for tweet in tweepyCursor:
+                hola = tweet.text
+                tweetsA.append(hola)
+                if len(tweetsA) >= 200:
+                    break
+        if soup.findAll("h2", { "class" : "ProtectedTimeline-heading" }) != [] or soup.findAll("div", {"class": "body-content"}) != [] or soup.findAll("div", {"class": "flex-module error-page clearfix"}) != []:
+            print("Skipping(2) " + follower)
+            continue
+        else:
+            try:
+                do_it()
+            except tweepy.error.TweepError as e:
+                print("Exception")
+                time.sleep(60*15)
+                print("Out-waited exception")
+                do_it()
+            for objectT in tweetsA:
+                tweetConCat = tweetConCat + objectT
+        followers.append(follower)
+        clubTweets.append(tweetConCat)
+        if len(followers) >= 200:
+            break
+    data = {"Club Name": clubName, "Twitter Account": user, "Followers": followers}
+    data2 = {"Club Name": clubName, "Twitter Account": user, "Followers": followers, "TweetsString": clubTweets}
+    # collection.insert_one(data)
+    # tweetsCollection.insert_one(data2)
+    for clubTweet in clubTweets:
+        data3 = {"Club Name": clubName, "Tweets": clubTweet}
+        print(data3)
+        break
+        # tweetsUsers.insert_one(data3)
+        # create_doc(uri="http://localhost:9200/elvis/tweets", doc_data=data3)
+
+addTwitterUser(user="nudems", clubName="Democrats")
 
 # cursor = tweetsUsers.find({})
 # #
