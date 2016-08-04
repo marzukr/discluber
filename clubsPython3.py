@@ -13,7 +13,7 @@ import requests
 import json
 import tweepy
 
-# import time
+import time
 # import sys
 # import bson
 import urllib.request
@@ -25,7 +25,8 @@ from bs4 import BeautifulSoup
 #     print(item["Followers"])
 
 es = ElasticSearch()
-
+currentDataBaseTerm = "holahola" # Used: elvis, club, clubs
+currentURL = "http://localhost:9200/" + currentDataBaseTerm + "/tweets" # DO NOT USE A "/" AT THE END
 
 # _INDEX_NAME = "club"
 # _USER_DOC_TYPE = 'tweet'
@@ -114,11 +115,18 @@ def create_doc(uri, doc_data):
     response = requests.post(uri, data=query)
     print(response)
 
-# create_doc(uri="http://localhost:9200/elvis/tweets", doc_data={"content": "lazy brown fox"})
+# create_doc(uri="http://localhost:9200/elvis/tweets", doc_data={"Club Name": "NU Democrats", "hola": "hola"})
 
 # king = search(uri="http://localhost:9200/elvis/tweets/_search?", term=hola)
 # print(format_results(results=king))
 # print(king)
+
+def newIndex():
+    cursor = tweetsUsers.find({})
+    for item in cursor:
+        dataToSearch = {"Tweets": item["Tweets"], "Club Name": item["Club Name"]}
+        print(item["Club Name"])
+        create_doc(uri=currentURL, doc_data=dataToSearch)
 
 def returnResults(user):
     tweepyCursor = tweepy.Cursor(api.user_timeline, screen_name=user, count=200).items()
@@ -129,7 +137,7 @@ def returnResults(user):
         n = n + 1
         if n >= 200:
             break
-    king = search(uri="http://localhost:9200/elvis/tweets/_search?", term=hola)
+    king = search(uri=currentURL + "/_search?", term=hola)
     points = []
     uPoints = []
     uniqueClubs = []
@@ -194,16 +202,12 @@ def addTwitterUser(user, clubName):
             break
     data = {"Club Name": clubName, "Twitter Account": user, "Followers": followers}
     data2 = {"Club Name": clubName, "Twitter Account": user, "Followers": followers, "TweetsString": clubTweets}
-    # collection.insert_one(data)
-    # tweetsCollection.insert_one(data2)
+    collection.insert_one(data)
+    tweetsCollection.insert_one(data2)
     for clubTweet in clubTweets:
         data3 = {"Club Name": clubName, "Tweets": clubTweet}
-        print(data3)
-        break
-        # tweetsUsers.insert_one(data3)
-        # create_doc(uri="http://localhost:9200/elvis/tweets", doc_data=data3)
-
-addTwitterUser(user="nudems", clubName="Democrats")
+        tweetsUsers.insert_one(data3)
+        create_doc(uri=currentURL, doc_data={"Club Name": clubName, "Tweets": clubTweet})
 
 # cursor = tweetsUsers.find({})
 # #

@@ -63,7 +63,7 @@ html, body {
                                     $('#resultsList').hide();
                                     var message = data.error;
                                     var code = data.code;
-                                    if (code=="401" || code=="403")
+                                    if (code=="401")
                                     {
                                         $('#error').text($('#username').val() + " is a private Twitter account");
                                     }
@@ -73,7 +73,7 @@ html, body {
                                     }
                                     else if (code=="403" || code=="429")
                                     {
-                                        $('#error').text("The program has timed-out due to demand, please try again later.");
+                                        $('#error').text("The program has timed-out due to increased traffic, please try again later.");
                                     }
                                     else
                                     {
