@@ -1,0 +1,1901 @@
+[2016-07-21 13:18:26,033][INFO ][node                     ] [myNode] version[2.3.4], pid[7013], build[e455fd0/2016-06-30T11:24:31Z]
+[2016-07-21 13:18:26,034][INFO ][node                     ] [myNode] initializing ...
+[2016-07-21 13:18:26,505][INFO ][plugins                  ] [myNode] modules [reindex, lang-expression, lang-groovy], plugins [], sites []
+[2016-07-21 13:18:26,530][INFO ][env                      ] [myNode] using [1] data paths, mounts [[/ (/dev/disk1)]], net usable_space [337.3gb], net total_space [464.7gb], spins? [unknown], types [hfs]
+[2016-07-21 13:18:26,530][INFO ][env                      ] [myNode] heap size [989.8mb], compressed ordinary object pointers [true]
+[2016-07-21 13:18:26,531][WARN ][env                      ] [myNode] max file descriptors [10240] for elasticsearch process likely too low, consider increasing to at least [65536]
+[2016-07-21 13:18:27,879][INFO ][node                     ] [myNode] initialized
+[2016-07-21 13:18:27,879][INFO ][node                     ] [myNode] starting ...
+[2016-07-21 13:18:27,954][INFO ][transport                ] [myNode] publish_address {127.0.0.1:9300}, bound_addresses {[fe80::1]:9300}, {[::1]:9300}, {127.0.0.1:9300}
+[2016-07-21 13:18:27,959][INFO ][discovery                ] [myNode] clubsOrganizations/c3Q_TJyJROW4sZlM77M1AA
+[2016-07-21 13:18:30,996][INFO ][cluster.service          ] [myNode] new_master {myNode}{c3Q_TJyJROW4sZlM77M1AA}{127.0.0.1}{127.0.0.1:9300}, reason: zen-disco-join(elected_as_master, [0] joins received)
+[2016-07-21 13:18:31,009][INFO ][http                     ] [myNode] publish_address {127.0.0.1:9200}, bound_addresses {[fe80::1]:9200}, {[::1]:9200}, {127.0.0.1:9200}
+[2016-07-21 13:18:31,009][INFO ][node                     ] [myNode] started
+[2016-07-21 13:18:31,026][INFO ][gateway                  ] [myNode] recovered [0] indices into cluster_state
+[2016-07-21 13:25:46,676][INFO ][cluster.metadata         ] [myNode] [test] creating index, cause [auto(index api)], templates [], shards [5]/[1], mappings [articles]
+[2016-07-21 13:25:46,847][INFO ][cluster.routing.allocation] [myNode] Cluster health status changed from [RED] to [YELLOW] (reason: [shards started [[test][4]] ...]).
+[2016-07-21 13:25:46,862][INFO ][cluster.metadata         ] [myNode] [test] update_mapping [articles]
+[2016-07-21 13:28:08,574][DEBUG][action.search            ] [myNode] [test][0], node[c3Q_TJyJROW4sZlM77M1AA], [P], v[2], s[STARTED], a[id=NePtvwbTSTyXykBltT4Odg]: Failed to execute [org.elasticsearch.action.search.SearchRequest@3cb7ef20] lastShard [true]
+RemoteTransportException[[myNode][127.0.0.1:9300][indices:data/read/search[phase/query]]]; nested: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown fox“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@7937ad5; line: 4, column: 26]];
+Caused by: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown fox“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@7937ad5; line: 4, column: 26]];
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:855)
+	at org.elasticsearch.search.SearchService.createContext(SearchService.java:654)
+	at org.elasticsearch.search.SearchService.createAndPutContext(SearchService.java:620)
+	at org.elasticsearch.search.SearchService.executeQueryPhase(SearchService.java:371)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:368)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:365)
+	at org.elasticsearch.transport.TransportRequestHandler.messageReceived(TransportRequestHandler.java:33)
+	at org.elasticsearch.transport.RequestHandlerRegistry.processMessageReceived(RequestHandlerRegistry.java:75)
+	at org.elasticsearch.transport.TransportService$4.doRun(TransportService.java:376)
+	at org.elasticsearch.common.util.concurrent.AbstractRunnable.run(AbstractRunnable.java:37)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: [test] QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@7937ad5; line: 4, column: 26]];
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:225)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:218)
+	at org.elasticsearch.search.query.QueryParseElement.parse(QueryParseElement.java:33)
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:838)
+	... 12 more
+Caused by: com.fasterxml.jackson.core.JsonParseException: Invalid UTF-8 start byte 0x80
+ at [Source: [B@7937ad5; line: 4, column: 26]
+	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1581)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:533)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidInitial(UTF8StreamJsonParser.java:3467)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._decodeCharForError(UTF8StreamJsonParser.java:3213)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidToken(UTF8StreamJsonParser.java:3445)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._handleUnexpectedValue(UTF8StreamJsonParser.java:2610)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser.nextToken(UTF8StreamJsonParser.java:795)
+	at org.elasticsearch.common.xcontent.json.JsonXContentParser.nextToken(JsonXContentParser.java:53)
+	at org.elasticsearch.index.query.MatchQueryParser.parse(MatchQueryParser.java:66)
+	at org.elasticsearch.index.query.QueryParseContext.parseInnerQuery(QueryParseContext.java:250)
+	at org.elasticsearch.index.query.IndexQueryParserService.innerParse(IndexQueryParserService.java:320)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:223)
+	... 15 more
+[2016-07-21 13:28:08,574][DEBUG][action.search            ] [myNode] [test][4], node[c3Q_TJyJROW4sZlM77M1AA], [P], v[2], s[STARTED], a[id=Idoy8_QrSmWN9Sfz2_K8Gg]: Failed to execute [org.elasticsearch.action.search.SearchRequest@3cb7ef20] lastShard [true]
+RemoteTransportException[[myNode][127.0.0.1:9300][indices:data/read/search[phase/query]]]; nested: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown fox“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@7937ad5; line: 4, column: 26]];
+Caused by: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown fox“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@7937ad5; line: 4, column: 26]];
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:855)
+	at org.elasticsearch.search.SearchService.createContext(SearchService.java:654)
+	at org.elasticsearch.search.SearchService.createAndPutContext(SearchService.java:620)
+	at org.elasticsearch.search.SearchService.executeQueryPhase(SearchService.java:371)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:368)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:365)
+	at org.elasticsearch.transport.TransportRequestHandler.messageReceived(TransportRequestHandler.java:33)
+	at org.elasticsearch.transport.RequestHandlerRegistry.processMessageReceived(RequestHandlerRegistry.java:75)
+	at org.elasticsearch.transport.TransportService$4.doRun(TransportService.java:376)
+	at org.elasticsearch.common.util.concurrent.AbstractRunnable.run(AbstractRunnable.java:37)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: [test] QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@7937ad5; line: 4, column: 26]];
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:225)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:218)
+	at org.elasticsearch.search.query.QueryParseElement.parse(QueryParseElement.java:33)
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:838)
+	... 12 more
+Caused by: com.fasterxml.jackson.core.JsonParseException: Invalid UTF-8 start byte 0x80
+ at [Source: [B@7937ad5; line: 4, column: 26]
+	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1581)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:533)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidInitial(UTF8StreamJsonParser.java:3467)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._decodeCharForError(UTF8StreamJsonParser.java:3213)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidToken(UTF8StreamJsonParser.java:3445)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._handleUnexpectedValue(UTF8StreamJsonParser.java:2610)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser.nextToken(UTF8StreamJsonParser.java:795)
+	at org.elasticsearch.common.xcontent.json.JsonXContentParser.nextToken(JsonXContentParser.java:53)
+	at org.elasticsearch.index.query.MatchQueryParser.parse(MatchQueryParser.java:66)
+	at org.elasticsearch.index.query.QueryParseContext.parseInnerQuery(QueryParseContext.java:250)
+	at org.elasticsearch.index.query.IndexQueryParserService.innerParse(IndexQueryParserService.java:320)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:223)
+	... 15 more
+[2016-07-21 13:28:08,574][DEBUG][action.search            ] [myNode] [test][2], node[c3Q_TJyJROW4sZlM77M1AA], [P], v[2], s[STARTED], a[id=j6MzjqaVTzGc4Ph6-52hdg]: Failed to execute [org.elasticsearch.action.search.SearchRequest@3cb7ef20] lastShard [true]
+RemoteTransportException[[myNode][127.0.0.1:9300][indices:data/read/search[phase/query]]]; nested: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown fox“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@7937ad5; line: 4, column: 26]];
+Caused by: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown fox“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@7937ad5; line: 4, column: 26]];
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:855)
+	at org.elasticsearch.search.SearchService.createContext(SearchService.java:654)
+	at org.elasticsearch.search.SearchService.createAndPutContext(SearchService.java:620)
+	at org.elasticsearch.search.SearchService.executeQueryPhase(SearchService.java:371)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:368)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:365)
+	at org.elasticsearch.transport.TransportRequestHandler.messageReceived(TransportRequestHandler.java:33)
+	at org.elasticsearch.transport.RequestHandlerRegistry.processMessageReceived(RequestHandlerRegistry.java:75)
+	at org.elasticsearch.transport.TransportService$4.doRun(TransportService.java:376)
+	at org.elasticsearch.common.util.concurrent.AbstractRunnable.run(AbstractRunnable.java:37)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: [test] QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@7937ad5; line: 4, column: 26]];
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:225)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:218)
+	at org.elasticsearch.search.query.QueryParseElement.parse(QueryParseElement.java:33)
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:838)
+	... 12 more
+Caused by: com.fasterxml.jackson.core.JsonParseException: Invalid UTF-8 start byte 0x80
+ at [Source: [B@7937ad5; line: 4, column: 26]
+	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1581)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:533)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidInitial(UTF8StreamJsonParser.java:3467)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._decodeCharForError(UTF8StreamJsonParser.java:3213)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidToken(UTF8StreamJsonParser.java:3445)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._handleUnexpectedValue(UTF8StreamJsonParser.java:2610)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser.nextToken(UTF8StreamJsonParser.java:795)
+	at org.elasticsearch.common.xcontent.json.JsonXContentParser.nextToken(JsonXContentParser.java:53)
+	at org.elasticsearch.index.query.MatchQueryParser.parse(MatchQueryParser.java:66)
+	at org.elasticsearch.index.query.QueryParseContext.parseInnerQuery(QueryParseContext.java:250)
+	at org.elasticsearch.index.query.IndexQueryParserService.innerParse(IndexQueryParserService.java:320)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:223)
+	... 15 more
+[2016-07-21 13:28:08,574][DEBUG][action.search            ] [myNode] [test][1], node[c3Q_TJyJROW4sZlM77M1AA], [P], v[2], s[STARTED], a[id=FK6WnH03QSuE-kqERfTFvA]: Failed to execute [org.elasticsearch.action.search.SearchRequest@3cb7ef20]
+RemoteTransportException[[myNode][127.0.0.1:9300][indices:data/read/search[phase/query]]]; nested: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown fox“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@7937ad5; line: 4, column: 26]];
+Caused by: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown fox“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@7937ad5; line: 4, column: 26]];
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:855)
+	at org.elasticsearch.search.SearchService.createContext(SearchService.java:654)
+	at org.elasticsearch.search.SearchService.createAndPutContext(SearchService.java:620)
+	at org.elasticsearch.search.SearchService.executeQueryPhase(SearchService.java:371)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:368)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:365)
+	at org.elasticsearch.transport.TransportRequestHandler.messageReceived(TransportRequestHandler.java:33)
+	at org.elasticsearch.transport.RequestHandlerRegistry.processMessageReceived(RequestHandlerRegistry.java:75)
+	at org.elasticsearch.transport.TransportService$4.doRun(TransportService.java:376)
+	at org.elasticsearch.common.util.concurrent.AbstractRunnable.run(AbstractRunnable.java:37)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: [test] QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@7937ad5; line: 4, column: 26]];
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:225)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:218)
+	at org.elasticsearch.search.query.QueryParseElement.parse(QueryParseElement.java:33)
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:838)
+	... 12 more
+Caused by: com.fasterxml.jackson.core.JsonParseException: Invalid UTF-8 start byte 0x80
+ at [Source: [B@7937ad5; line: 4, column: 26]
+	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1581)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:533)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidInitial(UTF8StreamJsonParser.java:3467)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._decodeCharForError(UTF8StreamJsonParser.java:3213)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidToken(UTF8StreamJsonParser.java:3445)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._handleUnexpectedValue(UTF8StreamJsonParser.java:2610)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser.nextToken(UTF8StreamJsonParser.java:795)
+	at org.elasticsearch.common.xcontent.json.JsonXContentParser.nextToken(JsonXContentParser.java:53)
+	at org.elasticsearch.index.query.MatchQueryParser.parse(MatchQueryParser.java:66)
+	at org.elasticsearch.index.query.QueryParseContext.parseInnerQuery(QueryParseContext.java:250)
+	at org.elasticsearch.index.query.IndexQueryParserService.innerParse(IndexQueryParserService.java:320)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:223)
+	... 15 more
+[2016-07-21 13:28:08,574][DEBUG][action.search            ] [myNode] [test][3], node[c3Q_TJyJROW4sZlM77M1AA], [P], v[2], s[STARTED], a[id=MDFyYIafQNy5QZngE-Ahwg]: Failed to execute [org.elasticsearch.action.search.SearchRequest@3cb7ef20] lastShard [true]
+RemoteTransportException[[myNode][127.0.0.1:9300][indices:data/read/search[phase/query]]]; nested: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown fox“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@7937ad5; line: 4, column: 26]];
+Caused by: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown fox“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@7937ad5; line: 4, column: 26]];
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:855)
+	at org.elasticsearch.search.SearchService.createContext(SearchService.java:654)
+	at org.elasticsearch.search.SearchService.createAndPutContext(SearchService.java:620)
+	at org.elasticsearch.search.SearchService.executeQueryPhase(SearchService.java:371)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:368)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:365)
+	at org.elasticsearch.transport.TransportRequestHandler.messageReceived(TransportRequestHandler.java:33)
+	at org.elasticsearch.transport.RequestHandlerRegistry.processMessageReceived(RequestHandlerRegistry.java:75)
+	at org.elasticsearch.transport.TransportService$4.doRun(TransportService.java:376)
+	at org.elasticsearch.common.util.concurrent.AbstractRunnable.run(AbstractRunnable.java:37)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: [test] QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@7937ad5; line: 4, column: 26]];
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:225)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:218)
+	at org.elasticsearch.search.query.QueryParseElement.parse(QueryParseElement.java:33)
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:838)
+	... 12 more
+Caused by: com.fasterxml.jackson.core.JsonParseException: Invalid UTF-8 start byte 0x80
+ at [Source: [B@7937ad5; line: 4, column: 26]
+	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1581)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:533)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidInitial(UTF8StreamJsonParser.java:3467)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._decodeCharForError(UTF8StreamJsonParser.java:3213)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidToken(UTF8StreamJsonParser.java:3445)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._handleUnexpectedValue(UTF8StreamJsonParser.java:2610)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser.nextToken(UTF8StreamJsonParser.java:795)
+	at org.elasticsearch.common.xcontent.json.JsonXContentParser.nextToken(JsonXContentParser.java:53)
+	at org.elasticsearch.index.query.MatchQueryParser.parse(MatchQueryParser.java:66)
+	at org.elasticsearch.index.query.QueryParseContext.parseInnerQuery(QueryParseContext.java:250)
+	at org.elasticsearch.index.query.IndexQueryParserService.innerParse(IndexQueryParserService.java:320)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:223)
+	... 15 more
+[2016-07-21 13:28:08,578][DEBUG][action.search            ] [myNode] All shards failed for phase: [query]
+RemoteTransportException[[myNode][127.0.0.1:9300][indices:data/read/search[phase/query]]]; nested: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown fox“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@7937ad5; line: 4, column: 26]];
+Caused by: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown fox“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@7937ad5; line: 4, column: 26]];
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:855)
+	at org.elasticsearch.search.SearchService.createContext(SearchService.java:654)
+	at org.elasticsearch.search.SearchService.createAndPutContext(SearchService.java:620)
+	at org.elasticsearch.search.SearchService.executeQueryPhase(SearchService.java:371)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:368)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:365)
+	at org.elasticsearch.transport.TransportRequestHandler.messageReceived(TransportRequestHandler.java:33)
+	at org.elasticsearch.transport.RequestHandlerRegistry.processMessageReceived(RequestHandlerRegistry.java:75)
+	at org.elasticsearch.transport.TransportService$4.doRun(TransportService.java:376)
+	at org.elasticsearch.common.util.concurrent.AbstractRunnable.run(AbstractRunnable.java:37)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: [test] QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@7937ad5; line: 4, column: 26]];
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:225)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:218)
+	at org.elasticsearch.search.query.QueryParseElement.parse(QueryParseElement.java:33)
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:838)
+	... 12 more
+Caused by: com.fasterxml.jackson.core.JsonParseException: Invalid UTF-8 start byte 0x80
+ at [Source: [B@7937ad5; line: 4, column: 26]
+	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1581)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:533)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidInitial(UTF8StreamJsonParser.java:3467)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._decodeCharForError(UTF8StreamJsonParser.java:3213)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidToken(UTF8StreamJsonParser.java:3445)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._handleUnexpectedValue(UTF8StreamJsonParser.java:2610)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser.nextToken(UTF8StreamJsonParser.java:795)
+	at org.elasticsearch.common.xcontent.json.JsonXContentParser.nextToken(JsonXContentParser.java:53)
+	at org.elasticsearch.index.query.MatchQueryParser.parse(MatchQueryParser.java:66)
+	at org.elasticsearch.index.query.QueryParseContext.parseInnerQuery(QueryParseContext.java:250)
+	at org.elasticsearch.index.query.IndexQueryParserService.innerParse(IndexQueryParserService.java:320)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:223)
+	... 15 more
+[2016-07-21 13:28:31,015][DEBUG][action.search            ] [myNode] [test][2], node[c3Q_TJyJROW4sZlM77M1AA], [P], v[2], s[STARTED], a[id=j6MzjqaVTzGc4Ph6-52hdg]: Failed to execute [org.elasticsearch.action.search.SearchRequest@11398cd7] lastShard [true]
+RemoteTransportException[[myNode][127.0.0.1:9300][indices:data/read/search[phase/query]]]; nested: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@246dcc31; line: 4, column: 26]];
+Caused by: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@246dcc31; line: 4, column: 26]];
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:855)
+	at org.elasticsearch.search.SearchService.createContext(SearchService.java:654)
+	at org.elasticsearch.search.SearchService.createAndPutContext(SearchService.java:620)
+	at org.elasticsearch.search.SearchService.executeQueryPhase(SearchService.java:371)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:368)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:365)
+	at org.elasticsearch.transport.TransportRequestHandler.messageReceived(TransportRequestHandler.java:33)
+	at org.elasticsearch.transport.RequestHandlerRegistry.processMessageReceived(RequestHandlerRegistry.java:75)
+	at org.elasticsearch.transport.TransportService$4.doRun(TransportService.java:376)
+	at org.elasticsearch.common.util.concurrent.AbstractRunnable.run(AbstractRunnable.java:37)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: [test] QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@246dcc31; line: 4, column: 26]];
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:225)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:218)
+	at org.elasticsearch.search.query.QueryParseElement.parse(QueryParseElement.java:33)
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:838)
+	... 12 more
+Caused by: com.fasterxml.jackson.core.JsonParseException: Invalid UTF-8 start byte 0x80
+ at [Source: [B@246dcc31; line: 4, column: 26]
+	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1581)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:533)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidInitial(UTF8StreamJsonParser.java:3467)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._decodeCharForError(UTF8StreamJsonParser.java:3213)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidToken(UTF8StreamJsonParser.java:3445)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._handleUnexpectedValue(UTF8StreamJsonParser.java:2610)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser.nextToken(UTF8StreamJsonParser.java:795)
+	at org.elasticsearch.common.xcontent.json.JsonXContentParser.nextToken(JsonXContentParser.java:53)
+	at org.elasticsearch.index.query.MatchQueryParser.parse(MatchQueryParser.java:66)
+	at org.elasticsearch.index.query.QueryParseContext.parseInnerQuery(QueryParseContext.java:250)
+	at org.elasticsearch.index.query.IndexQueryParserService.innerParse(IndexQueryParserService.java:320)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:223)
+	... 15 more
+[2016-07-21 13:28:31,015][DEBUG][action.search            ] [myNode] [test][1], node[c3Q_TJyJROW4sZlM77M1AA], [P], v[2], s[STARTED], a[id=FK6WnH03QSuE-kqERfTFvA]: Failed to execute [org.elasticsearch.action.search.SearchRequest@11398cd7] lastShard [true]
+RemoteTransportException[[myNode][127.0.0.1:9300][indices:data/read/search[phase/query]]]; nested: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@246dcc31; line: 4, column: 26]];
+Caused by: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@246dcc31; line: 4, column: 26]];
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:855)
+	at org.elasticsearch.search.SearchService.createContext(SearchService.java:654)
+	at org.elasticsearch.search.SearchService.createAndPutContext(SearchService.java:620)
+	at org.elasticsearch.search.SearchService.executeQueryPhase(SearchService.java:371)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:368)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:365)
+	at org.elasticsearch.transport.TransportRequestHandler.messageReceived(TransportRequestHandler.java:33)
+	at org.elasticsearch.transport.RequestHandlerRegistry.processMessageReceived(RequestHandlerRegistry.java:75)
+	at org.elasticsearch.transport.TransportService$4.doRun(TransportService.java:376)
+	at org.elasticsearch.common.util.concurrent.AbstractRunnable.run(AbstractRunnable.java:37)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: [test] QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@246dcc31; line: 4, column: 26]];
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:225)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:218)
+	at org.elasticsearch.search.query.QueryParseElement.parse(QueryParseElement.java:33)
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:838)
+	... 12 more
+Caused by: com.fasterxml.jackson.core.JsonParseException: Invalid UTF-8 start byte 0x80
+ at [Source: [B@246dcc31; line: 4, column: 26]
+	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1581)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:533)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidInitial(UTF8StreamJsonParser.java:3467)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._decodeCharForError(UTF8StreamJsonParser.java:3213)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidToken(UTF8StreamJsonParser.java:3445)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._handleUnexpectedValue(UTF8StreamJsonParser.java:2610)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser.nextToken(UTF8StreamJsonParser.java:795)
+	at org.elasticsearch.common.xcontent.json.JsonXContentParser.nextToken(JsonXContentParser.java:53)
+	at org.elasticsearch.index.query.MatchQueryParser.parse(MatchQueryParser.java:66)
+	at org.elasticsearch.index.query.QueryParseContext.parseInnerQuery(QueryParseContext.java:250)
+	at org.elasticsearch.index.query.IndexQueryParserService.innerParse(IndexQueryParserService.java:320)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:223)
+	... 15 more
+[2016-07-21 13:28:31,015][DEBUG][action.search            ] [myNode] [test][0], node[c3Q_TJyJROW4sZlM77M1AA], [P], v[2], s[STARTED], a[id=NePtvwbTSTyXykBltT4Odg]: Failed to execute [org.elasticsearch.action.search.SearchRequest@11398cd7] lastShard [true]
+RemoteTransportException[[myNode][127.0.0.1:9300][indices:data/read/search[phase/query]]]; nested: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@246dcc31; line: 4, column: 26]];
+Caused by: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@246dcc31; line: 4, column: 26]];
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:855)
+	at org.elasticsearch.search.SearchService.createContext(SearchService.java:654)
+	at org.elasticsearch.search.SearchService.createAndPutContext(SearchService.java:620)
+	at org.elasticsearch.search.SearchService.executeQueryPhase(SearchService.java:371)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:368)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:365)
+	at org.elasticsearch.transport.TransportRequestHandler.messageReceived(TransportRequestHandler.java:33)
+	at org.elasticsearch.transport.RequestHandlerRegistry.processMessageReceived(RequestHandlerRegistry.java:75)
+	at org.elasticsearch.transport.TransportService$4.doRun(TransportService.java:376)
+	at org.elasticsearch.common.util.concurrent.AbstractRunnable.run(AbstractRunnable.java:37)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: [test] QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@246dcc31; line: 4, column: 26]];
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:225)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:218)
+	at org.elasticsearch.search.query.QueryParseElement.parse(QueryParseElement.java:33)
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:838)
+	... 12 more
+Caused by: com.fasterxml.jackson.core.JsonParseException: Invalid UTF-8 start byte 0x80
+ at [Source: [B@246dcc31; line: 4, column: 26]
+	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1581)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:533)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidInitial(UTF8StreamJsonParser.java:3467)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._decodeCharForError(UTF8StreamJsonParser.java:3213)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidToken(UTF8StreamJsonParser.java:3445)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._handleUnexpectedValue(UTF8StreamJsonParser.java:2610)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser.nextToken(UTF8StreamJsonParser.java:795)
+	at org.elasticsearch.common.xcontent.json.JsonXContentParser.nextToken(JsonXContentParser.java:53)
+	at org.elasticsearch.index.query.MatchQueryParser.parse(MatchQueryParser.java:66)
+	at org.elasticsearch.index.query.QueryParseContext.parseInnerQuery(QueryParseContext.java:250)
+	at org.elasticsearch.index.query.IndexQueryParserService.innerParse(IndexQueryParserService.java:320)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:223)
+	... 15 more
+[2016-07-21 13:28:31,015][DEBUG][action.search            ] [myNode] [test][3], node[c3Q_TJyJROW4sZlM77M1AA], [P], v[2], s[STARTED], a[id=MDFyYIafQNy5QZngE-Ahwg]: Failed to execute [org.elasticsearch.action.search.SearchRequest@11398cd7] lastShard [true]
+RemoteTransportException[[myNode][127.0.0.1:9300][indices:data/read/search[phase/query]]]; nested: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@246dcc31; line: 4, column: 26]];
+Caused by: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@246dcc31; line: 4, column: 26]];
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:855)
+	at org.elasticsearch.search.SearchService.createContext(SearchService.java:654)
+	at org.elasticsearch.search.SearchService.createAndPutContext(SearchService.java:620)
+	at org.elasticsearch.search.SearchService.executeQueryPhase(SearchService.java:371)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:368)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:365)
+	at org.elasticsearch.transport.TransportRequestHandler.messageReceived(TransportRequestHandler.java:33)
+	at org.elasticsearch.transport.RequestHandlerRegistry.processMessageReceived(RequestHandlerRegistry.java:75)
+	at org.elasticsearch.transport.TransportService$4.doRun(TransportService.java:376)
+	at org.elasticsearch.common.util.concurrent.AbstractRunnable.run(AbstractRunnable.java:37)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: [test] QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@246dcc31; line: 4, column: 26]];
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:225)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:218)
+	at org.elasticsearch.search.query.QueryParseElement.parse(QueryParseElement.java:33)
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:838)
+	... 12 more
+Caused by: com.fasterxml.jackson.core.JsonParseException: Invalid UTF-8 start byte 0x80
+ at [Source: [B@246dcc31; line: 4, column: 26]
+	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1581)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:533)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidInitial(UTF8StreamJsonParser.java:3467)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._decodeCharForError(UTF8StreamJsonParser.java:3213)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidToken(UTF8StreamJsonParser.java:3445)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._handleUnexpectedValue(UTF8StreamJsonParser.java:2610)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser.nextToken(UTF8StreamJsonParser.java:795)
+	at org.elasticsearch.common.xcontent.json.JsonXContentParser.nextToken(JsonXContentParser.java:53)
+	at org.elasticsearch.index.query.MatchQueryParser.parse(MatchQueryParser.java:66)
+	at org.elasticsearch.index.query.QueryParseContext.parseInnerQuery(QueryParseContext.java:250)
+	at org.elasticsearch.index.query.IndexQueryParserService.innerParse(IndexQueryParserService.java:320)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:223)
+	... 15 more
+[2016-07-21 13:28:31,015][DEBUG][action.search            ] [myNode] [test][4], node[c3Q_TJyJROW4sZlM77M1AA], [P], v[2], s[STARTED], a[id=Idoy8_QrSmWN9Sfz2_K8Gg]: Failed to execute [org.elasticsearch.action.search.SearchRequest@11398cd7]
+RemoteTransportException[[myNode][127.0.0.1:9300][indices:data/read/search[phase/query]]]; nested: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@246dcc31; line: 4, column: 26]];
+Caused by: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@246dcc31; line: 4, column: 26]];
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:855)
+	at org.elasticsearch.search.SearchService.createContext(SearchService.java:654)
+	at org.elasticsearch.search.SearchService.createAndPutContext(SearchService.java:620)
+	at org.elasticsearch.search.SearchService.executeQueryPhase(SearchService.java:371)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:368)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:365)
+	at org.elasticsearch.transport.TransportRequestHandler.messageReceived(TransportRequestHandler.java:33)
+	at org.elasticsearch.transport.RequestHandlerRegistry.processMessageReceived(RequestHandlerRegistry.java:75)
+	at org.elasticsearch.transport.TransportService$4.doRun(TransportService.java:376)
+	at org.elasticsearch.common.util.concurrent.AbstractRunnable.run(AbstractRunnable.java:37)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: [test] QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@246dcc31; line: 4, column: 26]];
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:225)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:218)
+	at org.elasticsearch.search.query.QueryParseElement.parse(QueryParseElement.java:33)
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:838)
+	... 12 more
+Caused by: com.fasterxml.jackson.core.JsonParseException: Invalid UTF-8 start byte 0x80
+ at [Source: [B@246dcc31; line: 4, column: 26]
+	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1581)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:533)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidInitial(UTF8StreamJsonParser.java:3467)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._decodeCharForError(UTF8StreamJsonParser.java:3213)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidToken(UTF8StreamJsonParser.java:3445)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._handleUnexpectedValue(UTF8StreamJsonParser.java:2610)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser.nextToken(UTF8StreamJsonParser.java:795)
+	at org.elasticsearch.common.xcontent.json.JsonXContentParser.nextToken(JsonXContentParser.java:53)
+	at org.elasticsearch.index.query.MatchQueryParser.parse(MatchQueryParser.java:66)
+	at org.elasticsearch.index.query.QueryParseContext.parseInnerQuery(QueryParseContext.java:250)
+	at org.elasticsearch.index.query.IndexQueryParserService.innerParse(IndexQueryParserService.java:320)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:223)
+	... 15 more
+[2016-07-21 13:28:31,020][DEBUG][action.search            ] [myNode] All shards failed for phase: [query]
+RemoteTransportException[[myNode][127.0.0.1:9300][indices:data/read/search[phase/query]]]; nested: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@246dcc31; line: 4, column: 26]];
+Caused by: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@246dcc31; line: 4, column: 26]];
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:855)
+	at org.elasticsearch.search.SearchService.createContext(SearchService.java:654)
+	at org.elasticsearch.search.SearchService.createAndPutContext(SearchService.java:620)
+	at org.elasticsearch.search.SearchService.executeQueryPhase(SearchService.java:371)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:368)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:365)
+	at org.elasticsearch.transport.TransportRequestHandler.messageReceived(TransportRequestHandler.java:33)
+	at org.elasticsearch.transport.RequestHandlerRegistry.processMessageReceived(RequestHandlerRegistry.java:75)
+	at org.elasticsearch.transport.TransportService$4.doRun(TransportService.java:376)
+	at org.elasticsearch.common.util.concurrent.AbstractRunnable.run(AbstractRunnable.java:37)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: [test] QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@246dcc31; line: 4, column: 26]];
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:225)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:218)
+	at org.elasticsearch.search.query.QueryParseElement.parse(QueryParseElement.java:33)
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:838)
+	... 12 more
+Caused by: com.fasterxml.jackson.core.JsonParseException: Invalid UTF-8 start byte 0x80
+ at [Source: [B@246dcc31; line: 4, column: 26]
+	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1581)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:533)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidInitial(UTF8StreamJsonParser.java:3467)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._decodeCharForError(UTF8StreamJsonParser.java:3213)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidToken(UTF8StreamJsonParser.java:3445)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._handleUnexpectedValue(UTF8StreamJsonParser.java:2610)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser.nextToken(UTF8StreamJsonParser.java:795)
+	at org.elasticsearch.common.xcontent.json.JsonXContentParser.nextToken(JsonXContentParser.java:53)
+	at org.elasticsearch.index.query.MatchQueryParser.parse(MatchQueryParser.java:66)
+	at org.elasticsearch.index.query.QueryParseContext.parseInnerQuery(QueryParseContext.java:250)
+	at org.elasticsearch.index.query.IndexQueryParserService.innerParse(IndexQueryParserService.java:320)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:223)
+	... 15 more
+[2016-07-21 13:28:36,017][DEBUG][action.search            ] [myNode] [test][4], node[c3Q_TJyJROW4sZlM77M1AA], [P], v[2], s[STARTED], a[id=Idoy8_QrSmWN9Sfz2_K8Gg]: Failed to execute [org.elasticsearch.action.search.SearchRequest@322f6e61]
+RemoteTransportException[[myNode][127.0.0.1:9300][indices:data/read/search[phase/query]]]; nested: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@819bfa4; line: 4, column: 26]];
+Caused by: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@819bfa4; line: 4, column: 26]];
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:855)
+	at org.elasticsearch.search.SearchService.createContext(SearchService.java:654)
+	at org.elasticsearch.search.SearchService.createAndPutContext(SearchService.java:620)
+	at org.elasticsearch.search.SearchService.executeQueryPhase(SearchService.java:371)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:368)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:365)
+	at org.elasticsearch.transport.TransportRequestHandler.messageReceived(TransportRequestHandler.java:33)
+	at org.elasticsearch.transport.RequestHandlerRegistry.processMessageReceived(RequestHandlerRegistry.java:75)
+	at org.elasticsearch.transport.TransportService$4.doRun(TransportService.java:376)
+	at org.elasticsearch.common.util.concurrent.AbstractRunnable.run(AbstractRunnable.java:37)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: [test] QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@819bfa4; line: 4, column: 26]];
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:225)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:218)
+	at org.elasticsearch.search.query.QueryParseElement.parse(QueryParseElement.java:33)
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:838)
+	... 12 more
+Caused by: com.fasterxml.jackson.core.JsonParseException: Invalid UTF-8 start byte 0x80
+ at [Source: [B@819bfa4; line: 4, column: 26]
+	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1581)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:533)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidInitial(UTF8StreamJsonParser.java:3467)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._decodeCharForError(UTF8StreamJsonParser.java:3213)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidToken(UTF8StreamJsonParser.java:3445)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._handleUnexpectedValue(UTF8StreamJsonParser.java:2610)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser.nextToken(UTF8StreamJsonParser.java:795)
+	at org.elasticsearch.common.xcontent.json.JsonXContentParser.nextToken(JsonXContentParser.java:53)
+	at org.elasticsearch.index.query.MatchQueryParser.parse(MatchQueryParser.java:66)
+	at org.elasticsearch.index.query.QueryParseContext.parseInnerQuery(QueryParseContext.java:250)
+	at org.elasticsearch.index.query.IndexQueryParserService.innerParse(IndexQueryParserService.java:320)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:223)
+	... 15 more
+[2016-07-21 13:28:36,017][DEBUG][action.search            ] [myNode] [test][1], node[c3Q_TJyJROW4sZlM77M1AA], [P], v[2], s[STARTED], a[id=FK6WnH03QSuE-kqERfTFvA]: Failed to execute [org.elasticsearch.action.search.SearchRequest@322f6e61] lastShard [true]
+RemoteTransportException[[myNode][127.0.0.1:9300][indices:data/read/search[phase/query]]]; nested: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@819bfa4; line: 4, column: 26]];
+Caused by: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@819bfa4; line: 4, column: 26]];
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:855)
+	at org.elasticsearch.search.SearchService.createContext(SearchService.java:654)
+	at org.elasticsearch.search.SearchService.createAndPutContext(SearchService.java:620)
+	at org.elasticsearch.search.SearchService.executeQueryPhase(SearchService.java:371)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:368)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:365)
+	at org.elasticsearch.transport.TransportRequestHandler.messageReceived(TransportRequestHandler.java:33)
+	at org.elasticsearch.transport.RequestHandlerRegistry.processMessageReceived(RequestHandlerRegistry.java:75)
+	at org.elasticsearch.transport.TransportService$4.doRun(TransportService.java:376)
+	at org.elasticsearch.common.util.concurrent.AbstractRunnable.run(AbstractRunnable.java:37)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: [test] QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@819bfa4; line: 4, column: 26]];
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:225)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:218)
+	at org.elasticsearch.search.query.QueryParseElement.parse(QueryParseElement.java:33)
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:838)
+	... 12 more
+Caused by: com.fasterxml.jackson.core.JsonParseException: Invalid UTF-8 start byte 0x80
+ at [Source: [B@819bfa4; line: 4, column: 26]
+	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1581)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:533)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidInitial(UTF8StreamJsonParser.java:3467)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._decodeCharForError(UTF8StreamJsonParser.java:3213)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidToken(UTF8StreamJsonParser.java:3445)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._handleUnexpectedValue(UTF8StreamJsonParser.java:2610)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser.nextToken(UTF8StreamJsonParser.java:795)
+	at org.elasticsearch.common.xcontent.json.JsonXContentParser.nextToken(JsonXContentParser.java:53)
+	at org.elasticsearch.index.query.MatchQueryParser.parse(MatchQueryParser.java:66)
+	at org.elasticsearch.index.query.QueryParseContext.parseInnerQuery(QueryParseContext.java:250)
+	at org.elasticsearch.index.query.IndexQueryParserService.innerParse(IndexQueryParserService.java:320)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:223)
+	... 15 more
+[2016-07-21 13:28:36,017][DEBUG][action.search            ] [myNode] [test][3], node[c3Q_TJyJROW4sZlM77M1AA], [P], v[2], s[STARTED], a[id=MDFyYIafQNy5QZngE-Ahwg]: Failed to execute [org.elasticsearch.action.search.SearchRequest@322f6e61] lastShard [true]
+RemoteTransportException[[myNode][127.0.0.1:9300][indices:data/read/search[phase/query]]]; nested: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@819bfa4; line: 4, column: 26]];
+Caused by: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@819bfa4; line: 4, column: 26]];
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:855)
+	at org.elasticsearch.search.SearchService.createContext(SearchService.java:654)
+	at org.elasticsearch.search.SearchService.createAndPutContext(SearchService.java:620)
+	at org.elasticsearch.search.SearchService.executeQueryPhase(SearchService.java:371)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:368)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:365)
+	at org.elasticsearch.transport.TransportRequestHandler.messageReceived(TransportRequestHandler.java:33)
+	at org.elasticsearch.transport.RequestHandlerRegistry.processMessageReceived(RequestHandlerRegistry.java:75)
+	at org.elasticsearch.transport.TransportService$4.doRun(TransportService.java:376)
+	at org.elasticsearch.common.util.concurrent.AbstractRunnable.run(AbstractRunnable.java:37)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: [test] QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@819bfa4; line: 4, column: 26]];
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:225)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:218)
+	at org.elasticsearch.search.query.QueryParseElement.parse(QueryParseElement.java:33)
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:838)
+	... 12 more
+Caused by: com.fasterxml.jackson.core.JsonParseException: Invalid UTF-8 start byte 0x80
+ at [Source: [B@819bfa4; line: 4, column: 26]
+	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1581)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:533)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidInitial(UTF8StreamJsonParser.java:3467)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._decodeCharForError(UTF8StreamJsonParser.java:3213)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidToken(UTF8StreamJsonParser.java:3445)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._handleUnexpectedValue(UTF8StreamJsonParser.java:2610)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser.nextToken(UTF8StreamJsonParser.java:795)
+	at org.elasticsearch.common.xcontent.json.JsonXContentParser.nextToken(JsonXContentParser.java:53)
+	at org.elasticsearch.index.query.MatchQueryParser.parse(MatchQueryParser.java:66)
+	at org.elasticsearch.index.query.QueryParseContext.parseInnerQuery(QueryParseContext.java:250)
+	at org.elasticsearch.index.query.IndexQueryParserService.innerParse(IndexQueryParserService.java:320)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:223)
+	... 15 more
+[2016-07-21 13:28:36,017][DEBUG][action.search            ] [myNode] [test][0], node[c3Q_TJyJROW4sZlM77M1AA], [P], v[2], s[STARTED], a[id=NePtvwbTSTyXykBltT4Odg]: Failed to execute [org.elasticsearch.action.search.SearchRequest@322f6e61] lastShard [true]
+RemoteTransportException[[myNode][127.0.0.1:9300][indices:data/read/search[phase/query]]]; nested: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@819bfa4; line: 4, column: 26]];
+Caused by: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@819bfa4; line: 4, column: 26]];
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:855)
+	at org.elasticsearch.search.SearchService.createContext(SearchService.java:654)
+	at org.elasticsearch.search.SearchService.createAndPutContext(SearchService.java:620)
+	at org.elasticsearch.search.SearchService.executeQueryPhase(SearchService.java:371)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:368)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:365)
+	at org.elasticsearch.transport.TransportRequestHandler.messageReceived(TransportRequestHandler.java:33)
+	at org.elasticsearch.transport.RequestHandlerRegistry.processMessageReceived(RequestHandlerRegistry.java:75)
+	at org.elasticsearch.transport.TransportService$4.doRun(TransportService.java:376)
+	at org.elasticsearch.common.util.concurrent.AbstractRunnable.run(AbstractRunnable.java:37)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: [test] QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@819bfa4; line: 4, column: 26]];
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:225)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:218)
+	at org.elasticsearch.search.query.QueryParseElement.parse(QueryParseElement.java:33)
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:838)
+	... 12 more
+Caused by: com.fasterxml.jackson.core.JsonParseException: Invalid UTF-8 start byte 0x80
+ at [Source: [B@819bfa4; line: 4, column: 26]
+	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1581)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:533)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidInitial(UTF8StreamJsonParser.java:3467)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._decodeCharForError(UTF8StreamJsonParser.java:3213)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidToken(UTF8StreamJsonParser.java:3445)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._handleUnexpectedValue(UTF8StreamJsonParser.java:2610)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser.nextToken(UTF8StreamJsonParser.java:795)
+	at org.elasticsearch.common.xcontent.json.JsonXContentParser.nextToken(JsonXContentParser.java:53)
+	at org.elasticsearch.index.query.MatchQueryParser.parse(MatchQueryParser.java:66)
+	at org.elasticsearch.index.query.QueryParseContext.parseInnerQuery(QueryParseContext.java:250)
+	at org.elasticsearch.index.query.IndexQueryParserService.innerParse(IndexQueryParserService.java:320)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:223)
+	... 15 more
+[2016-07-21 13:28:36,017][DEBUG][action.search            ] [myNode] [test][2], node[c3Q_TJyJROW4sZlM77M1AA], [P], v[2], s[STARTED], a[id=j6MzjqaVTzGc4Ph6-52hdg]: Failed to execute [org.elasticsearch.action.search.SearchRequest@322f6e61] lastShard [true]
+RemoteTransportException[[myNode][127.0.0.1:9300][indices:data/read/search[phase/query]]]; nested: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@819bfa4; line: 4, column: 26]];
+Caused by: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@819bfa4; line: 4, column: 26]];
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:855)
+	at org.elasticsearch.search.SearchService.createContext(SearchService.java:654)
+	at org.elasticsearch.search.SearchService.createAndPutContext(SearchService.java:620)
+	at org.elasticsearch.search.SearchService.executeQueryPhase(SearchService.java:371)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:368)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:365)
+	at org.elasticsearch.transport.TransportRequestHandler.messageReceived(TransportRequestHandler.java:33)
+	at org.elasticsearch.transport.RequestHandlerRegistry.processMessageReceived(RequestHandlerRegistry.java:75)
+	at org.elasticsearch.transport.TransportService$4.doRun(TransportService.java:376)
+	at org.elasticsearch.common.util.concurrent.AbstractRunnable.run(AbstractRunnable.java:37)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: [test] QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@819bfa4; line: 4, column: 26]];
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:225)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:218)
+	at org.elasticsearch.search.query.QueryParseElement.parse(QueryParseElement.java:33)
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:838)
+	... 12 more
+Caused by: com.fasterxml.jackson.core.JsonParseException: Invalid UTF-8 start byte 0x80
+ at [Source: [B@819bfa4; line: 4, column: 26]
+	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1581)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:533)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidInitial(UTF8StreamJsonParser.java:3467)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._decodeCharForError(UTF8StreamJsonParser.java:3213)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidToken(UTF8StreamJsonParser.java:3445)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._handleUnexpectedValue(UTF8StreamJsonParser.java:2610)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser.nextToken(UTF8StreamJsonParser.java:795)
+	at org.elasticsearch.common.xcontent.json.JsonXContentParser.nextToken(JsonXContentParser.java:53)
+	at org.elasticsearch.index.query.MatchQueryParser.parse(MatchQueryParser.java:66)
+	at org.elasticsearch.index.query.QueryParseContext.parseInnerQuery(QueryParseContext.java:250)
+	at org.elasticsearch.index.query.IndexQueryParserService.innerParse(IndexQueryParserService.java:320)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:223)
+	... 15 more
+[2016-07-21 13:28:36,018][DEBUG][action.search            ] [myNode] All shards failed for phase: [query]
+RemoteTransportException[[myNode][127.0.0.1:9300][indices:data/read/search[phase/query]]]; nested: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@819bfa4; line: 4, column: 26]];
+Caused by: SearchParseException[failed to parse search source [{
+    "query": {
+        "match": {
+            "content": “brown“
+        }
+    }
+}]]; nested: QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@819bfa4; line: 4, column: 26]];
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:855)
+	at org.elasticsearch.search.SearchService.createContext(SearchService.java:654)
+	at org.elasticsearch.search.SearchService.createAndPutContext(SearchService.java:620)
+	at org.elasticsearch.search.SearchService.executeQueryPhase(SearchService.java:371)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:368)
+	at org.elasticsearch.search.action.SearchServiceTransportAction$SearchQueryTransportHandler.messageReceived(SearchServiceTransportAction.java:365)
+	at org.elasticsearch.transport.TransportRequestHandler.messageReceived(TransportRequestHandler.java:33)
+	at org.elasticsearch.transport.RequestHandlerRegistry.processMessageReceived(RequestHandlerRegistry.java:75)
+	at org.elasticsearch.transport.TransportService$4.doRun(TransportService.java:376)
+	at org.elasticsearch.common.util.concurrent.AbstractRunnable.run(AbstractRunnable.java:37)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: [test] QueryParsingException[Failed to parse]; nested: JsonParseException[Invalid UTF-8 start byte 0x80
+ at [Source: [B@819bfa4; line: 4, column: 26]];
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:225)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:218)
+	at org.elasticsearch.search.query.QueryParseElement.parse(QueryParseElement.java:33)
+	at org.elasticsearch.search.SearchService.parseSource(SearchService.java:838)
+	... 12 more
+Caused by: com.fasterxml.jackson.core.JsonParseException: Invalid UTF-8 start byte 0x80
+ at [Source: [B@819bfa4; line: 4, column: 26]
+	at com.fasterxml.jackson.core.JsonParser._constructError(JsonParser.java:1581)
+	at com.fasterxml.jackson.core.base.ParserMinimalBase._reportError(ParserMinimalBase.java:533)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidInitial(UTF8StreamJsonParser.java:3467)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._decodeCharForError(UTF8StreamJsonParser.java:3213)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._reportInvalidToken(UTF8StreamJsonParser.java:3445)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser._handleUnexpectedValue(UTF8StreamJsonParser.java:2610)
+	at com.fasterxml.jackson.core.json.UTF8StreamJsonParser.nextToken(UTF8StreamJsonParser.java:795)
+	at org.elasticsearch.common.xcontent.json.JsonXContentParser.nextToken(JsonXContentParser.java:53)
+	at org.elasticsearch.index.query.MatchQueryParser.parse(MatchQueryParser.java:66)
+	at org.elasticsearch.index.query.QueryParseContext.parseInnerQuery(QueryParseContext.java:250)
+	at org.elasticsearch.index.query.IndexQueryParserService.innerParse(IndexQueryParserService.java:320)
+	at org.elasticsearch.index.query.IndexQueryParserService.parse(IndexQueryParserService.java:223)
+	... 15 more
+[2016-07-21 14:57:31,478][INFO ][node                     ] [myNode] stopping ...
+[2016-07-21 14:57:31,502][INFO ][node                     ] [myNode] stopped
+[2016-07-21 14:57:31,503][INFO ][node                     ] [myNode] closing ...
+[2016-07-21 14:57:31,506][INFO ][node                     ] [myNode] closed
+[2016-07-21 15:01:17,050][INFO ][node                     ] [myNode] version[2.3.4], pid[7931], build[e455fd0/2016-06-30T11:24:31Z]
+[2016-07-21 15:01:17,050][INFO ][node                     ] [myNode] initializing ...
+[2016-07-21 15:01:17,422][INFO ][plugins                  ] [myNode] modules [reindex, lang-expression, lang-groovy], plugins [], sites []
+[2016-07-21 15:01:17,436][INFO ][env                      ] [myNode] using [1] data paths, mounts [[/ (/dev/disk1)]], net usable_space [337.1gb], net total_space [464.7gb], spins? [unknown], types [hfs]
+[2016-07-21 15:01:17,436][INFO ][env                      ] [myNode] heap size [989.8mb], compressed ordinary object pointers [true]
+[2016-07-21 15:01:17,437][WARN ][env                      ] [myNode] max file descriptors [10240] for elasticsearch process likely too low, consider increasing to at least [65536]
+[2016-07-21 15:01:18,409][INFO ][node                     ] [myNode] initialized
+[2016-07-21 15:01:18,409][INFO ][node                     ] [myNode] starting ...
+[2016-07-21 15:01:18,468][INFO ][transport                ] [myNode] publish_address {127.0.0.1:9300}, bound_addresses {[fe80::1]:9300}, {[::1]:9300}, {127.0.0.1:9300}
+[2016-07-21 15:01:18,471][INFO ][discovery                ] [myNode] clubsOrganizations/BHRYmc6zTPuhdX7q5HuIAw
+[2016-07-21 15:01:21,508][INFO ][cluster.service          ] [myNode] new_master {myNode}{BHRYmc6zTPuhdX7q5HuIAw}{127.0.0.1}{127.0.0.1:9300}, reason: zen-disco-join(elected_as_master, [0] joins received)
+[2016-07-21 15:01:21,520][INFO ][http                     ] [myNode] publish_address {127.0.0.1:9200}, bound_addresses {[fe80::1]:9200}, {[::1]:9200}, {127.0.0.1:9200}
+[2016-07-21 15:01:21,520][INFO ][node                     ] [myNode] started
+[2016-07-21 15:01:21,545][INFO ][gateway                  ] [myNode] recovered [1] indices into cluster_state
+[2016-07-21 15:01:21,768][INFO ][cluster.routing.allocation] [myNode] Cluster health status changed from [RED] to [YELLOW] (reason: [shards started [[test][3]] ...]).
+[2016-07-21 15:01:51,518][DEBUG][action.admin.indices.stats] [myNode] [indices:monitor/stats] failed to execute operation for shard [[test][1], node[BHRYmc6zTPuhdX7q5HuIAw], [P], v[4], s[STARTED], a[id=YsOdL6wqSweiBeAJd66qTQ]]
+ElasticsearchException[failed to refresh store stats]; nested: NoSuchFileException[/Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/1/index];
+	at org.elasticsearch.index.store.Store$StoreStatsCache.refresh(Store.java:1532)
+	at org.elasticsearch.index.store.Store$StoreStatsCache.refresh(Store.java:1517)
+	at org.elasticsearch.common.util.SingleObjectCache.getOrRefresh(SingleObjectCache.java:55)
+	at org.elasticsearch.index.store.Store.stats(Store.java:293)
+	at org.elasticsearch.index.shard.IndexShard.storeStats(IndexShard.java:702)
+	at org.elasticsearch.action.admin.indices.stats.CommonStats.<init>(CommonStats.java:134)
+	at org.elasticsearch.action.admin.indices.stats.TransportIndicesStatsAction.shardOperation(TransportIndicesStatsAction.java:165)
+	at org.elasticsearch.action.admin.indices.stats.TransportIndicesStatsAction.shardOperation(TransportIndicesStatsAction.java:47)
+	at org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction$BroadcastByNodeTransportRequestHandler.onShardOperation(TransportBroadcastByNodeAction.java:420)
+	at org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction$BroadcastByNodeTransportRequestHandler.messageReceived(TransportBroadcastByNodeAction.java:399)
+	at org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction$BroadcastByNodeTransportRequestHandler.messageReceived(TransportBroadcastByNodeAction.java:386)
+	at org.elasticsearch.transport.TransportRequestHandler.messageReceived(TransportRequestHandler.java:33)
+	at org.elasticsearch.transport.RequestHandlerRegistry.processMessageReceived(RequestHandlerRegistry.java:75)
+	at org.elasticsearch.transport.TransportService$4.doRun(TransportService.java:376)
+	at org.elasticsearch.common.util.concurrent.AbstractRunnable.run(AbstractRunnable.java:37)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.nio.file.NoSuchFileException: /Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/1/index
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:407)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:191)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:203)
+	at org.elasticsearch.index.store.FsDirectoryService$1.listAll(FsDirectoryService.java:127)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.elasticsearch.index.store.Store$StoreStatsCache.estimateSize(Store.java:1538)
+	at org.elasticsearch.index.store.Store$StoreStatsCache.refresh(Store.java:1530)
+	... 17 more
+[2016-07-21 15:01:51,521][DEBUG][action.admin.indices.stats] [myNode] [indices:monitor/stats] failed to execute operation for shard [[test][4], node[BHRYmc6zTPuhdX7q5HuIAw], [P], v[4], s[STARTED], a[id=kZzKZfm7QlCATv0ntd1Oyw]]
+ElasticsearchException[failed to refresh store stats]; nested: NoSuchFileException[/Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/4/index];
+	at org.elasticsearch.index.store.Store$StoreStatsCache.refresh(Store.java:1532)
+	at org.elasticsearch.index.store.Store$StoreStatsCache.refresh(Store.java:1517)
+	at org.elasticsearch.common.util.SingleObjectCache.getOrRefresh(SingleObjectCache.java:55)
+	at org.elasticsearch.index.store.Store.stats(Store.java:293)
+	at org.elasticsearch.index.shard.IndexShard.storeStats(IndexShard.java:702)
+	at org.elasticsearch.action.admin.indices.stats.CommonStats.<init>(CommonStats.java:134)
+	at org.elasticsearch.action.admin.indices.stats.TransportIndicesStatsAction.shardOperation(TransportIndicesStatsAction.java:165)
+	at org.elasticsearch.action.admin.indices.stats.TransportIndicesStatsAction.shardOperation(TransportIndicesStatsAction.java:47)
+	at org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction$BroadcastByNodeTransportRequestHandler.onShardOperation(TransportBroadcastByNodeAction.java:420)
+	at org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction$BroadcastByNodeTransportRequestHandler.messageReceived(TransportBroadcastByNodeAction.java:399)
+	at org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction$BroadcastByNodeTransportRequestHandler.messageReceived(TransportBroadcastByNodeAction.java:386)
+	at org.elasticsearch.transport.TransportRequestHandler.messageReceived(TransportRequestHandler.java:33)
+	at org.elasticsearch.transport.RequestHandlerRegistry.processMessageReceived(RequestHandlerRegistry.java:75)
+	at org.elasticsearch.transport.TransportService$4.doRun(TransportService.java:376)
+	at org.elasticsearch.common.util.concurrent.AbstractRunnable.run(AbstractRunnable.java:37)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.nio.file.NoSuchFileException: /Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/4/index
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:407)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:191)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:203)
+	at org.elasticsearch.index.store.FsDirectoryService$1.listAll(FsDirectoryService.java:127)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.elasticsearch.index.store.Store$StoreStatsCache.estimateSize(Store.java:1538)
+	at org.elasticsearch.index.store.Store$StoreStatsCache.refresh(Store.java:1530)
+	... 17 more
+[2016-07-21 15:01:51,522][DEBUG][action.admin.indices.stats] [myNode] [indices:monitor/stats] failed to execute operation for shard [[test][3], node[BHRYmc6zTPuhdX7q5HuIAw], [P], v[4], s[STARTED], a[id=HJRz8LgdR8apbiTms3r7lg]]
+ElasticsearchException[failed to refresh store stats]; nested: NoSuchFileException[/Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/3/index];
+	at org.elasticsearch.index.store.Store$StoreStatsCache.refresh(Store.java:1532)
+	at org.elasticsearch.index.store.Store$StoreStatsCache.refresh(Store.java:1517)
+	at org.elasticsearch.common.util.SingleObjectCache.getOrRefresh(SingleObjectCache.java:55)
+	at org.elasticsearch.index.store.Store.stats(Store.java:293)
+	at org.elasticsearch.index.shard.IndexShard.storeStats(IndexShard.java:702)
+	at org.elasticsearch.action.admin.indices.stats.CommonStats.<init>(CommonStats.java:134)
+	at org.elasticsearch.action.admin.indices.stats.TransportIndicesStatsAction.shardOperation(TransportIndicesStatsAction.java:165)
+	at org.elasticsearch.action.admin.indices.stats.TransportIndicesStatsAction.shardOperation(TransportIndicesStatsAction.java:47)
+	at org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction$BroadcastByNodeTransportRequestHandler.onShardOperation(TransportBroadcastByNodeAction.java:420)
+	at org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction$BroadcastByNodeTransportRequestHandler.messageReceived(TransportBroadcastByNodeAction.java:399)
+	at org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction$BroadcastByNodeTransportRequestHandler.messageReceived(TransportBroadcastByNodeAction.java:386)
+	at org.elasticsearch.transport.TransportRequestHandler.messageReceived(TransportRequestHandler.java:33)
+	at org.elasticsearch.transport.RequestHandlerRegistry.processMessageReceived(RequestHandlerRegistry.java:75)
+	at org.elasticsearch.transport.TransportService$4.doRun(TransportService.java:376)
+	at org.elasticsearch.common.util.concurrent.AbstractRunnable.run(AbstractRunnable.java:37)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.nio.file.NoSuchFileException: /Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/3/index
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:407)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:191)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:203)
+	at org.elasticsearch.index.store.FsDirectoryService$1.listAll(FsDirectoryService.java:127)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.elasticsearch.index.store.Store$StoreStatsCache.estimateSize(Store.java:1538)
+	at org.elasticsearch.index.store.Store$StoreStatsCache.refresh(Store.java:1530)
+	... 17 more
+[2016-07-21 15:01:51,522][DEBUG][action.admin.indices.stats] [myNode] [indices:monitor/stats] failed to execute operation for shard [[test][2], node[BHRYmc6zTPuhdX7q5HuIAw], [P], v[4], s[STARTED], a[id=YcK3yEAFSlOdc5sf3JTNNA]]
+ElasticsearchException[failed to refresh store stats]; nested: NoSuchFileException[/Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/2/index];
+	at org.elasticsearch.index.store.Store$StoreStatsCache.refresh(Store.java:1532)
+	at org.elasticsearch.index.store.Store$StoreStatsCache.refresh(Store.java:1517)
+	at org.elasticsearch.common.util.SingleObjectCache.getOrRefresh(SingleObjectCache.java:55)
+	at org.elasticsearch.index.store.Store.stats(Store.java:293)
+	at org.elasticsearch.index.shard.IndexShard.storeStats(IndexShard.java:702)
+	at org.elasticsearch.action.admin.indices.stats.CommonStats.<init>(CommonStats.java:134)
+	at org.elasticsearch.action.admin.indices.stats.TransportIndicesStatsAction.shardOperation(TransportIndicesStatsAction.java:165)
+	at org.elasticsearch.action.admin.indices.stats.TransportIndicesStatsAction.shardOperation(TransportIndicesStatsAction.java:47)
+	at org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction$BroadcastByNodeTransportRequestHandler.onShardOperation(TransportBroadcastByNodeAction.java:420)
+	at org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction$BroadcastByNodeTransportRequestHandler.messageReceived(TransportBroadcastByNodeAction.java:399)
+	at org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction$BroadcastByNodeTransportRequestHandler.messageReceived(TransportBroadcastByNodeAction.java:386)
+	at org.elasticsearch.transport.TransportRequestHandler.messageReceived(TransportRequestHandler.java:33)
+	at org.elasticsearch.transport.RequestHandlerRegistry.processMessageReceived(RequestHandlerRegistry.java:75)
+	at org.elasticsearch.transport.TransportService$4.doRun(TransportService.java:376)
+	at org.elasticsearch.common.util.concurrent.AbstractRunnable.run(AbstractRunnable.java:37)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.nio.file.NoSuchFileException: /Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/2/index
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:407)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:191)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:203)
+	at org.elasticsearch.index.store.FsDirectoryService$1.listAll(FsDirectoryService.java:127)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.elasticsearch.index.store.Store$StoreStatsCache.estimateSize(Store.java:1538)
+	at org.elasticsearch.index.store.Store$StoreStatsCache.refresh(Store.java:1530)
+	... 17 more
+[2016-07-21 15:01:51,523][DEBUG][action.admin.indices.stats] [myNode] [indices:monitor/stats] failed to execute operation for shard [[test][0], node[BHRYmc6zTPuhdX7q5HuIAw], [P], v[4], s[STARTED], a[id=Spm9IEoCQIi9qnC8fMYHSw]]
+ElasticsearchException[failed to refresh store stats]; nested: NoSuchFileException[/Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/0/index];
+	at org.elasticsearch.index.store.Store$StoreStatsCache.refresh(Store.java:1532)
+	at org.elasticsearch.index.store.Store$StoreStatsCache.refresh(Store.java:1517)
+	at org.elasticsearch.common.util.SingleObjectCache.getOrRefresh(SingleObjectCache.java:55)
+	at org.elasticsearch.index.store.Store.stats(Store.java:293)
+	at org.elasticsearch.index.shard.IndexShard.storeStats(IndexShard.java:702)
+	at org.elasticsearch.action.admin.indices.stats.CommonStats.<init>(CommonStats.java:134)
+	at org.elasticsearch.action.admin.indices.stats.TransportIndicesStatsAction.shardOperation(TransportIndicesStatsAction.java:165)
+	at org.elasticsearch.action.admin.indices.stats.TransportIndicesStatsAction.shardOperation(TransportIndicesStatsAction.java:47)
+	at org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction$BroadcastByNodeTransportRequestHandler.onShardOperation(TransportBroadcastByNodeAction.java:420)
+	at org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction$BroadcastByNodeTransportRequestHandler.messageReceived(TransportBroadcastByNodeAction.java:399)
+	at org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction$BroadcastByNodeTransportRequestHandler.messageReceived(TransportBroadcastByNodeAction.java:386)
+	at org.elasticsearch.transport.TransportRequestHandler.messageReceived(TransportRequestHandler.java:33)
+	at org.elasticsearch.transport.RequestHandlerRegistry.processMessageReceived(RequestHandlerRegistry.java:75)
+	at org.elasticsearch.transport.TransportService$4.doRun(TransportService.java:376)
+	at org.elasticsearch.common.util.concurrent.AbstractRunnable.run(AbstractRunnable.java:37)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.nio.file.NoSuchFileException: /Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/0/index
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:407)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:191)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:203)
+	at org.elasticsearch.index.store.FsDirectoryService$1.listAll(FsDirectoryService.java:127)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.elasticsearch.index.store.Store$StoreStatsCache.estimateSize(Store.java:1538)
+	at org.elasticsearch.index.store.Store$StoreStatsCache.refresh(Store.java:1530)
+	... 17 more
+[2016-07-21 15:02:21,531][DEBUG][action.admin.indices.stats] [myNode] [indices:monitor/stats] failed to execute operation for shard [[test][1], node[BHRYmc6zTPuhdX7q5HuIAw], [P], v[4], s[STARTED], a[id=YsOdL6wqSweiBeAJd66qTQ]]
+ElasticsearchException[failed to refresh store stats]; nested: NoSuchFileException[/Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/1/index];
+	at org.elasticsearch.index.store.Store$StoreStatsCache.refresh(Store.java:1532)
+	at org.elasticsearch.index.store.Store$StoreStatsCache.refresh(Store.java:1517)
+	at org.elasticsearch.common.util.SingleObjectCache.getOrRefresh(SingleObjectCache.java:55)
+	at org.elasticsearch.index.store.Store.stats(Store.java:293)
+	at org.elasticsearch.index.shard.IndexShard.storeStats(IndexShard.java:702)
+	at org.elasticsearch.action.admin.indices.stats.CommonStats.<init>(CommonStats.java:134)
+	at org.elasticsearch.action.admin.indices.stats.TransportIndicesStatsAction.shardOperation(TransportIndicesStatsAction.java:165)
+	at org.elasticsearch.action.admin.indices.stats.TransportIndicesStatsAction.shardOperation(TransportIndicesStatsAction.java:47)
+	at org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction$BroadcastByNodeTransportRequestHandler.onShardOperation(TransportBroadcastByNodeAction.java:420)
+	at org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction$BroadcastByNodeTransportRequestHandler.messageReceived(TransportBroadcastByNodeAction.java:399)
+	at org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction$BroadcastByNodeTransportRequestHandler.messageReceived(TransportBroadcastByNodeAction.java:386)
+	at org.elasticsearch.transport.TransportRequestHandler.messageReceived(TransportRequestHandler.java:33)
+	at org.elasticsearch.transport.RequestHandlerRegistry.processMessageReceived(RequestHandlerRegistry.java:75)
+	at org.elasticsearch.transport.TransportService$4.doRun(TransportService.java:376)
+	at org.elasticsearch.common.util.concurrent.AbstractRunnable.run(AbstractRunnable.java:37)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.nio.file.NoSuchFileException: /Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/1/index
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:407)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:191)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:203)
+	at org.elasticsearch.index.store.FsDirectoryService$1.listAll(FsDirectoryService.java:127)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.elasticsearch.index.store.Store$StoreStatsCache.estimateSize(Store.java:1538)
+	at org.elasticsearch.index.store.Store$StoreStatsCache.refresh(Store.java:1530)
+	... 17 more
+[2016-07-21 15:02:21,532][DEBUG][action.admin.indices.stats] [myNode] [indices:monitor/stats] failed to execute operation for shard [[test][4], node[BHRYmc6zTPuhdX7q5HuIAw], [P], v[4], s[STARTED], a[id=kZzKZfm7QlCATv0ntd1Oyw]]
+ElasticsearchException[failed to refresh store stats]; nested: NoSuchFileException[/Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/4/index];
+	at org.elasticsearch.index.store.Store$StoreStatsCache.refresh(Store.java:1532)
+	at org.elasticsearch.index.store.Store$StoreStatsCache.refresh(Store.java:1517)
+	at org.elasticsearch.common.util.SingleObjectCache.getOrRefresh(SingleObjectCache.java:55)
+	at org.elasticsearch.index.store.Store.stats(Store.java:293)
+	at org.elasticsearch.index.shard.IndexShard.storeStats(IndexShard.java:702)
+	at org.elasticsearch.action.admin.indices.stats.CommonStats.<init>(CommonStats.java:134)
+	at org.elasticsearch.action.admin.indices.stats.TransportIndicesStatsAction.shardOperation(TransportIndicesStatsAction.java:165)
+	at org.elasticsearch.action.admin.indices.stats.TransportIndicesStatsAction.shardOperation(TransportIndicesStatsAction.java:47)
+	at org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction$BroadcastByNodeTransportRequestHandler.onShardOperation(TransportBroadcastByNodeAction.java:420)
+	at org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction$BroadcastByNodeTransportRequestHandler.messageReceived(TransportBroadcastByNodeAction.java:399)
+	at org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction$BroadcastByNodeTransportRequestHandler.messageReceived(TransportBroadcastByNodeAction.java:386)
+	at org.elasticsearch.transport.TransportRequestHandler.messageReceived(TransportRequestHandler.java:33)
+	at org.elasticsearch.transport.RequestHandlerRegistry.processMessageReceived(RequestHandlerRegistry.java:75)
+	at org.elasticsearch.transport.TransportService$4.doRun(TransportService.java:376)
+	at org.elasticsearch.common.util.concurrent.AbstractRunnable.run(AbstractRunnable.java:37)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.nio.file.NoSuchFileException: /Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/4/index
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:407)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:191)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:203)
+	at org.elasticsearch.index.store.FsDirectoryService$1.listAll(FsDirectoryService.java:127)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.elasticsearch.index.store.Store$StoreStatsCache.estimateSize(Store.java:1538)
+	at org.elasticsearch.index.store.Store$StoreStatsCache.refresh(Store.java:1530)
+	... 17 more
+[2016-07-21 15:02:21,534][DEBUG][action.admin.indices.stats] [myNode] [indices:monitor/stats] failed to execute operation for shard [[test][3], node[BHRYmc6zTPuhdX7q5HuIAw], [P], v[4], s[STARTED], a[id=HJRz8LgdR8apbiTms3r7lg]]
+ElasticsearchException[failed to refresh store stats]; nested: NoSuchFileException[/Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/3/index];
+	at org.elasticsearch.index.store.Store$StoreStatsCache.refresh(Store.java:1532)
+	at org.elasticsearch.index.store.Store$StoreStatsCache.refresh(Store.java:1517)
+	at org.elasticsearch.common.util.SingleObjectCache.getOrRefresh(SingleObjectCache.java:55)
+	at org.elasticsearch.index.store.Store.stats(Store.java:293)
+	at org.elasticsearch.index.shard.IndexShard.storeStats(IndexShard.java:702)
+	at org.elasticsearch.action.admin.indices.stats.CommonStats.<init>(CommonStats.java:134)
+	at org.elasticsearch.action.admin.indices.stats.TransportIndicesStatsAction.shardOperation(TransportIndicesStatsAction.java:165)
+	at org.elasticsearch.action.admin.indices.stats.TransportIndicesStatsAction.shardOperation(TransportIndicesStatsAction.java:47)
+	at org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction$BroadcastByNodeTransportRequestHandler.onShardOperation(TransportBroadcastByNodeAction.java:420)
+	at org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction$BroadcastByNodeTransportRequestHandler.messageReceived(TransportBroadcastByNodeAction.java:399)
+	at org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction$BroadcastByNodeTransportRequestHandler.messageReceived(TransportBroadcastByNodeAction.java:386)
+	at org.elasticsearch.transport.TransportRequestHandler.messageReceived(TransportRequestHandler.java:33)
+	at org.elasticsearch.transport.RequestHandlerRegistry.processMessageReceived(RequestHandlerRegistry.java:75)
+	at org.elasticsearch.transport.TransportService$4.doRun(TransportService.java:376)
+	at org.elasticsearch.common.util.concurrent.AbstractRunnable.run(AbstractRunnable.java:37)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.nio.file.NoSuchFileException: /Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/3/index
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:407)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:191)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:203)
+	at org.elasticsearch.index.store.FsDirectoryService$1.listAll(FsDirectoryService.java:127)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.elasticsearch.index.store.Store$StoreStatsCache.estimateSize(Store.java:1538)
+	at org.elasticsearch.index.store.Store$StoreStatsCache.refresh(Store.java:1530)
+	... 17 more
+[2016-07-21 15:02:21,535][DEBUG][action.admin.indices.stats] [myNode] [indices:monitor/stats] failed to execute operation for shard [[test][2], node[BHRYmc6zTPuhdX7q5HuIAw], [P], v[4], s[STARTED], a[id=YcK3yEAFSlOdc5sf3JTNNA]]
+ElasticsearchException[failed to refresh store stats]; nested: NoSuchFileException[/Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/2/index];
+	at org.elasticsearch.index.store.Store$StoreStatsCache.refresh(Store.java:1532)
+	at org.elasticsearch.index.store.Store$StoreStatsCache.refresh(Store.java:1517)
+	at org.elasticsearch.common.util.SingleObjectCache.getOrRefresh(SingleObjectCache.java:55)
+	at org.elasticsearch.index.store.Store.stats(Store.java:293)
+	at org.elasticsearch.index.shard.IndexShard.storeStats(IndexShard.java:702)
+	at org.elasticsearch.action.admin.indices.stats.CommonStats.<init>(CommonStats.java:134)
+	at org.elasticsearch.action.admin.indices.stats.TransportIndicesStatsAction.shardOperation(TransportIndicesStatsAction.java:165)
+	at org.elasticsearch.action.admin.indices.stats.TransportIndicesStatsAction.shardOperation(TransportIndicesStatsAction.java:47)
+	at org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction$BroadcastByNodeTransportRequestHandler.onShardOperation(TransportBroadcastByNodeAction.java:420)
+	at org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction$BroadcastByNodeTransportRequestHandler.messageReceived(TransportBroadcastByNodeAction.java:399)
+	at org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction$BroadcastByNodeTransportRequestHandler.messageReceived(TransportBroadcastByNodeAction.java:386)
+	at org.elasticsearch.transport.TransportRequestHandler.messageReceived(TransportRequestHandler.java:33)
+	at org.elasticsearch.transport.RequestHandlerRegistry.processMessageReceived(RequestHandlerRegistry.java:75)
+	at org.elasticsearch.transport.TransportService$4.doRun(TransportService.java:376)
+	at org.elasticsearch.common.util.concurrent.AbstractRunnable.run(AbstractRunnable.java:37)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.nio.file.NoSuchFileException: /Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/2/index
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:407)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:191)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:203)
+	at org.elasticsearch.index.store.FsDirectoryService$1.listAll(FsDirectoryService.java:127)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.elasticsearch.index.store.Store$StoreStatsCache.estimateSize(Store.java:1538)
+	at org.elasticsearch.index.store.Store$StoreStatsCache.refresh(Store.java:1530)
+	... 17 more
+[2016-07-21 15:02:21,536][DEBUG][action.admin.indices.stats] [myNode] [indices:monitor/stats] failed to execute operation for shard [[test][0], node[BHRYmc6zTPuhdX7q5HuIAw], [P], v[4], s[STARTED], a[id=Spm9IEoCQIi9qnC8fMYHSw]]
+ElasticsearchException[failed to refresh store stats]; nested: NoSuchFileException[/Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/0/index];
+	at org.elasticsearch.index.store.Store$StoreStatsCache.refresh(Store.java:1532)
+	at org.elasticsearch.index.store.Store$StoreStatsCache.refresh(Store.java:1517)
+	at org.elasticsearch.common.util.SingleObjectCache.getOrRefresh(SingleObjectCache.java:55)
+	at org.elasticsearch.index.store.Store.stats(Store.java:293)
+	at org.elasticsearch.index.shard.IndexShard.storeStats(IndexShard.java:702)
+	at org.elasticsearch.action.admin.indices.stats.CommonStats.<init>(CommonStats.java:134)
+	at org.elasticsearch.action.admin.indices.stats.TransportIndicesStatsAction.shardOperation(TransportIndicesStatsAction.java:165)
+	at org.elasticsearch.action.admin.indices.stats.TransportIndicesStatsAction.shardOperation(TransportIndicesStatsAction.java:47)
+	at org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction$BroadcastByNodeTransportRequestHandler.onShardOperation(TransportBroadcastByNodeAction.java:420)
+	at org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction$BroadcastByNodeTransportRequestHandler.messageReceived(TransportBroadcastByNodeAction.java:399)
+	at org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction$BroadcastByNodeTransportRequestHandler.messageReceived(TransportBroadcastByNodeAction.java:386)
+	at org.elasticsearch.transport.TransportRequestHandler.messageReceived(TransportRequestHandler.java:33)
+	at org.elasticsearch.transport.RequestHandlerRegistry.processMessageReceived(RequestHandlerRegistry.java:75)
+	at org.elasticsearch.transport.TransportService$4.doRun(TransportService.java:376)
+	at org.elasticsearch.common.util.concurrent.AbstractRunnable.run(AbstractRunnable.java:37)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.nio.file.NoSuchFileException: /Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/0/index
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:407)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:191)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:203)
+	at org.elasticsearch.index.store.FsDirectoryService$1.listAll(FsDirectoryService.java:127)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.elasticsearch.index.store.Store$StoreStatsCache.estimateSize(Store.java:1538)
+	at org.elasticsearch.index.store.Store$StoreStatsCache.refresh(Store.java:1530)
+	... 17 more
+[2016-07-21 15:02:32,692][INFO ][node                     ] [myNode] stopping ...
+[2016-07-21 15:02:32,704][WARN ][index.engine             ] [myNode] [test][0] failed to read latest segment infos on flush
+java.nio.file.NoSuchFileException: /Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/0/index
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:407)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:191)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:203)
+	at org.elasticsearch.index.store.FsDirectoryService$1.listAll(FsDirectoryService.java:127)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.elasticsearch.index.store.Store.failIfCorrupted(Store.java:567)
+	at org.elasticsearch.index.store.Store.failIfCorrupted(Store.java:563)
+	at org.elasticsearch.index.store.Store.readLastCommittedSegmentsInfo(Store.java:146)
+	at org.elasticsearch.index.engine.InternalEngine.flush(InternalEngine.java:777)
+	at org.elasticsearch.index.engine.InternalEngine.flush(InternalEngine.java:726)
+	at org.elasticsearch.index.engine.Engine.flushAndClose(Engine.java:1128)
+	at org.elasticsearch.index.shard.IndexShard.close(IndexShard.java:868)
+	at org.elasticsearch.index.IndexService.closeShardInjector(IndexService.java:443)
+	at org.elasticsearch.index.IndexService.removeShard(IndexService.java:416)
+	at org.elasticsearch.index.IndexService.close(IndexService.java:252)
+	at org.elasticsearch.indices.IndicesService.removeIndex(IndicesService.java:413)
+	at org.elasticsearch.indices.IndicesService.access$000(IndicesService.java:108)
+	at org.elasticsearch.indices.IndicesService$1.run(IndicesService.java:174)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+[2016-07-21 15:02:32,705][WARN ][index.translog           ] [myNode] [test][0] failed to delete unreferenced translog files
+java.nio.file.NoSuchFileException: /Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/0/translog
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:407)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at org.elasticsearch.index.translog.Translog$OnCloseRunnable.handle(Translog.java:726)
+	at org.elasticsearch.index.translog.Translog$OnCloseRunnable.handle(Translog.java:714)
+	at org.elasticsearch.index.translog.ChannelReference.closeInternal(ChannelReference.java:67)
+	at org.elasticsearch.common.util.concurrent.AbstractRefCounted.decRef(AbstractRefCounted.java:64)
+	at org.elasticsearch.index.translog.TranslogReader.close(TranslogReader.java:143)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:97)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:84)
+	at org.elasticsearch.index.translog.Translog.close(Translog.java:423)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:97)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:84)
+	at org.elasticsearch.index.engine.InternalEngine.closeNoLock(InternalEngine.java:990)
+	at org.elasticsearch.index.engine.Engine.close(Engine.java:1147)
+	at org.elasticsearch.index.engine.Engine.flushAndClose(Engine.java:1135)
+	at org.elasticsearch.index.shard.IndexShard.close(IndexShard.java:868)
+	at org.elasticsearch.index.IndexService.closeShardInjector(IndexService.java:443)
+	at org.elasticsearch.index.IndexService.removeShard(IndexService.java:416)
+	at org.elasticsearch.index.IndexService.close(IndexService.java:252)
+	at org.elasticsearch.indices.IndicesService.removeIndex(IndicesService.java:413)
+	at org.elasticsearch.indices.IndicesService.access$000(IndicesService.java:108)
+	at org.elasticsearch.indices.IndicesService$1.run(IndicesService.java:174)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+[2016-07-21 15:02:32,706][WARN ][index.translog           ] [myNode] [test][0] failed to delete unreferenced translog files
+java.nio.file.NoSuchFileException: /Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/0/translog
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:407)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at org.elasticsearch.index.translog.Translog$OnCloseRunnable.handle(Translog.java:726)
+	at org.elasticsearch.index.translog.Translog$OnCloseRunnable.handle(Translog.java:714)
+	at org.elasticsearch.index.translog.ChannelReference.closeInternal(ChannelReference.java:67)
+	at org.elasticsearch.common.util.concurrent.AbstractRefCounted.decRef(AbstractRefCounted.java:64)
+	at org.elasticsearch.index.translog.TranslogReader.close(TranslogReader.java:143)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:97)
+	at org.elasticsearch.index.translog.Translog.close(Translog.java:425)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:97)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:84)
+	at org.elasticsearch.index.engine.InternalEngine.closeNoLock(InternalEngine.java:990)
+	at org.elasticsearch.index.engine.Engine.close(Engine.java:1147)
+	at org.elasticsearch.index.engine.Engine.flushAndClose(Engine.java:1135)
+	at org.elasticsearch.index.shard.IndexShard.close(IndexShard.java:868)
+	at org.elasticsearch.index.IndexService.closeShardInjector(IndexService.java:443)
+	at org.elasticsearch.index.IndexService.removeShard(IndexService.java:416)
+	at org.elasticsearch.index.IndexService.close(IndexService.java:252)
+	at org.elasticsearch.indices.IndicesService.removeIndex(IndicesService.java:413)
+	at org.elasticsearch.indices.IndicesService.access$000(IndicesService.java:108)
+	at org.elasticsearch.indices.IndicesService$1.run(IndicesService.java:174)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+[2016-07-21 15:02:32,708][WARN ][index.engine             ] [myNode] [test][0] failed to rollback writer on close
+java.nio.file.NoSuchFileException: /Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/0/index
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:407)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:191)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:203)
+	at org.elasticsearch.index.store.FsDirectoryService$1.listAll(FsDirectoryService.java:127)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.apache.lucene.index.IndexFileDeleter.refresh(IndexFileDeleter.java:426)
+	at org.apache.lucene.index.IndexWriter.rollbackInternalNoCommit(IndexWriter.java:2099)
+	at org.apache.lucene.index.IndexWriter.rollbackInternal(IndexWriter.java:2041)
+	at org.apache.lucene.index.IndexWriter.rollback(IndexWriter.java:2034)
+	at org.elasticsearch.index.engine.InternalEngine.closeNoLock(InternalEngine.java:997)
+	at org.elasticsearch.index.engine.Engine.close(Engine.java:1147)
+	at org.elasticsearch.index.engine.Engine.flushAndClose(Engine.java:1135)
+	at org.elasticsearch.index.shard.IndexShard.close(IndexShard.java:868)
+	at org.elasticsearch.index.IndexService.closeShardInjector(IndexService.java:443)
+	at org.elasticsearch.index.IndexService.removeShard(IndexService.java:416)
+	at org.elasticsearch.index.IndexService.close(IndexService.java:252)
+	at org.elasticsearch.indices.IndicesService.removeIndex(IndicesService.java:413)
+	at org.elasticsearch.indices.IndicesService.access$000(IndicesService.java:108)
+	at org.elasticsearch.indices.IndicesService$1.run(IndicesService.java:174)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+[2016-07-21 15:02:32,709][WARN ][index.engine             ] [myNode] [test][1] failed to read latest segment infos on flush
+java.nio.file.NoSuchFileException: /Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/1/index
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:407)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:191)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:203)
+	at org.elasticsearch.index.store.FsDirectoryService$1.listAll(FsDirectoryService.java:127)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.elasticsearch.index.store.Store.failIfCorrupted(Store.java:567)
+	at org.elasticsearch.index.store.Store.failIfCorrupted(Store.java:563)
+	at org.elasticsearch.index.store.Store.readLastCommittedSegmentsInfo(Store.java:146)
+	at org.elasticsearch.index.engine.InternalEngine.flush(InternalEngine.java:777)
+	at org.elasticsearch.index.engine.InternalEngine.flush(InternalEngine.java:726)
+	at org.elasticsearch.index.engine.Engine.flushAndClose(Engine.java:1128)
+	at org.elasticsearch.index.shard.IndexShard.close(IndexShard.java:868)
+	at org.elasticsearch.index.IndexService.closeShardInjector(IndexService.java:443)
+	at org.elasticsearch.index.IndexService.removeShard(IndexService.java:416)
+	at org.elasticsearch.index.IndexService.close(IndexService.java:252)
+	at org.elasticsearch.indices.IndicesService.removeIndex(IndicesService.java:413)
+	at org.elasticsearch.indices.IndicesService.access$000(IndicesService.java:108)
+	at org.elasticsearch.indices.IndicesService$1.run(IndicesService.java:174)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+[2016-07-21 15:02:32,709][WARN ][index.translog           ] [myNode] [test][1] failed to delete unreferenced translog files
+java.nio.file.NoSuchFileException: /Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/1/translog
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:407)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at org.elasticsearch.index.translog.Translog$OnCloseRunnable.handle(Translog.java:726)
+	at org.elasticsearch.index.translog.Translog$OnCloseRunnable.handle(Translog.java:714)
+	at org.elasticsearch.index.translog.ChannelReference.closeInternal(ChannelReference.java:67)
+	at org.elasticsearch.common.util.concurrent.AbstractRefCounted.decRef(AbstractRefCounted.java:64)
+	at org.elasticsearch.index.translog.TranslogReader.close(TranslogReader.java:143)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:97)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:84)
+	at org.elasticsearch.index.translog.Translog.close(Translog.java:423)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:97)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:84)
+	at org.elasticsearch.index.engine.InternalEngine.closeNoLock(InternalEngine.java:990)
+	at org.elasticsearch.index.engine.Engine.close(Engine.java:1147)
+	at org.elasticsearch.index.engine.Engine.flushAndClose(Engine.java:1135)
+	at org.elasticsearch.index.shard.IndexShard.close(IndexShard.java:868)
+	at org.elasticsearch.index.IndexService.closeShardInjector(IndexService.java:443)
+	at org.elasticsearch.index.IndexService.removeShard(IndexService.java:416)
+	at org.elasticsearch.index.IndexService.close(IndexService.java:252)
+	at org.elasticsearch.indices.IndicesService.removeIndex(IndicesService.java:413)
+	at org.elasticsearch.indices.IndicesService.access$000(IndicesService.java:108)
+	at org.elasticsearch.indices.IndicesService$1.run(IndicesService.java:174)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+[2016-07-21 15:02:32,710][WARN ][index.translog           ] [myNode] [test][1] failed to delete unreferenced translog files
+java.nio.file.NoSuchFileException: /Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/1/translog
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:407)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at org.elasticsearch.index.translog.Translog$OnCloseRunnable.handle(Translog.java:726)
+	at org.elasticsearch.index.translog.Translog$OnCloseRunnable.handle(Translog.java:714)
+	at org.elasticsearch.index.translog.ChannelReference.closeInternal(ChannelReference.java:67)
+	at org.elasticsearch.common.util.concurrent.AbstractRefCounted.decRef(AbstractRefCounted.java:64)
+	at org.elasticsearch.index.translog.TranslogReader.close(TranslogReader.java:143)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:97)
+	at org.elasticsearch.index.translog.Translog.close(Translog.java:425)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:97)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:84)
+	at org.elasticsearch.index.engine.InternalEngine.closeNoLock(InternalEngine.java:990)
+	at org.elasticsearch.index.engine.Engine.close(Engine.java:1147)
+	at org.elasticsearch.index.engine.Engine.flushAndClose(Engine.java:1135)
+	at org.elasticsearch.index.shard.IndexShard.close(IndexShard.java:868)
+	at org.elasticsearch.index.IndexService.closeShardInjector(IndexService.java:443)
+	at org.elasticsearch.index.IndexService.removeShard(IndexService.java:416)
+	at org.elasticsearch.index.IndexService.close(IndexService.java:252)
+	at org.elasticsearch.indices.IndicesService.removeIndex(IndicesService.java:413)
+	at org.elasticsearch.indices.IndicesService.access$000(IndicesService.java:108)
+	at org.elasticsearch.indices.IndicesService$1.run(IndicesService.java:174)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+[2016-07-21 15:02:32,710][WARN ][index.engine             ] [myNode] [test][1] failed to rollback writer on close
+java.nio.file.NoSuchFileException: /Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/1/index
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:407)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:191)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:203)
+	at org.elasticsearch.index.store.FsDirectoryService$1.listAll(FsDirectoryService.java:127)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.apache.lucene.index.IndexFileDeleter.refresh(IndexFileDeleter.java:426)
+	at org.apache.lucene.index.IndexWriter.rollbackInternalNoCommit(IndexWriter.java:2099)
+	at org.apache.lucene.index.IndexWriter.rollbackInternal(IndexWriter.java:2041)
+	at org.apache.lucene.index.IndexWriter.rollback(IndexWriter.java:2034)
+	at org.elasticsearch.index.engine.InternalEngine.closeNoLock(InternalEngine.java:997)
+	at org.elasticsearch.index.engine.Engine.close(Engine.java:1147)
+	at org.elasticsearch.index.engine.Engine.flushAndClose(Engine.java:1135)
+	at org.elasticsearch.index.shard.IndexShard.close(IndexShard.java:868)
+	at org.elasticsearch.index.IndexService.closeShardInjector(IndexService.java:443)
+	at org.elasticsearch.index.IndexService.removeShard(IndexService.java:416)
+	at org.elasticsearch.index.IndexService.close(IndexService.java:252)
+	at org.elasticsearch.indices.IndicesService.removeIndex(IndicesService.java:413)
+	at org.elasticsearch.indices.IndicesService.access$000(IndicesService.java:108)
+	at org.elasticsearch.indices.IndicesService$1.run(IndicesService.java:174)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+[2016-07-21 15:02:32,711][WARN ][index.engine             ] [myNode] [test][2] failed to read latest segment infos on flush
+java.nio.file.NoSuchFileException: /Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/2/index
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:407)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:191)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:203)
+	at org.elasticsearch.index.store.FsDirectoryService$1.listAll(FsDirectoryService.java:127)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.elasticsearch.index.store.Store.failIfCorrupted(Store.java:567)
+	at org.elasticsearch.index.store.Store.failIfCorrupted(Store.java:563)
+	at org.elasticsearch.index.store.Store.readLastCommittedSegmentsInfo(Store.java:146)
+	at org.elasticsearch.index.engine.InternalEngine.flush(InternalEngine.java:777)
+	at org.elasticsearch.index.engine.InternalEngine.flush(InternalEngine.java:726)
+	at org.elasticsearch.index.engine.Engine.flushAndClose(Engine.java:1128)
+	at org.elasticsearch.index.shard.IndexShard.close(IndexShard.java:868)
+	at org.elasticsearch.index.IndexService.closeShardInjector(IndexService.java:443)
+	at org.elasticsearch.index.IndexService.removeShard(IndexService.java:416)
+	at org.elasticsearch.index.IndexService.close(IndexService.java:252)
+	at org.elasticsearch.indices.IndicesService.removeIndex(IndicesService.java:413)
+	at org.elasticsearch.indices.IndicesService.access$000(IndicesService.java:108)
+	at org.elasticsearch.indices.IndicesService$1.run(IndicesService.java:174)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+[2016-07-21 15:02:32,711][WARN ][index.translog           ] [myNode] [test][2] failed to delete unreferenced translog files
+java.nio.file.NoSuchFileException: /Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/2/translog
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:407)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at org.elasticsearch.index.translog.Translog$OnCloseRunnable.handle(Translog.java:726)
+	at org.elasticsearch.index.translog.Translog$OnCloseRunnable.handle(Translog.java:714)
+	at org.elasticsearch.index.translog.ChannelReference.closeInternal(ChannelReference.java:67)
+	at org.elasticsearch.common.util.concurrent.AbstractRefCounted.decRef(AbstractRefCounted.java:64)
+	at org.elasticsearch.index.translog.TranslogReader.close(TranslogReader.java:143)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:97)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:84)
+	at org.elasticsearch.index.translog.Translog.close(Translog.java:423)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:97)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:84)
+	at org.elasticsearch.index.engine.InternalEngine.closeNoLock(InternalEngine.java:990)
+	at org.elasticsearch.index.engine.Engine.close(Engine.java:1147)
+	at org.elasticsearch.index.engine.Engine.flushAndClose(Engine.java:1135)
+	at org.elasticsearch.index.shard.IndexShard.close(IndexShard.java:868)
+	at org.elasticsearch.index.IndexService.closeShardInjector(IndexService.java:443)
+	at org.elasticsearch.index.IndexService.removeShard(IndexService.java:416)
+	at org.elasticsearch.index.IndexService.close(IndexService.java:252)
+	at org.elasticsearch.indices.IndicesService.removeIndex(IndicesService.java:413)
+	at org.elasticsearch.indices.IndicesService.access$000(IndicesService.java:108)
+	at org.elasticsearch.indices.IndicesService$1.run(IndicesService.java:174)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+[2016-07-21 15:02:32,712][WARN ][index.translog           ] [myNode] [test][2] failed to delete unreferenced translog files
+java.nio.file.NoSuchFileException: /Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/2/translog
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:407)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at org.elasticsearch.index.translog.Translog$OnCloseRunnable.handle(Translog.java:726)
+	at org.elasticsearch.index.translog.Translog$OnCloseRunnable.handle(Translog.java:714)
+	at org.elasticsearch.index.translog.ChannelReference.closeInternal(ChannelReference.java:67)
+	at org.elasticsearch.common.util.concurrent.AbstractRefCounted.decRef(AbstractRefCounted.java:64)
+	at org.elasticsearch.index.translog.TranslogReader.close(TranslogReader.java:143)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:97)
+	at org.elasticsearch.index.translog.Translog.close(Translog.java:425)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:97)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:84)
+	at org.elasticsearch.index.engine.InternalEngine.closeNoLock(InternalEngine.java:990)
+	at org.elasticsearch.index.engine.Engine.close(Engine.java:1147)
+	at org.elasticsearch.index.engine.Engine.flushAndClose(Engine.java:1135)
+	at org.elasticsearch.index.shard.IndexShard.close(IndexShard.java:868)
+	at org.elasticsearch.index.IndexService.closeShardInjector(IndexService.java:443)
+	at org.elasticsearch.index.IndexService.removeShard(IndexService.java:416)
+	at org.elasticsearch.index.IndexService.close(IndexService.java:252)
+	at org.elasticsearch.indices.IndicesService.removeIndex(IndicesService.java:413)
+	at org.elasticsearch.indices.IndicesService.access$000(IndicesService.java:108)
+	at org.elasticsearch.indices.IndicesService$1.run(IndicesService.java:174)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+[2016-07-21 15:02:32,713][WARN ][index.engine             ] [myNode] [test][2] failed to rollback writer on close
+java.nio.file.NoSuchFileException: /Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/2/index
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:407)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:191)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:203)
+	at org.elasticsearch.index.store.FsDirectoryService$1.listAll(FsDirectoryService.java:127)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.apache.lucene.index.IndexFileDeleter.refresh(IndexFileDeleter.java:426)
+	at org.apache.lucene.index.IndexWriter.rollbackInternalNoCommit(IndexWriter.java:2099)
+	at org.apache.lucene.index.IndexWriter.rollbackInternal(IndexWriter.java:2041)
+	at org.apache.lucene.index.IndexWriter.rollback(IndexWriter.java:2034)
+	at org.elasticsearch.index.engine.InternalEngine.closeNoLock(InternalEngine.java:997)
+	at org.elasticsearch.index.engine.Engine.close(Engine.java:1147)
+	at org.elasticsearch.index.engine.Engine.flushAndClose(Engine.java:1135)
+	at org.elasticsearch.index.shard.IndexShard.close(IndexShard.java:868)
+	at org.elasticsearch.index.IndexService.closeShardInjector(IndexService.java:443)
+	at org.elasticsearch.index.IndexService.removeShard(IndexService.java:416)
+	at org.elasticsearch.index.IndexService.close(IndexService.java:252)
+	at org.elasticsearch.indices.IndicesService.removeIndex(IndicesService.java:413)
+	at org.elasticsearch.indices.IndicesService.access$000(IndicesService.java:108)
+	at org.elasticsearch.indices.IndicesService$1.run(IndicesService.java:174)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+[2016-07-21 15:02:32,713][WARN ][index.engine             ] [myNode] [test][3] failed to read latest segment infos on flush
+java.nio.file.NoSuchFileException: /Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/3/index
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:407)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:191)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:203)
+	at org.elasticsearch.index.store.FsDirectoryService$1.listAll(FsDirectoryService.java:127)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.elasticsearch.index.store.Store.failIfCorrupted(Store.java:567)
+	at org.elasticsearch.index.store.Store.failIfCorrupted(Store.java:563)
+	at org.elasticsearch.index.store.Store.readLastCommittedSegmentsInfo(Store.java:146)
+	at org.elasticsearch.index.engine.InternalEngine.flush(InternalEngine.java:777)
+	at org.elasticsearch.index.engine.InternalEngine.flush(InternalEngine.java:726)
+	at org.elasticsearch.index.engine.Engine.flushAndClose(Engine.java:1128)
+	at org.elasticsearch.index.shard.IndexShard.close(IndexShard.java:868)
+	at org.elasticsearch.index.IndexService.closeShardInjector(IndexService.java:443)
+	at org.elasticsearch.index.IndexService.removeShard(IndexService.java:416)
+	at org.elasticsearch.index.IndexService.close(IndexService.java:252)
+	at org.elasticsearch.indices.IndicesService.removeIndex(IndicesService.java:413)
+	at org.elasticsearch.indices.IndicesService.access$000(IndicesService.java:108)
+	at org.elasticsearch.indices.IndicesService$1.run(IndicesService.java:174)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+[2016-07-21 15:02:32,714][WARN ][index.translog           ] [myNode] [test][3] failed to delete unreferenced translog files
+java.nio.file.NoSuchFileException: /Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/3/translog
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:407)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at org.elasticsearch.index.translog.Translog$OnCloseRunnable.handle(Translog.java:726)
+	at org.elasticsearch.index.translog.Translog$OnCloseRunnable.handle(Translog.java:714)
+	at org.elasticsearch.index.translog.ChannelReference.closeInternal(ChannelReference.java:67)
+	at org.elasticsearch.common.util.concurrent.AbstractRefCounted.decRef(AbstractRefCounted.java:64)
+	at org.elasticsearch.index.translog.TranslogReader.close(TranslogReader.java:143)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:97)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:84)
+	at org.elasticsearch.index.translog.Translog.close(Translog.java:423)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:97)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:84)
+	at org.elasticsearch.index.engine.InternalEngine.closeNoLock(InternalEngine.java:990)
+	at org.elasticsearch.index.engine.Engine.close(Engine.java:1147)
+	at org.elasticsearch.index.engine.Engine.flushAndClose(Engine.java:1135)
+	at org.elasticsearch.index.shard.IndexShard.close(IndexShard.java:868)
+	at org.elasticsearch.index.IndexService.closeShardInjector(IndexService.java:443)
+	at org.elasticsearch.index.IndexService.removeShard(IndexService.java:416)
+	at org.elasticsearch.index.IndexService.close(IndexService.java:252)
+	at org.elasticsearch.indices.IndicesService.removeIndex(IndicesService.java:413)
+	at org.elasticsearch.indices.IndicesService.access$000(IndicesService.java:108)
+	at org.elasticsearch.indices.IndicesService$1.run(IndicesService.java:174)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+[2016-07-21 15:02:32,714][WARN ][index.translog           ] [myNode] [test][3] failed to delete unreferenced translog files
+java.nio.file.NoSuchFileException: /Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/3/translog
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:407)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at org.elasticsearch.index.translog.Translog$OnCloseRunnable.handle(Translog.java:726)
+	at org.elasticsearch.index.translog.Translog$OnCloseRunnable.handle(Translog.java:714)
+	at org.elasticsearch.index.translog.ChannelReference.closeInternal(ChannelReference.java:67)
+	at org.elasticsearch.common.util.concurrent.AbstractRefCounted.decRef(AbstractRefCounted.java:64)
+	at org.elasticsearch.index.translog.TranslogReader.close(TranslogReader.java:143)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:97)
+	at org.elasticsearch.index.translog.Translog.close(Translog.java:425)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:97)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:84)
+	at org.elasticsearch.index.engine.InternalEngine.closeNoLock(InternalEngine.java:990)
+	at org.elasticsearch.index.engine.Engine.close(Engine.java:1147)
+	at org.elasticsearch.index.engine.Engine.flushAndClose(Engine.java:1135)
+	at org.elasticsearch.index.shard.IndexShard.close(IndexShard.java:868)
+	at org.elasticsearch.index.IndexService.closeShardInjector(IndexService.java:443)
+	at org.elasticsearch.index.IndexService.removeShard(IndexService.java:416)
+	at org.elasticsearch.index.IndexService.close(IndexService.java:252)
+	at org.elasticsearch.indices.IndicesService.removeIndex(IndicesService.java:413)
+	at org.elasticsearch.indices.IndicesService.access$000(IndicesService.java:108)
+	at org.elasticsearch.indices.IndicesService$1.run(IndicesService.java:174)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+[2016-07-21 15:02:32,716][WARN ][index.engine             ] [myNode] [test][3] failed to rollback writer on close
+java.nio.file.NoSuchFileException: /Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/3/index
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:407)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:191)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:203)
+	at org.elasticsearch.index.store.FsDirectoryService$1.listAll(FsDirectoryService.java:127)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.apache.lucene.index.IndexFileDeleter.refresh(IndexFileDeleter.java:426)
+	at org.apache.lucene.index.IndexWriter.rollbackInternalNoCommit(IndexWriter.java:2099)
+	at org.apache.lucene.index.IndexWriter.rollbackInternal(IndexWriter.java:2041)
+	at org.apache.lucene.index.IndexWriter.rollback(IndexWriter.java:2034)
+	at org.elasticsearch.index.engine.InternalEngine.closeNoLock(InternalEngine.java:997)
+	at org.elasticsearch.index.engine.Engine.close(Engine.java:1147)
+	at org.elasticsearch.index.engine.Engine.flushAndClose(Engine.java:1135)
+	at org.elasticsearch.index.shard.IndexShard.close(IndexShard.java:868)
+	at org.elasticsearch.index.IndexService.closeShardInjector(IndexService.java:443)
+	at org.elasticsearch.index.IndexService.removeShard(IndexService.java:416)
+	at org.elasticsearch.index.IndexService.close(IndexService.java:252)
+	at org.elasticsearch.indices.IndicesService.removeIndex(IndicesService.java:413)
+	at org.elasticsearch.indices.IndicesService.access$000(IndicesService.java:108)
+	at org.elasticsearch.indices.IndicesService$1.run(IndicesService.java:174)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+[2016-07-21 15:02:32,716][WARN ][index.engine             ] [myNode] [test][4] failed to read latest segment infos on flush
+java.nio.file.NoSuchFileException: /Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/4/index
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:407)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:191)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:203)
+	at org.elasticsearch.index.store.FsDirectoryService$1.listAll(FsDirectoryService.java:127)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.elasticsearch.index.store.Store.failIfCorrupted(Store.java:567)
+	at org.elasticsearch.index.store.Store.failIfCorrupted(Store.java:563)
+	at org.elasticsearch.index.store.Store.readLastCommittedSegmentsInfo(Store.java:146)
+	at org.elasticsearch.index.engine.InternalEngine.flush(InternalEngine.java:777)
+	at org.elasticsearch.index.engine.InternalEngine.flush(InternalEngine.java:726)
+	at org.elasticsearch.index.engine.Engine.flushAndClose(Engine.java:1128)
+	at org.elasticsearch.index.shard.IndexShard.close(IndexShard.java:868)
+	at org.elasticsearch.index.IndexService.closeShardInjector(IndexService.java:443)
+	at org.elasticsearch.index.IndexService.removeShard(IndexService.java:416)
+	at org.elasticsearch.index.IndexService.close(IndexService.java:252)
+	at org.elasticsearch.indices.IndicesService.removeIndex(IndicesService.java:413)
+	at org.elasticsearch.indices.IndicesService.access$000(IndicesService.java:108)
+	at org.elasticsearch.indices.IndicesService$1.run(IndicesService.java:174)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+[2016-07-21 15:02:32,717][WARN ][index.translog           ] [myNode] [test][4] failed to delete unreferenced translog files
+java.nio.file.NoSuchFileException: /Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/4/translog
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:407)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at org.elasticsearch.index.translog.Translog$OnCloseRunnable.handle(Translog.java:726)
+	at org.elasticsearch.index.translog.Translog$OnCloseRunnable.handle(Translog.java:714)
+	at org.elasticsearch.index.translog.ChannelReference.closeInternal(ChannelReference.java:67)
+	at org.elasticsearch.common.util.concurrent.AbstractRefCounted.decRef(AbstractRefCounted.java:64)
+	at org.elasticsearch.index.translog.TranslogReader.close(TranslogReader.java:143)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:97)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:84)
+	at org.elasticsearch.index.translog.Translog.close(Translog.java:423)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:97)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:84)
+	at org.elasticsearch.index.engine.InternalEngine.closeNoLock(InternalEngine.java:990)
+	at org.elasticsearch.index.engine.Engine.close(Engine.java:1147)
+	at org.elasticsearch.index.engine.Engine.flushAndClose(Engine.java:1135)
+	at org.elasticsearch.index.shard.IndexShard.close(IndexShard.java:868)
+	at org.elasticsearch.index.IndexService.closeShardInjector(IndexService.java:443)
+	at org.elasticsearch.index.IndexService.removeShard(IndexService.java:416)
+	at org.elasticsearch.index.IndexService.close(IndexService.java:252)
+	at org.elasticsearch.indices.IndicesService.removeIndex(IndicesService.java:413)
+	at org.elasticsearch.indices.IndicesService.access$000(IndicesService.java:108)
+	at org.elasticsearch.indices.IndicesService$1.run(IndicesService.java:174)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+[2016-07-21 15:02:32,717][WARN ][index.translog           ] [myNode] [test][4] failed to delete unreferenced translog files
+java.nio.file.NoSuchFileException: /Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/4/translog
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:407)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at org.elasticsearch.index.translog.Translog$OnCloseRunnable.handle(Translog.java:726)
+	at org.elasticsearch.index.translog.Translog$OnCloseRunnable.handle(Translog.java:714)
+	at org.elasticsearch.index.translog.ChannelReference.closeInternal(ChannelReference.java:67)
+	at org.elasticsearch.common.util.concurrent.AbstractRefCounted.decRef(AbstractRefCounted.java:64)
+	at org.elasticsearch.index.translog.TranslogReader.close(TranslogReader.java:143)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:97)
+	at org.elasticsearch.index.translog.Translog.close(Translog.java:425)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:97)
+	at org.apache.lucene.util.IOUtils.close(IOUtils.java:84)
+	at org.elasticsearch.index.engine.InternalEngine.closeNoLock(InternalEngine.java:990)
+	at org.elasticsearch.index.engine.Engine.close(Engine.java:1147)
+	at org.elasticsearch.index.engine.Engine.flushAndClose(Engine.java:1135)
+	at org.elasticsearch.index.shard.IndexShard.close(IndexShard.java:868)
+	at org.elasticsearch.index.IndexService.closeShardInjector(IndexService.java:443)
+	at org.elasticsearch.index.IndexService.removeShard(IndexService.java:416)
+	at org.elasticsearch.index.IndexService.close(IndexService.java:252)
+	at org.elasticsearch.indices.IndicesService.removeIndex(IndicesService.java:413)
+	at org.elasticsearch.indices.IndicesService.access$000(IndicesService.java:108)
+	at org.elasticsearch.indices.IndicesService$1.run(IndicesService.java:174)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+[2016-07-21 15:02:32,718][WARN ][index.engine             ] [myNode] [test][4] failed to rollback writer on close
+java.nio.file.NoSuchFileException: /Users/marzukrashid/Documents/elasticsearch-2.3.4/data/clubsOrganizations/nodes/0/indices/test/4/index
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:407)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:191)
+	at org.apache.lucene.store.FSDirectory.listAll(FSDirectory.java:203)
+	at org.elasticsearch.index.store.FsDirectoryService$1.listAll(FsDirectoryService.java:127)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.apache.lucene.store.FilterDirectory.listAll(FilterDirectory.java:57)
+	at org.apache.lucene.index.IndexFileDeleter.refresh(IndexFileDeleter.java:426)
+	at org.apache.lucene.index.IndexWriter.rollbackInternalNoCommit(IndexWriter.java:2099)
+	at org.apache.lucene.index.IndexWriter.rollbackInternal(IndexWriter.java:2041)
+	at org.apache.lucene.index.IndexWriter.rollback(IndexWriter.java:2034)
+	at org.elasticsearch.index.engine.InternalEngine.closeNoLock(InternalEngine.java:997)
+	at org.elasticsearch.index.engine.Engine.close(Engine.java:1147)
+	at org.elasticsearch.index.engine.Engine.flushAndClose(Engine.java:1135)
+	at org.elasticsearch.index.shard.IndexShard.close(IndexShard.java:868)
+	at org.elasticsearch.index.IndexService.closeShardInjector(IndexService.java:443)
+	at org.elasticsearch.index.IndexService.removeShard(IndexService.java:416)
+	at org.elasticsearch.index.IndexService.close(IndexService.java:252)
+	at org.elasticsearch.indices.IndicesService.removeIndex(IndicesService.java:413)
+	at org.elasticsearch.indices.IndicesService.access$000(IndicesService.java:108)
+	at org.elasticsearch.indices.IndicesService$1.run(IndicesService.java:174)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+[2016-07-21 15:02:32,721][INFO ][node                     ] [myNode] stopped
+[2016-07-21 15:02:32,721][INFO ][node                     ] [myNode] closing ...
+[2016-07-21 15:02:32,723][INFO ][node                     ] [myNode] closed
