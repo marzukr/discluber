@@ -6,6 +6,7 @@ db = client.clubsDatabase
 collection = db.followersList
 tweetsCollection = db.tweetsList
 tweetsUsers = db.tweetsUsers
+tweetsUsersNew = db.tweetsUsersNew
 
 # from elasticsearch import Elasticsearch, exceptions
 from pyelasticsearch import ElasticSearch
@@ -19,13 +20,8 @@ import time
 import urllib.request
 from bs4 import BeautifulSoup
 
-# cursor = tweetsCollection.find({"Club Name": "Alexander Hamilton Society"})
-#
-# for item in cursor:
-#     print(item["Followers"])
-
 es = ElasticSearch()
-currentDataBaseTerm = "holahola" # Used: elvis, club, clubs
+currentDataBaseTerm = "dva" # Used: elvis, club, clubs, holahola, fourK, gold, diamond, mercury, dva
 currentURL = "http://localhost:9200/" + currentDataBaseTerm + "/tweets" # DO NOT USE A "/" AT THE END
 
 # _INDEX_NAME = "club"
@@ -85,6 +81,91 @@ api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 #     if n >= 200:
 #         break
 
+from nltk.tokenize import word_tokenize
+import re
+from nltk.corpus import stopwords
+import string
+punctuation = list(string.punctuation)
+alphabet = list("qwertyuiopasdfghjklzxcvbnm")
+stop = stopwords.words('english') + punctuation + ['rt', 'via', 'RT', '…', "’", "I","”","“","—","‘"]
+
+emoticons_str = r"""
+    (?:
+        [:=;] # Eyes
+        [oO\-]? # Nose (optional)
+        [D\)\]\(\]/\\OpP] # Mouth
+    )"""
+
+regex_str = [
+    emoticons_str,
+    r'<[^>]+>', # HTML tags
+    r'(?:@[\w_]+)', # @-mentions
+    r"(?:\#+[\w_]+[\w\'_\-]*[\w_]+)", # hash-tags
+    r'http[s]?://(?:[a-z]|[0-9]|[$-_@.&amp;+]|[!*\(\),]|(?:%[0-9a-f][0-9a-f]))+', # URLs
+
+    r'(?:(?:\d+,?)+(?:\.?\d+)?)', # numbers
+    r"(?:[a-z][a-z'\-_]+[a-z])", # words with - and '
+    r'(?:[\w_]+)', # other words
+    r'(?:\S)' # anything else
+]
+
+tokens_re = re.compile(r'('+'|'.join(regex_str)+')', re.VERBOSE | re.IGNORECASE)
+emoticon_re = re.compile(r'^'+emoticons_str+'$', re.VERBOSE | re.IGNORECASE)
+
+def tokenize(s):
+    return tokens_re.findall(s)
+
+def preprocess(s, lowercase=False):
+    tokens = tokenize(s)
+    if lowercase:
+        tokens = [token if emoticon_re.search(token) else token.lower() for token in tokens]
+    return tokens
+
+def isanumber(a):
+
+    bool_a = True
+    try:
+        bool_a = float(repr(a))
+    except:
+        bool_a = False
+
+    return bool_a
+
+import operator
+from collections import Counter
+
+cursor = tweetsCollection.find()
+
+clubsTweetDict = {}
+clubs = []
+for item in cursor:
+    if item["Club Name"] in clubsTweetDict:
+        clubsTweetDict[item["Club Name"]] = clubsTweetDict[item["Club Name"]] + item["TweetsString"]
+    else:
+        clubsTweetDict[item["Club Name"]] = item["TweetsString"]
+        clubs.append(item["Club Name"])
+
+termsDict = {}
+
+def freqCount(hola):
+    count_all = Counter()
+    terms_hash = [term for term in preprocess(hola) if term.startswith('#')]
+    terms_users = [term for term in preprocess(hola) if term.startswith('@')]
+    terms_only = [term.lower() for term in preprocess(hola) if term.lower() not in stop and not term.startswith(('#', '@', 'http')) and not isanumber(term)]
+    count_all.update(terms_only)
+
+    countList = count_all.most_common()
+    print(count_all.most_common(10))
+    # countList = count_all
+    saveList = []
+    for i in countList:
+        saveList.append(i[0])
+    return saveList
+
+for club in clubs:
+    holad = clubsTweetDict[club][0]
+    termsDict[club] = freqCount(hola=holad)
+
 def search(uri, term):
     """Simple Elasticsearch Query"""
     query = json.dumps({
@@ -96,7 +177,36 @@ def search(uri, term):
     })
     response = requests.get(uri, data=query)
     results = json.loads(response.text)
+    # print(results)
     return results
+
+def mlt(uri, user):
+    tweepyCursor = tweepy.Cursor(api.user_timeline, screen_name=user, count=200).items()
+    hola = ""
+    n = 0
+    for tweet in tweepyCursor:
+        hola = hola + tweet.text
+        n = n + 1
+        if n >= 200:
+            break
+    query = json.dumps({
+        "query":
+        {
+            "more_like_this" :
+            {
+                "fields" : ["Tweets"],
+                "like" : hola,
+                "min_term_freq" : 1,
+                "max_query_terms" : 12,
+                "max_word_length" : 12
+            }
+        }
+    })
+    response = requests.get(uri, data=query)
+    print("hola")
+    results = json.loads(response.text)
+    print("bob")
+    print(results)
 
 def format_results(results):
     """Print results nicely:
@@ -105,6 +215,7 @@ def format_results(results):
     data = [doc for doc in results['hits']['hits']]
     prettyA = []
     for doc in data:
+        # CHANGE THIS for different outputs
         pretty = "%s" % (doc['_source'] ['Club Name'])
         prettyA.append(pretty)
     return prettyA
@@ -137,10 +248,13 @@ def returnResults(user):
         n = n + 1
         if n >= 200:
             break
+    userList = freqCount(hola)
     king = search(uri=currentURL + "/_search?", term=hola)
+
     points = []
     uPoints = []
     uniqueClubs = []
+
     clubsArray = format_results(results=king)
     for n in range(0,len(clubsArray)):
         points.append(len(clubsArray) - n)
@@ -157,21 +271,48 @@ def returnResults(user):
                 else:
                     uPoints.append(points[index])
     sortedArray = [x for (y, x) in sorted(zip(uPoints, uniqueClubs), reverse=True)]
-    return sortedArray
+    termsArray = []
+    allTermsArray = []
+    realTermsArray = []
+    tupleTermsArray = []
+    for item in sortedArray:
+        termsArray.append(termsDict[item])
+    for term in termsArray:
+        for termit in term:
+            allTermsArray.append(termit)
+    for word in userList:
+        i = 0
+        for term in allTermsArray:
+            i = i + 1
+            if word == term and word not in realTermsArray:
+                realTermsArray.append(word)
+                tupleTermsArray.append((word,i))
+    tupleTermsArray.sort(key=lambda tup: tup[1])
+    tupleTermsArray = tupleTermsArray[:10]
+    realTermsArray = []
+    for item in tupleTermsArray:
+        realTermsArray.append(item[0])
+    return [sortedArray, realTermsArray]
 
 def addTwitterUser(user, clubName):
     followersCursor = tweepy.Cursor(api.followers, screen_name=user, count=300).items()
+    fabio = []
+    for fob in followersCursor:
+        fabio.append(fob.screen_name)
+        if len(fabio) >= 200:
+            break
     followers = []
     clubTweets = []
-    for followerH in followersCursor:
-        follower = followerH.screen_name
+    for followerH in fabio:
+        follower = followerH
         url = "https://twitter.com/%s" % follower
         tweetConCat = ""
         tweetsA = []
         try:
             with urllib.request.urlopen(url) as url:
                 f = url.read()
-        except urllib.error.HTTPError as e:
+        #urllib.error.HTTPError as e
+        except:
             print("Skipping(1) " + follower)
             continue
         soup = BeautifulSoup(f, 'html.parser')
@@ -202,12 +343,31 @@ def addTwitterUser(user, clubName):
             break
     data = {"Club Name": clubName, "Twitter Account": user, "Followers": followers}
     data2 = {"Club Name": clubName, "Twitter Account": user, "Followers": followers, "TweetsString": clubTweets}
-    collection.insert_one(data)
-    tweetsCollection.insert_one(data2)
-    for clubTweet in clubTweets:
-        data3 = {"Club Name": clubName, "Tweets": clubTweet}
-        tweetsUsers.insert_one(data3)
-        create_doc(uri=currentURL, doc_data={"Club Name": clubName, "Tweets": clubTweet})
+    # RE ENABLE FOR REGULAR USE #
+    # collection.insert_one(data)
+    # tweetsCollection.insert_one(data2)
+    ###########
+    for n in range(0,len(clubTweets)):
+        data3 = {"Club Name": clubName, "Tweets": clubTweets[n], "User": followers[n]}
+        tweetsUsersNew.insert_one(data3)
+        create_doc(uri=currentURL, doc_data={"Club Name": clubName, "Tweets": clubTweets[n], "User": followers[n]})
+
+# cursor = tweetsCollection.find({})
+# bob = []
+# twitters = []
+# clubsBOB = []
+# for item in cursor:
+#     print(item["Club Name"])
+#     clubsBOB.append(item["Club Name"])
+#     twitters.append(item["Twitter Account"])
+#     # print(item["_id"])
+#
+# for num in range(0,len(twitters)):
+#     addTwitterUser(user=twitters[num], clubName=clubsBOB[num])
+#     bob.append(clubsBOB[num])
+#     print("Done")
+#     for bobs in bob:
+#         print(bobs)
 
 # cursor = tweetsUsers.find({})
 # #
@@ -215,7 +375,7 @@ def addTwitterUser(user, clubName):
 #     dataToSearch = {"Tweets": item["Tweets"], "Club Name": item["Club Name"]}
 #     es.index_op(dataToSearch, _USER_DOC_TYPE, True)
 #     print(item["Club Name"])
-#     create_doc(uri="http://localhost:9200/clubs/tweets/", doc_data=dataToSearch)
+#     create_doc(uri=currentURL, doc_data=dataToSearch)
 
 #consumer_key = "LsAwFJvshsac0oV1MWPT5SPdP"
 #consumer_secret = "HtOBG7Lv66RUIvmtffEe5LYN0RRVncuQp7p1bXoyGdNu3coYkw"

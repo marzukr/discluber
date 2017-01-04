@@ -1,3 +1,0 @@
-[2016-08-04 15:16:47,492][INFO ][cluster.metadata         ] [myNode] [holahola] creating index, cause [auto(index api)], templates [], shards [5]/[1], mappings [tweets]
-[2016-08-04 15:16:47,549][INFO ][cluster.routing.allocation] [myNode] Cluster health status changed from [RED] to [YELLOW] (reason: [shards started [[holahola][4]] ...]).
-[2016-08-04 15:16:47,554][INFO ][cluster.metadata         ] [myNode] [holahola] update_mapping [tweets]
