@@ -1,6 +1,5 @@
 clubsOrganizations README
 ============
 
-About
------
-clubsOrganizations is a project that I know about and is currently classified. Classification ID: Elvis
+# About
+An online tool to recommend a club to a given NU student based on their tweets.
