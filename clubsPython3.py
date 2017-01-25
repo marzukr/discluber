@@ -8,6 +8,8 @@ tweetsCollection = db.tweetsList
 tweetsUsers = db.tweetsUsers
 tweetsUsersNew = db.tweetsUsersNew
 
+documentCollection = db.documentCollection
+
 # from elasticsearch import Elasticsearch, exceptions
 from pyelasticsearch import ElasticSearch
 import requests
@@ -145,8 +147,6 @@ for item in cursor:
         clubsTweetDict[item["Club Name"]] = item["TweetsString"]
         clubs.append(item["Club Name"])
 
-termsDict = {}
-
 def freqCount(hola):
     count_all = Counter()
     terms_hash = [term for term in preprocess(hola) if term.startswith('#')]
@@ -155,16 +155,55 @@ def freqCount(hola):
     count_all.update(terms_only)
 
     countList = count_all.most_common()
-    print(count_all.most_common(10))
+    # print(count_all.most_common(10))
     # countList = count_all
     saveList = []
     for i in countList:
         saveList.append(i[0])
     return saveList
 
+termsDict = {}
+termListDuplicates = []
+termList = []
 for club in clubs:
-    holad = clubsTweetDict[club][0]
-    termsDict[club] = freqCount(hola=holad)
+    # Gather the aggregated tweets for the given club and store them in holad
+    holad = clubsTweetDict[club]
+
+    # Get all the terms from all of the tweets and store them in wordsArray
+    wordsArray = []
+    for jonah in holad:
+        for word in freqCount(hola=jonah):
+            wordsArray.append(word)
+            termList.append(word)
+
+    # Assign the list of terms to the club and store it in termDict
+    termsDict[club] = wordsArray
+    print("Done")
+
+# print(termsDict[clubs[0]][0])
+
+# Duplicate free term list stored in termList
+for word in termListDuplicates:
+    if word not in termList:
+        termList.append(word)
+
+documentFrequencies = {}
+progressNum = 0
+progressPercent = 0
+# Go through every term and check how many clubs contain it, then store this in documentFrequencies
+for word in termList:
+    for club in clubs:
+        if word in termsDict[club] and word in documentFrequencies:
+            documentFrequencies[word] += 1
+        elif word in termsDict[club]:
+            documentFrequencies[word] = 1
+    progressNum += 1
+    newProgressPercent = progressNum/len(termList) * 100
+    if newProgressPercent >= progressPercent + 0.001:
+        progressPercent = newProgressPercent
+        print("{}%".format(round(progressPercent, 3)))
+
+print(documentFrequencies)
 
 def search(uri, term):
     """Simple Elasticsearch Query"""
