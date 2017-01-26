@@ -165,6 +165,7 @@ def freqCount(hola):
 termsDict = {}
 termListDuplicates = []
 termList = []
+progressNum = 0
 for club in clubs:
     # Gather the aggregated tweets for the given club and store them in holad
     holad = clubsTweetDict[club]
@@ -174,36 +175,50 @@ for club in clubs:
     for jonah in holad:
         for word in freqCount(hola=jonah):
             wordsArray.append(word)
-            termList.append(word)
+            termListDuplicates.append(word)
 
     # Assign the list of terms to the club and store it in termDict
     termsDict[club] = wordsArray
-    print("Done")
+    progressNum += 1
+    print(progressNum)
 
 # print(termsDict[clubs[0]][0])
 
 # Duplicate free term list stored in termList
+print(len(termListDuplicates))
+progressNum = 0
+progressPercent = 0
 for word in termListDuplicates:
     if word not in termList:
         termList.append(word)
+    progressNum += 1
+    newProgressPercent = progressNum/len(termListDuplicates) * 100
+    if newProgressPercent >= progressPercent + 0.1:
+        progressPercent = newProgressPercent
+        print("{}%".format(round(progressPercent, 1)))
+print(len(termList))
 
 documentFrequencies = {}
 progressNum = 0
 progressPercent = 0
-# Go through every term and check how many clubs contain it, then store this in documentFrequencies
+# Go through every term and check how many clubs contain it, then store this in documentFrequencies and the documentCollection mongo DB
 for word in termList:
     for club in clubs:
         if word in termsDict[club] and word in documentFrequencies:
             documentFrequencies[word] += 1
         elif word in termsDict[club]:
             documentFrequencies[word] = 1
+    data = {"Term": word, "df": documentFrequencies[word]}
+    documentCollection.insert_one(data)
+
     progressNum += 1
     newProgressPercent = progressNum/len(termList) * 100
     if newProgressPercent >= progressPercent + 0.001:
         progressPercent = newProgressPercent
         print("{}%".format(round(progressPercent, 3)))
 
-print(documentFrequencies)
+print(documentFrequencies["the"])
+print(documentFrequencies["mast"])
 
 def search(uri, term):
     """Simple Elasticsearch Query"""
