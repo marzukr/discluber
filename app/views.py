@@ -1,7 +1,7 @@
 from flask import Flask, render_template, jsonify, request
 from app import app
 
-import clubsPython3
+from ClubEngine import clubsPython3
 import tweepy
 
 @app.route('/')

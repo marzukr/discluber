@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from ClubEngine import tfidfEngine
+
 from pymongo import MongoClient
 client = MongoClient()
 db = client.clubsDatabase
@@ -38,76 +40,6 @@ auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_key, access_secret)
 
 api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
-
-# from nltk.tokenize import word_tokenize
-# import re
-# from nltk.corpus import stopwords
-# import string
-# punctuation = list(string.punctuation)
-# alphabet = list("qwertyuiopasdfghjklzxcvbnm")
-# stop = stopwords.words('english') + punctuation + ['rt', 'via', 'RT', '…', "’", "I","”","“","—","‘"]
-#
-# emoticons_str = r"""
-#     (?:
-#         [:=;] # Eyes
-#         [oO\-]? # Nose (optional)
-#         [D\)\]\(\]/\\OpP] # Mouth
-#     )"""
-#
-# regex_str = [
-#     emoticons_str,
-#     r'<[^>]+>', # HTML tags
-#     r'(?:@[\w_]+)', # @-mentions
-#     r"(?:\#+[\w_]+[\w\'_\-]*[\w_]+)", # hash-tags
-#     r'http[s]?://(?:[a-z]|[0-9]|[$-_@.&amp;+]|[!*\(\),]|(?:%[0-9a-f][0-9a-f]))+', # URLs
-#
-#     r'(?:(?:\d+,?)+(?:\.?\d+)?)', # numbers
-#     r"(?:[a-z][a-z'\-_]+[a-z])", # words with - and '
-#     r'(?:[\w_]+)', # other words
-#     r'(?:\S)' # anything else
-# ]
-#
-# tokens_re = re.compile(r'('+'|'.join(regex_str)+')', re.VERBOSE | re.IGNORECASE)
-# emoticon_re = re.compile(r'^'+emoticons_str+'$', re.VERBOSE | re.IGNORECASE)
-
-# def tokenize(s):
-#     return tokens_re.findall(s)
-#
-# def preprocess(s, lowercase=False):
-#     tokens = tokenize(s)
-#     if lowercase:
-#         tokens = [token if emoticon_re.search(token) else token.lower() for token in tokens]
-#     return tokens
-#
-# def isanumber(a):
-#     bool_a = True
-#     try:
-#         bool_a = float(repr(a))
-#     except:
-#         bool_a = False
-#
-#     return bool_a
-
-import operator
-from collections import Counter
-
-def freqCount(hola, shouldReturnListOnly):
-    count_all = Counter()
-    terms_hash = [term for term in preprocess(hola) if term.startswith('#')]
-    terms_users = [term for term in preprocess(hola) if term.startswith('@')]
-    terms_only = [term.lower() for term in preprocess(hola) if term.lower() not in stop and not term.startswith(('#', '@', 'http')) and not isanumber(term)]
-    count_all.update(terms_only)
-
-    countList = count_all.most_common()
-    # print(count_all.most_common(10))
-    # countList = count_all
-    saveList = []
-    if shouldReturnListOnly:
-        for i in countList:
-            saveList.append(i[0])
-        return saveList
-    else:
-        return countList
 
 def search(uri, term):
     """Simple Elasticsearch Query"""
@@ -183,16 +115,21 @@ def newIndex():
         create_doc(uri=currentURL, doc_data=dataToSearch)
 
 def returnResults(user):
+    # Gather the last 200 tweets of the user and combine them into a string
     tweepyCursor = tweepy.Cursor(api.user_timeline, screen_name=user, count=200).items()
-    hola = ""
+    userTweets = ""
     n = 0
     for tweet in tweepyCursor:
-        hola = hola + tweet.text
+        userTweets = userTweets + tweet.text
         n = n + 1
         if n >= 200:
             break
-    userList = freqCount(hola, True)
-    king = search(uri=currentURL + "/_search?", term=hola)
+    print(userTweets)
+    exit()
+    
+    userList = tfidfEngine.freqCount(userTweets, True)
+
+    king = search(uri=currentURL + "/_search?", term=userList)
 
     points = []
     uPoints = []
@@ -216,7 +153,7 @@ def returnResults(user):
     sortedArray = [x for (y, x) in sorted(zip(uPoints, uniqueClubs), reverse=True)]
 
     #calculate TFIDF stuff here
-    listWithCounts = freqCount(hola, False)
+    listWithCounts = tfidfEngine.freqCount(userList, False)
     totalTermCount = 0
     for item in listWithCounts:
         totalTermCount += item[1]

@@ -26,7 +26,6 @@ regex_str = [
     r'(?:\S)' # anything else
 ]
 
-
 tokens_re = re.compile(r'('+'|'.join(regex_str)+')', re.VERBOSE | re.IGNORECASE)
 emoticon_re = re.compile(r'^'+emoticons_str+'$', re.VERBOSE | re.IGNORECASE)
 
@@ -47,3 +46,24 @@ def isanumber(a):
         bool_a = False
 
     return bool_a
+
+import operator
+from collections import Counter
+
+def freqCount(userTweets, shouldReturnListOnly):
+    count_all = Counter()
+    terms_hash = [term for term in preprocess(userTweets) if term.startswith('#')]
+    terms_users = [term for term in preprocess(userTweets) if term.startswith('@')]
+    terms_only = [term.lower() for term in preprocess(userTweets) if term.lower() not in stop and not term.startswith(('#', '@', 'http')) and not isanumber(term)]
+    count_all.update(terms_only)
+
+    countList = count_all.most_common()
+    # print(count_all.most_common(10))
+    # countList = count_all
+    saveList = []
+    if shouldReturnListOnly:
+        for i in countList:
+            saveList.append(i[0])
+        return saveList
+    else:
+        return countList
