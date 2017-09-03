@@ -57,11 +57,14 @@ def freqCount(userTweets, shouldReturnListOnly):
     terms_only = [term.lower() for term in preprocess(userTweets) if term.lower() not in stop and not term.startswith(('#', '@', 'http')) and not isanumber(term)]
     count_all.update(terms_only)
 
+    #Array of the most common terms with usage numbers [(String, usage),]
     countList = count_all.most_common()
     # print(count_all.most_common(10))
     # countList = count_all
-    saveList = []
+
+    #Whether or not to return the terms and list, or just terms
     if shouldReturnListOnly:
+        saveList = []
         for i in countList:
             saveList.append(i[0])
         return saveList

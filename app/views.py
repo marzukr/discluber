@@ -13,7 +13,7 @@ def process():
     try:
         username = request.form['username']
         clubs = clubsPython3.returnResults(username)
-        return jsonify({'clubs' : clubs[1]})
+        return jsonify({'clubs' : clubs})
     except tweepy.TweepError as e:
         message = str(e)
         code = ""

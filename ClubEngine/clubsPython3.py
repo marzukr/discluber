@@ -42,6 +42,8 @@ auth.set_access_token(access_key, access_secret)
 api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
 def search(uri, term):
+    #Take the term and run it through elasticsearch
+
     """Simple Elasticsearch Query"""
     query = json.dumps({
         "query": {
@@ -52,7 +54,7 @@ def search(uri, term):
     })
     response = requests.get(uri, data=query)
     results = json.loads(response.text)
-    # print(results)
+
     return results
 
 def mlt(uri, user):
@@ -84,9 +86,9 @@ def mlt(uri, user):
     print(results)
 
 def format_results(results):
-    """Print results nicely:
-    doc_id) content
-    """
+    #Takes elasticsearch output and makes it into a list of clubs, some of which repeat
+    #LOOK INTO THIS TO OPTIMIZE RESULTS
+
     data = [doc for doc in results['hits']['hits']]
     prettyA = []
     for doc in data:
@@ -124,57 +126,61 @@ def returnResults(user):
         n = n + 1
         if n >= 200:
             break
-    print(userTweets)
-    exit()
-    
-    userList = tfidfEngine.freqCount(userTweets, True)
 
-    king = search(uri=currentURL + "/_search?", term=userList)
+    #Take the combined tweet string and feed it into elastic search, then make the result into a pretty list of clubs
+    rawElasticSearchResults = search(uri=currentURL + "/_search?", term=userTweets)
+    clubsArray = format_results(results=rawElasticSearchResults)
 
     points = []
     uPoints = []
     uniqueClubs = []
-
-    clubsArray = format_results(results=king)
+    #Assign points such that the clubs that come first have more
     for n in range(0,len(clubsArray)):
         points.append(len(clubsArray) - n)
+
+    #Get a list of unique clubs
     for club in clubsArray:
         if club not in uniqueClubs:
             uniqueClubs.append(club)
+
+    #Add the points of duplicate clubs together so that each unique club has only one point value
     for uClub in uniqueClubs:
-        for rClub in clubsArray:
-            if rClub == uClub:
+        for cClub in clubsArray:
+            if cClub == uClub:
                 uIndex = uniqueClubs.index(uClub)
-                index = clubsArray.index(rClub)
+                cindex = clubsArray.index(cClub)
                 if 0 <= uIndex < len(uPoints):
-                    uPoints[uIndex] = uPoints[uIndex] + points[index]
+                    uPoints[uIndex] = uPoints[uIndex] + points[cindex]
                 else:
-                    uPoints.append(points[index])
+                    uPoints.append(points[cindex])
+
+    #Sort the list of unique clubs by the point value so that the highest points are first
     sortedArray = [x for (y, x) in sorted(zip(uPoints, uniqueClubs), reverse=True)]
+    return sortedArray
 
     #calculate TFIDF stuff here
-    listWithCounts = tfidfEngine.freqCount(userList, False)
-    totalTermCount = 0
-    for item in listWithCounts:
-        totalTermCount += item[1]
-
-    tfidfArray = []
-    for i in range(0,len(listWithCounts)-1):
-        term = listWithCounts[i][0].lower()
-        documentCollecData = documentCollection.find_one({'Term': term})
-        if documentCollecData is not None:
-            tf = listWithCounts[i][1]/totalTermCount
-            df = 50/documentCollecData["df"]
-            tfidfCalc = tf * log(df)
-            arrayObject = (term, tfidfCalc)
-            tfidfArray.append(arrayObject)
-        else:
-            continue
-    tfidfArray.sort(key=lambda tup: tup[1], reverse=True)
-    if len(tfidfArray) >= 5:
-        tfidfArray = tfidfArray[0:5]
-
-    return [sortedArray, tfidfArray]
+    # listWithCounts = tfidfEngine.freqCount(userList, False)
+    # totalTermCount = 0
+    # for item in listWithCounts:
+    #     totalTermCount += item[1]
+    #
+    # tfidfArray = []
+    # for i in range(0,len(listWithCounts)-1):
+    #     term = listWithCounts[i][0].lower()
+    #     documentCollecData = documentCollection.find_one({'Term': term})
+    #     if documentCollecData is not None:
+    #         tf = listWithCounts[i][1]/totalTermCount
+    #         df = 50/documentCollecData["df"]
+    #         tfidfCalc = tf * log(df)
+    #         arrayObject = (term, tfidfCalc)
+    #         tfidfArray.append(arrayObject)
+    #     else:
+    #         continue
+    # tfidfArray.sort(key=lambda tup: tup[1], reverse=True)
+    # if len(tfidfArray) >= 5:
+    #     tfidfArray = tfidfArray[0:5]
+    #
+    # return [sortedArray, tfidfArray]
 
 def addTwitterUser(user, clubName):
     followersCursor = tweepy.Cursor(api.followers, screen_name=user, count=300).items()
