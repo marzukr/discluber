@@ -1,0 +1,24 @@
+{
+  "name": "clubProject",
+  "version": "1.0.0",
+  "description": "A project to reccomend clubs to Northwestern Student based on their Twitter account.",
+  "main": "index.js",
+  "repository": "https://github.com/marzukr/clubReccomendationNU.git",
+  "author": "Marzuk Rashid <marzukr@gmail.com>",
+  "license": "N/A",
+  "dependencies": {
+    "path": "^0.12.7",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "webpack": "^3.7.1"
+  },
+  "scripts": {
+    "build": "webpack"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1"
+  }
+}
