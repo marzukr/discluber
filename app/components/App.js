@@ -2,13 +2,18 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import TitleHeader from "./TitleHeader";
+import UserForm from "./UserForm";
 
 require("../styles/app.scss");
 
 export default class App extends React.Component {
   render() {
     return (
-        <TitleHeader/>
+        <div className="container">
+            <div className = "row" style={{height: "38.2vh"}}/>
+            <TitleHeader/>
+            <UserForm/>
+        </div>
     );
   }
 }
