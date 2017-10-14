@@ -1,18 +1,41 @@
 import React from 'react';
 
-export default class UserForm extends React.Component {
+export default class UserForm extends React.Component 
+{
+    constructor(props)
+    {
+        super(props);
+        this.state = {
+            twitterUsername: "",
+        };
+    }
+
+    textInputChanged(event)
+    {
+        this.setState({
+            [event.target.id]: event.target.value,
+        });
+    }
+
+    formSubmitted(event)
+    {
+        event.preventDefault();
+        let isValid = /(^@?[a-zA-Z_0-9]{1,15})$/.test(this.state.twitterUsername);
+        this.props.formSubmitWithValidData(isValid, this.state.twitterUsername);
+    }
+
     render() {
         return (
             <div className="row" style={{paddingTop: "1.5em"}}>
                 <div className="col"/>
                 <div className="col">
-                    <form>
+                    <form onSubmit={this.formSubmitted.bind(this)}>
                         <div className="form-row">
                             <div className="col">
-                                <input type="text" class="form-control" id="inlineFormInputGroupUsername" placeholder="Username"/>
+                                <input type="text" className="form-control" id="twitterUsername" placeholder="Twitter Username" value={this.state.twitterUsername} onChange={this.textInputChanged.bind(this)}/>
                             </div>
                             <div className="col-auto">
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="submit" className="btn btn-primary">Submit</button>
                             </div>
                         </div>
                     </form>
