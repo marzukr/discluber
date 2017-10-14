@@ -52,17 +52,3 @@ def clubReccomendation():
         return request.args["twitterUsername"] + " is a valid twitter handle"
     else:
         raise InvalidUsage("Invalid twitter username", 400)
-
-# @app.route('/process', methods=['POST'])
-# def process():
-#     try:
-#         username = request.form['username']
-#         clubs = clubsPython3.returnResults(username)
-#         return jsonify({'clubs' : clubs})
-#     except tweepy.TweepError as e:
-#         message = str(e)
-#         code = ""
-#         for letter in message:
-#             if letter.isdigit():
-#                 code = code + letter
-#         return jsonify({'error' : message, 'code' : code})

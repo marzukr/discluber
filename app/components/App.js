@@ -1,14 +1,14 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from "react";
+import ReactDOM from "react-dom";
+
+import TitleHeader from "./TitleHeader";
 
 require("../styles/app.scss");
 
 export default class App extends React.Component {
   render() {
     return (
-        <div style={{textAlign: 'center'}}>
-            <h1>Hello World</h1>
-        </div>
+        <TitleHeader/>
     );
   }
 }

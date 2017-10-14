@@ -5,15 +5,18 @@
     <meta charset="UTF-8">
     <title>title</title>
 
-    <!-- Custom Bootstrap Stylesheet -->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/app.css') }}">
+    <!-- Custom Bootstrap Stylesheet PRODUCTION-->
+    <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/app.css') }}"> -->
 </head>
 
 <body>
     <div id="root"></div>
 
-    <!-- React Script Bundle -->
-    <script src="{{ url_for('static', filename='js/app_bundle.js') }}"></script>
+    <!-- React Script Bundle PRODUCTION-->
+    <!-- <script src="{{ url_for('static', filename='js/app_bundle.js') }}"></script> -->
+
+    <!-- React Script Bundle DEVELOPMENT-->
+    <script src="http://localhost:8080/app_bundle.js"></script>
 </body>
 
 </html>
