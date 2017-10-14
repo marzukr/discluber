@@ -36,6 +36,7 @@ def index():
 
 @app.route('/api/recommend', methods=['GET'])
 def clubReccomendation():
+    # Check that the twitterUsername is valid with regex
     if re.fullmatch("^@?[a-zA-Z_0-9]{1,15}", request.args["twitterUsername"]):
         # try:
         #     username = request.form['username']
