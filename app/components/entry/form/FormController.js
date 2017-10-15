@@ -26,11 +26,15 @@ export default class FormController extends React.Component
         {
             this.setState({error: "Invalid Twitter Username."});
         }
+        else
+        {
+            this.props.moveUp();
+        }
     }
 
     render() {
         return (
-            <div>
+            <div id="entryItems">
                 <UserForm formSubmitWithValidData={this.formSubmitWithValidData.bind(this)}/>
                 <FormAlert showAlert={this.state.showAlert} error={this.state.error}/>
             </div>
