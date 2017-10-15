@@ -35,7 +35,7 @@ export default class UserForm extends React.Component
                                 <input type="text" className="form-control" id="twitterUsername" placeholder="Twitter Username" value={this.state.twitterUsername} onChange={this.textInputChanged.bind(this)}/>
                             </div>
                             <div className="col-auto">
-                                <button type="submit" className="btn btn-primary">Submit</button>
+                                <button type="submit" className="btn btn-primary" disabled={this.props.disableSubmit}>Submit</button>
                             </div>
                         </div>
                     </form>

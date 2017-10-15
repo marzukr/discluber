@@ -1,1 +1,5 @@
 @import "~bootstrap/scss/bootstrap";
+
+.loadingIcon {
+    fill: map-get($map: $theme-colors, $key: primary);
+}

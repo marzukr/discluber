@@ -2,8 +2,9 @@ import React from 'react';
 
 import UserForm from "./UserForm";
 import FormAlert from "./FormAlert";
+import LoadingIcon from "./LoadingIcon";
 
-export default class FormController extends React.Component 
+export default class FormController extends React.Component
 {
     constructor(props)
     {
@@ -12,6 +13,8 @@ export default class FormController extends React.Component
             showAlert: false,
             twitterUsername: "",
             error: "",
+            showLoadIcon: false,
+            disableSubmit: false,
         };
     }
 
@@ -20,6 +23,8 @@ export default class FormController extends React.Component
         this.setState({
             showAlert: !dataIsValid,
             twitterUsername: data,
+            showLoadIcon: dataIsValid,
+            disableSubmit: dataIsValid,
         });
 
         if (!dataIsValid)
@@ -28,15 +33,16 @@ export default class FormController extends React.Component
         }
         else
         {
-            this.props.moveUp();
+            
         }
     }
 
     render() {
         return (
             <div id="entryItems">
-                <UserForm formSubmitWithValidData={this.formSubmitWithValidData.bind(this)}/>
+                <UserForm formSubmitWithValidData={this.formSubmitWithValidData.bind(this)} disableSubmit={this.state.disableSubmit}/>
                 <FormAlert showAlert={this.state.showAlert} error={this.state.error}/>
+                <LoadingIcon size={100} showLoadIcon={this.state.showLoadIcon}/>
             </div>
         );
     }
