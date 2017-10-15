@@ -4,6 +4,8 @@ import UserForm from "./UserForm";
 import FormAlert from "./FormAlert";
 import LoadingIcon from "./LoadingIcon";
 
+import $ from "jquery";
+
 export default class FormController extends React.Component
 {
     constructor(props)
@@ -33,7 +35,17 @@ export default class FormController extends React.Component
         }
         else
         {
-            
+            $.ajax({
+                url: "/api/recommend",
+                type: "GET",
+                data: {twitterUsername: data},
+                success: (data) => {
+                    console.log(data);
+                },
+                error: (data) => {
+                    console.log(data.responseJSON.message);
+                },
+            })
         }
     }
 

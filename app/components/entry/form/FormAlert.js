@@ -1,5 +1,4 @@
 import React from 'react';
-import 'bootstrap';
 
 export default class FormAlert extends React.Component 
 {
