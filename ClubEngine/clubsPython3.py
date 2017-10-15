@@ -18,12 +18,6 @@ import requests
 import json
 import tweepy
 
-import time
-# import sys
-# import bson
-import urllib.request
-from bs4 import BeautifulSoup
-
 from math import log
 
 es = ElasticSearch()
@@ -103,18 +97,13 @@ def create_doc(uri, doc_data):
     response = requests.post(uri, data=query)
     print(response)
 
-# create_doc(uri="http://localhost:9200/elvis/tweets", doc_data={"Club Name": "NU Democrats", "hola": "hola"})
-
-# king = search(uri="http://localhost:9200/elvis/tweets/_search?", term=hola)
-# print(format_results(results=king))
-# print(king)
-
-def newIndex():
-    cursor = tweetsUsers.find({})
-    for item in cursor:
-        dataToSearch = {"Tweets": item["Tweets"], "Club Name": item["Club Name"]}
-        print(item["Club Name"])
-        create_doc(uri=currentURL, doc_data=dataToSearch)
+# LEGACY CODE UNKNOWN FUNCTION
+# def newIndex():
+#     cursor = tweetsUsers.find({})
+#     for item in cursor:
+#         dataToSearch = {"Tweets": item["Tweets"], "Club Name": item["Club Name"]}
+#         print(item["Club Name"])
+#         create_doc(uri=currentURL, doc_data=dataToSearch)
 
 def returnResults(user):
     # Gather the last 200 tweets of the user and combine them into a string
@@ -156,86 +145,88 @@ def returnResults(user):
 
     #Sort the list of unique clubs by the point value so that the highest points are first
     sortedArray = [x for (y, x) in sorted(zip(uPoints, uniqueClubs), reverse=True)]
-    return sortedArray
+    # return sortedArray
 
-    #calculate TFIDF stuff here
-    # listWithCounts = tfidfEngine.freqCount(userList, False)
-    # totalTermCount = 0
-    # for item in listWithCounts:
-    #     totalTermCount += item[1]
-    #
-    # tfidfArray = []
-    # for i in range(0,len(listWithCounts)-1):
-    #     term = listWithCounts[i][0].lower()
-    #     documentCollecData = documentCollection.find_one({'Term': term})
-    #     if documentCollecData is not None:
-    #         tf = listWithCounts[i][1]/totalTermCount
-    #         df = 50/documentCollecData["df"]
-    #         tfidfCalc = tf * log(df)
-    #         arrayObject = (term, tfidfCalc)
-    #         tfidfArray.append(arrayObject)
-    #     else:
-    #         continue
-    # tfidfArray.sort(key=lambda tup: tup[1], reverse=True)
-    # if len(tfidfArray) >= 5:
-    #     tfidfArray = tfidfArray[0:5]
-    #
-    # return [sortedArray, tfidfArray]
-
-def addTwitterUser(user, clubName):
-    followersCursor = tweepy.Cursor(api.followers, screen_name=user, count=300).items()
-    fabio = []
-    for fob in followersCursor:
-        fabio.append(fob.screen_name)
-        if len(fabio) >= 200:
-            break
-    followers = []
-    clubTweets = []
-    for followerH in fabio:
-        follower = followerH
-        url = "https://twitter.com/%s" % follower
-        tweetConCat = ""
-        tweetsA = []
-        try:
-            with urllib.request.urlopen(url) as url:
-                f = url.read()
-        #urllib.error.HTTPError as e
-        except:
-            print("Skipping(1) " + follower)
-            continue
-        soup = BeautifulSoup(f, 'html.parser')
-        def do_it():
-            print("Adding %s Tweets" % follower)
-            tweepyCursor = tweepy.Cursor(api.user_timeline, screen_name=follower, count=200).items()
-            for tweet in tweepyCursor:
-                hola = tweet.text
-                tweetsA.append(hola)
-                if len(tweetsA) >= 200:
-                    break
-        if soup.findAll("h2", { "class" : "ProtectedTimeline-heading" }) != [] or soup.findAll("div", {"class": "body-content"}) != [] or soup.findAll("div", {"class": "flex-module error-page clearfix"}) != []:
-            print("Skipping(2) " + follower)
-            continue
+    # calculate TFIDF stuff here
+    listWithCounts = tfidfEngine.freqCount(userTweets, False)
+    totalTermCount = 0
+    for item in listWithCounts:
+        totalTermCount += item[1]
+    
+    tfidfArray = []
+    for i in range(0,len(listWithCounts)-1):
+        term = listWithCounts[i][0].lower()
+        documentCollecData = documentCollection.find_one({'Term': term})
+        if documentCollecData is not None:
+            tf = listWithCounts[i][1]/totalTermCount
+            df = 50/documentCollecData["df"]
+            tfidfCalc = tf * log(df)
+            arrayObject = (term, tfidfCalc)
+            tfidfArray.append(arrayObject)
         else:
-            try:
-                do_it()
-            except tweepy.error.TweepError as e:
-                print("Exception")
-                time.sleep(60*15)
-                print("Out-waited exception")
-                do_it()
-            for objectT in tweetsA:
-                tweetConCat = tweetConCat + objectT
-        followers.append(follower)
-        clubTweets.append(tweetConCat)
-        if len(followers) >= 200:
-            break
-    data = {"Club Name": clubName, "Twitter Account": user, "Followers": followers}
-    data2 = {"Club Name": clubName, "Twitter Account": user, "Followers": followers, "TweetsString": clubTweets}
-    # RE ENABLE FOR REGULAR USE #
-    # collection.insert_one(data)
-    # tweetsCollection.insert_one(data2)
-    ###########
-    for n in range(0,len(clubTweets)):
-        data3 = {"Club Name": clubName, "Tweets": clubTweets[n], "User": followers[n]}
-        tweetsUsersNew.insert_one(data3)
-        create_doc(uri=currentURL, doc_data={"Club Name": clubName, "Tweets": clubTweets[n], "User": followers[n]})
+            continue
+    tfidfArray.sort(key=lambda tup: tup[1], reverse=True)
+    if len(tfidfArray) >= 5:
+        tfidfArray = tfidfArray[0:5]
+    
+    return [sortedArray, tfidfArray]
+
+
+# LEGACY CODE TO UPDATE/ADD TO DATABASE
+# def addTwitterUser(user, clubName):
+#     followersCursor = tweepy.Cursor(api.followers, screen_name=user, count=300).items()
+#     fabio = []
+#     for fob in followersCursor:
+#         fabio.append(fob.screen_name)
+#         if len(fabio) >= 200:
+#             break
+#     followers = []
+#     clubTweets = []
+#     for followerH in fabio:
+#         follower = followerH
+#         url = "https://twitter.com/%s" % follower
+#         tweetConCat = ""
+#         tweetsA = []
+#         try:
+#             with urllib.request.urlopen(url) as url:
+#                 f = url.read()
+#         #urllib.error.HTTPError as e
+#         except:
+#             print("Skipping(1) " + follower)
+#             continue
+#         soup = BeautifulSoup(f, 'html.parser')
+#         def do_it():
+#             print("Adding %s Tweets" % follower)
+#             tweepyCursor = tweepy.Cursor(api.user_timeline, screen_name=follower, count=200).items()
+#             for tweet in tweepyCursor:
+#                 hola = tweet.text
+#                 tweetsA.append(hola)
+#                 if len(tweetsA) >= 200:
+#                     break
+#         if soup.findAll("h2", { "class" : "ProtectedTimeline-heading" }) != [] or soup.findAll("div", {"class": "body-content"}) != [] or soup.findAll("div", {"class": "flex-module error-page clearfix"}) != []:
+#             print("Skipping(2) " + follower)
+#             continue
+#         else:
+#             try:
+#                 do_it()
+#             except tweepy.error.TweepError as e:
+#                 print("Exception")
+#                 time.sleep(60*15)
+#                 print("Out-waited exception")
+#                 do_it()
+#             for objectT in tweetsA:
+#                 tweetConCat = tweetConCat + objectT
+#         followers.append(follower)
+#         clubTweets.append(tweetConCat)
+#         if len(followers) >= 200:
+#             break
+#     data = {"Club Name": clubName, "Twitter Account": user, "Followers": followers}
+#     data2 = {"Club Name": clubName, "Twitter Account": user, "Followers": followers, "TweetsString": clubTweets}
+#     # RE ENABLE FOR REGULAR USE #
+#     # collection.insert_one(data)
+#     # tweetsCollection.insert_one(data2)
+#     ###########
+#     for n in range(0,len(clubTweets)):
+#         data3 = {"Club Name": clubName, "Tweets": clubTweets[n], "User": followers[n]}
+#         tweetsUsersNew.insert_one(data3)
+#         create_doc(uri=currentURL, doc_data={"Club Name": clubName, "Tweets": clubTweets[n], "User": followers[n]})

@@ -40,11 +40,10 @@ def clubReccomendation():
     # Check that the twitterUsername is valid with regex
     if re.fullmatch("^@?[a-zA-Z_0-9]{1,15}", request.args["twitterUsername"]):
         try:
-            username = request.args['twitterUsername']
+            username = request.args["twitterUsername"]
             clubs = clubsPython3.returnResults(username)
-            return jsonify({'clubs' : clubs})
+            return jsonify({"clubs": clubs[0], "terms": clubs[1]})
         except tweepy.TweepError as e:
             raise InvalidUsage(e.response.json()["errors"][0]["message"], e.response.status_code)
-        # return request.args["twitterUsername"] + " is a valid twitter handle"
     else:
         raise InvalidUsage("Invalid twitter username", 400)
