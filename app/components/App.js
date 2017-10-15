@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import EntryController from "./entry/EntryController";
+import ClubList from "./ClubList.js";
 
 require("../styles/app.scss");
 
@@ -11,6 +12,7 @@ export default class App extends React.Component
         return (
             <div className="container">
                 <EntryController/>
+                <ClubList/>
             </div>
         );
     }
