@@ -5,6 +5,7 @@ from ClubEngine import clubsPython3
 import tweepy
 
 import re
+import json
 
 """
 HTTP ERROR HANDLER
@@ -38,17 +39,12 @@ def index():
 def clubReccomendation():
     # Check that the twitterUsername is valid with regex
     if re.fullmatch("^@?[a-zA-Z_0-9]{1,15}", request.args["twitterUsername"]):
-        # try:
-        #     username = request.form['username']
-        #     clubs = clubsPython3.returnResults(username)
-        #     return jsonify({'clubs' : clubs})
-        # except tweepy.TweepError as e:
-        #     message = str(e)
-        #     code = ""
-        #     for letter in message:
-        #         if letter.isdigit():
-        #             code = code + letter
-        #     return jsonify({'error' : message, 'code' : code})
-        return request.args["twitterUsername"] + " is a valid twitter handle"
+        try:
+            username = request.args['twitterUsername']
+            clubs = clubsPython3.returnResults(username)
+            return jsonify({'clubs' : clubs})
+        except tweepy.TweepError as e:
+            raise InvalidUsage(e.response.json()["errors"][0]["message"], e.response.status_code)
+        # return request.args["twitterUsername"] + " is a valid twitter handle"
     else:
         raise InvalidUsage("Invalid twitter username", 400)
