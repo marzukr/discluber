@@ -3,24 +3,28 @@ clubsOrganizations README
 An online tool to recommend a club to a given NU student based on their tweets.
 
 ## Mongo Databases
-All Mongo databases contain "{underscore}_id" (remove {underscore}) as a key
+The database is called "clubsDatabase"
 
 **followersList**
-+ A list of all the followers for a club
-+ ["Followers", "Twitter Account", "Club Name"]
++ "Twitter Account": The twitter username of the club (with "@" prefix)
++ "Club Name": The readable string name of the club.
++ "Followers": An array of the username of up to 200 followers of the club (no "@" prefix)
 
 **tweetsList**
-+ A list of all the tweets together for a given club.
-+ ["Twitter Account", "Club Name", "Followers", "Tweets String"]
++ "Twitter Account": The twitter username of the club (with "@" prefix)
++ "Club Name": The readable string name of the club.
++ "Followers": An array of the username of up to 200 followers of the club (no "@" prefix)
++ "Tweets String": An array of up to 200 tweets of each follower concatenated into one string.
 
 **tweetsUsers**
-+ Individual Tweets sorted by clubName
-+ ["Tweets", "Club Name"]
++ "Club Name": The readable string name of the club. (Same as "tweetsList" collection)
++ "Tweets": Same tweet concatenation that is in "Tweets String" array of "tweetsList" collection.
 
 **tweetsUsersNew**
-+ Individual tweets sorted by user and club name
-+ ["Tweets", "Club Name", "User"]
++ "Club Name": The readable string name of the club. (Same as "tweetsUsers" collection)
++ "Tweets": Same as "Tweets" property of "tweetsUsers" collection
++ "User": The twitter follower of the club that the "Tweets" were pulled from
 
 **documentCollection**
-+ Terms used in all the tweets with document frequency based on each club.
-+ ["Term", "df"]
++ "Term": A term that was used the tweets of a follower of a club
++ "df": How many clubs that term appeared in
