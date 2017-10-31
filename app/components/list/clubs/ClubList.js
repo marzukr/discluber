@@ -8,7 +8,7 @@ export default class ClubList extends React.Component
         let clubItemList = [];
         for (let i = 0; i < this.props.clubList.length; i++)
         {
-            clubItemList.push(<ClubItem number={i + 1} clubName={this.props.clubList[i]} key={i}/>);
+            clubItemList.push(<ClubItem number={i + 1} clubObject={this.props.clubList[i]} key={i}/>);
         }
 
         return (

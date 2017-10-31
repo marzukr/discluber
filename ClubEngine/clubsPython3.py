@@ -79,7 +79,7 @@ def mlt(uri, user):
     print("bob")
     print(results)
 
-def format_results(results):
+def format_results(results, ouputParam):
     #Takes elasticsearch output and makes it into a list of clubs, some of which repeat
     #LOOK INTO THIS TO OPTIMIZE RESULTS
 
@@ -87,7 +87,7 @@ def format_results(results):
     prettyA = []
     for doc in data:
         # CHANGE THIS for different outputs
-        pretty = "%s" % (doc['_source'] ['Club Name'])
+        pretty = "%s" % (doc['_source'][ouputParam])
         prettyA.append(pretty)
     return prettyA
 
@@ -96,14 +96,6 @@ def create_doc(uri, doc_data):
     query = json.dumps(doc_data)
     response = requests.post(uri, data=query)
     print(response)
-
-# LEGACY CODE UNKNOWN FUNCTION
-# def newIndex():
-#     cursor = tweetsUsers.find({})
-#     for item in cursor:
-#         dataToSearch = {"Tweets": item["Tweets"], "Club Name": item["Club Name"]}
-#         print(item["Club Name"])
-#         create_doc(uri=currentURL, doc_data=dataToSearch)
 
 def returnResults(user):
     # Gather the last 200 tweets of the user and combine them into a string
@@ -118,7 +110,7 @@ def returnResults(user):
 
     #Take the combined tweet string and feed it into elastic search, then make the result into a pretty list of clubs
     rawElasticSearchResults = search(uri=currentURL + "/_search?", term=userTweets)
-    clubsArray = format_results(results=rawElasticSearchResults)
+    clubsArray = format_results(results=rawElasticSearchResults, ouputParam="Club Name")
 
     points = []
     uPoints = []
@@ -144,8 +136,17 @@ def returnResults(user):
                     uPoints.append(points[cindex])
 
     #Sort the list of unique clubs by the point value so that the highest points are first
-    sortedArray = [x for (y, x) in sorted(zip(uPoints, uniqueClubs), reverse=True)]
-    # return sortedArray
+    sortedArray = [x for (y, x) in sorted(zip(uPoints, uniqueClubs), reverse=True)][0:3]
+
+    #Get the profile image URLS for the clubs and reorganize the data
+    clubData = []
+    for club in sortedArray:
+        clubHandle = collection.find_one({"Club Name": club})["Twitter Account"]
+        clubImageURL = api.get_user(clubHandle).profile_image_url_https.replace("_normal", "_200x200")
+        newClubDataObject = {"name": club, "handle": clubHandle, "imageURL": clubImageURL}
+        clubData.append(newClubDataObject)
+
+    #Retreive the url of the club's Twitter image
 
     # calculate TFIDF stuff here
     listWithCounts = tfidfEngine.freqCount(userTweets, False)
@@ -169,8 +170,17 @@ def returnResults(user):
     if len(tfidfArray) >= 5:
         tfidfArray = tfidfArray[0:5]
     
-    return [sortedArray, tfidfArray]
+    return {"clubs": clubData, "terms": tfidfArray}
 
+# ----> LEGACY CODE BELOW THIS POINT <----
+
+# LEGACY CODE UNKNOWN FUNCTION
+# def newIndex():
+#     cursor = tweetsUsers.find({})
+#     for item in cursor:
+#         dataToSearch = {"Tweets": item["Tweets"], "Club Name": item["Club Name"]}
+#         print(item["Club Name"])
+#         create_doc(uri=currentURL, doc_data=dataToSearch)
 
 # LEGACY CODE TO UPDATE/ADD TO DATABASE
 # def addTwitterUser(user, clubName):

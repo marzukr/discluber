@@ -42,7 +42,7 @@ def clubReccomendation():
         try:
             username = request.args["twitterUsername"]
             clubs = clubsPython3.returnResults(username)
-            return jsonify({"clubs": clubs[0], "terms": clubs[1]})
+            return jsonify(clubs)
         except tweepy.TweepError as e:
             raise InvalidUsage(e.response.json()["errors"][0]["message"], e.response.status_code)
     else:

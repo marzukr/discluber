@@ -6,10 +6,10 @@ export default class ClubItem extends React.Component
         return (
             <div className="row" style={{paddingBottom: "3em"}}>
                 <div className="col" style={{textAlign: "right"}}>
-                    <img src="https://pbs.twimg.com/profile_images/378800000051668402/a15076880a27de03987d7d3e2b6df5eb.jpeg" className="rounded-circle border border-light" style={{height: "6em", width: "6em"}}/>
+                    <img src={this.props.clubObject.imageURL} className="rounded-circle border border-light" style={{height: "6em", width: "6em"}}/>
                 </div>
                 <div className="col align-self-center">
-                    <h5>{this.props.number}. {this.props.clubName}</h5>
+                    <h5>{this.props.number}. <a target="_blank" href={"https://twitter.com/" + this.props.clubObject.handle}>{this.props.clubObject.name}</a></h5>
                 </div>
             </div>
         );

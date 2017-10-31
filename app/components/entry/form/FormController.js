@@ -41,6 +41,7 @@ export default class FormController extends React.Component
                 data: {twitterUsername: data},
                 success: function(data) {
                     this.setState({showLoadIcon: false});
+                    this.setState({disableSubmit: false});
                     this.props.moveUp();
                     this.props.displayList(data);
                 }.bind(this),
