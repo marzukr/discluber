@@ -10,12 +10,16 @@ export default class EntryController extends React.Component
     moveUp()
     {
         let topSpacer = document.querySelector('#topSpacer');
-        anime({
-            targets: topSpacer,
-            height: ["38.2vh", "7vh"],
-            easing: "easeInOutQuad",
-            duration: 750,
-        });
+
+        if (topSpacer.style.height !== "7vh")
+        {
+            anime({
+                targets: topSpacer,
+                height: ["38.2vh", "7vh"],
+                easing: "easeInOutQuad",
+                duration: 750,
+            });
+        }
     }
 
     render() {
