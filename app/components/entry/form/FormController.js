@@ -39,9 +39,11 @@ export default class FormController extends React.Component
                 url: "/api/recommend",
                 type: "GET",
                 data: {twitterUsername: data},
-                success: (data) => {
-                    console.log(data);
-                },
+                success: function(data) {
+                    this.setState({showLoadIcon: false});
+                    this.props.moveUp();
+                    this.props.displayList(data);
+                }.bind(this),
                 error: (data) => {
                     console.log(data.responseJSON.message);
                 },

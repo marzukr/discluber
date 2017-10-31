@@ -23,7 +23,7 @@ export default class EntryController extends React.Component
             <div>
                 <div className="row" style={{ height: "38.2vh" }} id="topSpacer"/>
                 <TitleHeader/>
-                <FormController moveUp={this.moveUp.bind(this)}/>
+                <FormController moveUp={this.moveUp.bind(this)} displayList={this.props.displayList}/>
             </div>
         );
     }
