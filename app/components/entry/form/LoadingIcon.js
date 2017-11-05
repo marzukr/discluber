@@ -16,7 +16,7 @@ export default class LoadingIcon extends React.Component
     {
         anime({
             targets: "#loadingIcon",
-            height: this.props.size * (showLoadIcon ? 1 : 0),
+            height: showLoadIcon ? "4rem" : 0,
             opacity: showLoadIcon ? 1 : 0,
             duration: 400,
             easing: "easeInOutQuad",
@@ -24,10 +24,14 @@ export default class LoadingIcon extends React.Component
     }
 
     render() {
+        let sizeFraction = 2.5;
+        let viewBox = (120*sizeFraction - 120)/-2 + " " + (30*sizeFraction - 30)/-2 + " " + 120*sizeFraction + " " + 30*sizeFraction;
+
         return (
-            <div className="row" id="loadingIcon" style={{height: 0}}>
+            <div className="row" id="loadingIcon" style={{height: 0, opacity: 0}}>
                 <div className="col" style={{textAlign: "center"}}>
-                    <svg opacity="0" width={this.props.size * 4} height={this.props.size} xmlns="http://www.w3.org/2000/svg" className="loadingIcon">
+                    {/* original viewbox: 0 0 120 30 */}
+                    <svg opacity="1" height="100%" viewBox={viewBox} xmlns="http://www.w3.org/2000/svg" className="loadingIcon" style={{margin: "auto", display: "block"}}>
                         <circle cx="15" cy="15" r="15">
                             <animate attributeName="r" from="15" to="15"
                                 begin="0s" dur="0.8s"
