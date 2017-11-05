@@ -1,5 +1,15 @@
 @import "~bootstrap/scss/bootstrap";
 
+body {
+    background-color: #FAFAFC;
+}
+
 .loadingIcon {
     fill: map-get($map: $theme-colors, $key: primary);
+}
+
+.card {
+    border-radius: 0.75rem;
+    border: null;
+    box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
 }

@@ -17,17 +17,17 @@ export default class LoadingIcon extends React.Component
         anime({
             targets: "#loadingIcon",
             height: this.props.size * (showLoadIcon ? 1 : 0),
-            width: this.props.size * 4 * (showLoadIcon ? 1 : 0),
-            duration: 300,
+            opacity: showLoadIcon ? 1 : 0,
+            duration: 400,
             easing: "easeInOutQuad",
         });
     }
 
     render() {
         return (
-            <div className="row">
+            <div className="row" id="loadingIcon" style={{height: 0}}>
                 <div className="col" style={{textAlign: "center"}}>
-                    <svg id="loadingIcon" width="0" height="0" viewBox="0 0 135 135" xmlns="http://www.w3.org/2000/svg" className="loadingIcon">
+                    <svg opacity="0" width={this.props.size * 4} height={this.props.size} xmlns="http://www.w3.org/2000/svg" className="loadingIcon">
                         <circle cx="15" cy="15" r="15">
                             <animate attributeName="r" from="15" to="15"
                                 begin="0s" dur="0.8s"

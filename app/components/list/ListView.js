@@ -14,7 +14,7 @@ export default class ListView extends React.Component
 
     render() {
         return (
-            <div className="row" id="listView" style={{opacity: "0.5"}}>
+            <div className="row" id="listView" style={{opacity: "0"}}>
                 <div className="col">
                     <h3 style={{textAlign: "center"}}>TERMS</h3><br/>
                     <TermList terms={this.props.listData.terms}/>
