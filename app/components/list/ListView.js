@@ -14,18 +14,14 @@ export default class ListView extends React.Component
 
     render() {
         return (
-            <div className="row" id="listView" style={{opacity: "0"}}>
-                <div className="col">
-                    <h3 style={{textAlign: "center"}}>TERMS</h3><br/>
-                    <TermList terms={this.props.listData.terms}/>
+            <div className="row" id="listView" style={{opacity: "1"}}>
+                <div className="col"/>
+
+                <div className="col-7">
+                    <ClubList clubList={[{name: "Clubs", handle: "handle", imageURL: "url"}, {name: "Clubs Of THi THi HTi THi", handle: "handle", imageURL: "url"}]}/>
                 </div>
-                <div className="col">
-                    <h3 style={{textAlign: "center"}}>CLUBS</h3><br/>
-                    <ClubList clubList={this.props.listData.clubs}/>
-                </div>
-                <div className="col">
-                    <h3 style={{textAlign: "center"}}>USERS</h3><br/>
-                </div>
+
+                <div className="col"/>
             </div>
         );
     }

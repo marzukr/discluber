@@ -8,8 +8,47 @@ body {
     fill: map-get($map: $theme-colors, $key: primary);
 }
 
+//GENERIC STYLES
+
+.centerText {
+    text-align: center;
+}
+
+.leftText {
+    text-align: left;
+}
+
+.noWrap {
+    // white-space: nowrap;
+    overflow-wrap: break-word;
+}
+
+.divInlineBlock {
+    display: inline-block;
+}
+
+.fullWidth {
+    width: 100%;
+}
+
+.verticalCenter {
+    display: flex;
+    align-items: center;
+}
+
 .card {
     border-radius: 0.75rem;
     border: null;
     box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+}
+
+.buffer {
+    padding-top: 2rem;
+}
+
+//ClubItem.js
+
+.clubItem {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
 }
