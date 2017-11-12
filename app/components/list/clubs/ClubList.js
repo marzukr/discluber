@@ -13,7 +13,17 @@ export default class ClubList extends React.Component
 
         return (
             <div>
-                {clubItemList}
+                <div className="card">
+                    <div className="card-header">
+                        <h3 style={{textAlign: "center"}}>Clubs</h3>
+                    </div>
+                    <div className="card-body centerText">
+                        <div className="divInlineBlock">
+                            {clubItemList}
+                        </div>
+                    </div>
+                </div>
+                <div className="buffer"/>
             </div>
         );
     }

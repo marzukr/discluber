@@ -57,7 +57,7 @@ export default class FormController extends React.Component
             <div id="entryItems">
                 <UserForm formSubmitWithValidData={this.formSubmitWithValidData.bind(this)} disableSubmit={this.state.disableSubmit}/>
                 <FormAlert showAlert={this.state.showAlert} error={this.state.error}/>
-                <LoadingIcon size={100} showLoadIcon={this.state.showLoadIcon}/>
+                <LoadingIcon size={30} showLoadIcon={this.state.showLoadIcon}/>
             </div>
         );
     }

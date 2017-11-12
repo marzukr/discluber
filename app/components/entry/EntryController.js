@@ -1,6 +1,5 @@
 import React from 'react';
 
-import TitleHeader from "./TitleHeader";
 import FormController from "./form/FormController";
 
 import anime from 'animejs';
@@ -26,8 +25,24 @@ export default class EntryController extends React.Component
         return (
             <div>
                 <div className="row" style={{ height: "38.2vh" }} id="topSpacer"/>
-                <TitleHeader/>
-                <FormController moveUp={this.moveUp.bind(this)} displayList={this.props.displayList}/>
+                <div className="row">
+                    <div className="col"/>
+                    <div className="col-7">
+                        <div className="card">
+                            <div className="card-body">
+                                <div className="row">
+                                    <div className="col" style={{ textAlign: "center" }}>
+                                        <h1>Discluber <em>your</em> club</h1><br />
+                                        <h5>Want to join a club? Let Discluber find one to suit your interests...</h5>
+                                    </div>
+                                </div>
+                                <FormController moveUp={this.moveUp.bind(this)} displayList={this.props.displayList}/>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col"/>
+                </div>
+                <div className="buffer"/>
             </div>
         );
     }

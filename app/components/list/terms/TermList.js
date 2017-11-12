@@ -8,12 +8,22 @@ export default class TermList extends React.Component
         let termItemList = [];
         for (let i = 0; i < this.props.terms.length; i++)
         {
-            termItemList.push(<TermItem term={this.props.terms[i]} key={i} number={i+1}/>);
+            termItemList.push(<TermItem term={this.props.terms[i]} key={i}/>);
         }
 
         return (
             <div>
-                {termItemList}
+                <div className="card">
+                    <div className="card-header">
+                        <h3 style={{textAlign: "center"}}>Methodology</h3>
+                    </div>
+                    <div className="card-body centerText">
+                        <div className="row">
+                            {termItemList}
+                        </div>
+                    </div>
+                </div>
+                <div className="buffer"/>
             </div>
         );
     }

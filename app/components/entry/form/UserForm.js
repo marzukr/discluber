@@ -28,8 +28,8 @@ export default class UserForm extends React.Component
         return (
             <div className="row" style={{paddingTop: "1.5em"}}>
                 <div className="col"/>
-                <div className="col">
-                    <form onSubmit={this.formSubmitted.bind(this)}>
+                <div className="col-6">
+                    <form onSubmit={this.formSubmitted.bind(this)} autoComplete="off">
                         <div className="form-row">
                             <div className="col">
                                 <input type="text" className="form-control" id="twitterUsername" placeholder="Twitter Username" value={this.state.twitterUsername} onChange={this.textInputChanged.bind(this)}/>
