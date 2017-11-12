@@ -8,47 +8,50 @@ body {
     fill: map-get($map: $theme-colors, $key: primary);
 }
 
-//GENERIC STYLES
+//ALIGNMENT STYLES
+    .centerText {
+        text-align: center;
+    }
 
-.centerText {
-    text-align: center;
-}
+    .leftText {
+        text-align: left;
+    }
 
-.leftText {
-    text-align: left;
-}
+    .noWrap {
+        // white-space: nowrap;
+        overflow-wrap: break-word;
+    }
 
-.noWrap {
-    // white-space: nowrap;
-    overflow-wrap: break-word;
-}
+    .divInlineBlock {
+        display: inline-block;
+    }
 
-.divInlineBlock {
-    display: inline-block;
-}
+    .verticalCenter {
+        display: flex;
+        align-items: center;
+    }
 
-.fullWidth {
-    width: 100%;
-}
+// GENERAL STYLES
+    .fullWidth {
+        width: 100%;
+    }
 
-.verticalCenter {
-    display: flex;
-    align-items: center;
-}
+    .card {
+        border-radius: 0.75rem;
+        border: null;
+        box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+    }
 
-.card {
-    border-radius: 0.75rem;
-    border: null;
-    box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
-}
+    .buffer {
+        height: 2rem;
+    }
 
-.buffer {
-    padding-top: 2rem;
-}
+    .normalFontWeight {
+        font-weight: normal;
+    }
 
 //ClubItem.js
-
-.clubItem {
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
-}
+    .clubItem {
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+    }

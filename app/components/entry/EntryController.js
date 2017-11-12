@@ -42,6 +42,7 @@ export default class EntryController extends React.Component
                     </div>
                     <div className="col"/>
                 </div>
+                <div className="buffer"/>
             </div>
         );
     }

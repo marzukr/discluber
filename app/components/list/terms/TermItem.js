@@ -3,14 +3,18 @@ import React from 'react';
 export default class TermItem extends React.Component 
 {
     render() {
+        let termList = [];
+        for (let i = 0; i < this.props.term.list.length; i++)
+        {
+            let text = <h6 className="normalFontWeight" key={i}>{this.props.term.list[i].text}</h6>;
+            let element = <a target="_blank" href={this.props.term.list[i].url}>{text}</a>;
+            termList.push(element);
+        }
+
         return (
-            <div className="row">
-                <div className="col" style={{textAlign: "right", paddingRight: "0.5em"}}>
-                    <h5>{this.props.number}.</h5>
-                </div>
-                <div className="col" style={{paddingLeft: "0"}}>
-                    <h5>{this.props.term[0]}</h5>
-                </div>
+            <div className="col centerText">
+                <h5>{this.props.term.name.toUpperCase()}</h5>
+                {termList}
             </div>
         );
     }
