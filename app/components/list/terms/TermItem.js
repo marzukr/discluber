@@ -6,8 +6,8 @@ export default class TermItem extends React.Component
         let termList = [];
         for (let i = 0; i < this.props.term.list.length; i++)
         {
-            let text = <h6 className="normalFontWeight" key={i}>{this.props.term.list[i].text}</h6>;
-            let element = <a target="_blank" href={this.props.term.list[i].url}>{text}</a>;
+            let text = <h6 className="normalFontWeight">{this.props.term.list[i].text}</h6>;
+            let element = <a target="_blank" href={this.props.term.list[i].url} key={i}>{text}</a>;
             termList.push(element);
         }
 

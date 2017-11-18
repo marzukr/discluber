@@ -148,7 +148,7 @@ def returnResults(user):
 
     #Retreive the url of the club's Twitter image
 
-    # calculate TFIDF stuff here
+    # calculate TFIDF stuff here for terms
     listWithCounts = tfidfEngine.freqCount(userTweets, False)
     totalTermCount = 0
     for item in listWithCounts:
@@ -167,10 +167,38 @@ def returnResults(user):
         else:
             continue
     tfidfArray.sort(key=lambda tup: tup[1], reverse=True)
-    if len(tfidfArray) >= 5:
-        tfidfArray = tfidfArray[0:5]
+    if len(tfidfArray) >= 10:
+        tfidfArray = tfidfArray[0:9]
     
-    return {"clubs": clubData, "terms": tfidfArray}
+    # Format
+    # [
+    #     {
+    #         "name": "Terms", 
+    #         "list": [
+    #             {
+    #                 "text": "test", 
+    #                 "url": "test.com", 
+    #                 "tfidfScore": "0.3"
+    #             },
+    #             ...
+    #         ]
+    #     },
+    #     ...
+    # ]
+    termsNewFormat = []
+
+    # add url for terms
+    vanillaTermsObject = {"name": "Terms"}
+    vanillaTermList = []
+    for term in tfidfArray:
+        termURL = "https://twitter.com/search?q=" + term[0]
+        termURLObject = {"text": term[0], "url": termURL, "tfidfScore": term[1]}
+        vanillaTermList.append(termURLObject)
+    vanillaTermsObject["list"] = vanillaTermList
+
+    termsNewFormat.append(vanillaTermsObject)
+    
+    return {"clubs": clubData, "terms": termsNewFormat}
 
 # ----> LEGACY CODE BELOW THIS POINT <----
 
