@@ -15,7 +15,7 @@ export default class TermList extends React.Component
             <div>
                 <div className="card">
                     <div className="card-header">
-                        <h3 style={{textAlign: "center"}}>Methodology</h3>
+                        <h3 className="cardHeader">Methodology</h3>
                     </div>
                     <div className="card-body centerText">
                         <div className="row">
