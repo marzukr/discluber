@@ -29,7 +29,6 @@ export default class App extends React.Component
 
     disableScroll(shouldDisable)
     {
-        console.log("Changing");
         if (shouldDisable)
         {
             $("body").css({"margin": "0", "height": "100%", "overflow": "hidden"});
