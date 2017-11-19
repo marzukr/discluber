@@ -7,7 +7,7 @@ import anime from 'animejs';
 
 export default class ListView extends React.Component 
 {
-    animateFromBottom()
+    animateOnScreen()
     {
         let clubSpacer = document.querySelector('#clubSpacer');
         anime({
@@ -19,11 +19,30 @@ export default class ListView extends React.Component
         });
     }
 
+    animateOffScreen()
+    {
+        this.props.disableScroll(true);
+        let clubSpacer = document.querySelector('#clubSpacer');
+        anime({
+            targets: clubSpacer,
+            height: ["0vh", "100vh"],
+            easing: "easeInOutQuad",
+            duration: 750,
+        });
+    }
+
     componentWillReceiveProps(nextProps)
     {
-        if (nextProps.shouldDisplay)
+        if (nextProps.shouldDisplay !== this.props.shouldDisplay)
         {
-            this.animateFromBottom();
+            if (nextProps.shouldDisplay)
+            {
+                this.animateOnScreen();
+            }
+            else
+            {
+                this.animateOffScreen();
+            }
         }
     }
 

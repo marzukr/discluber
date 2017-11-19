@@ -19,10 +19,10 @@ export default class App extends React.Component
         };
     }
 
-    displayList(clubData)
+    displayList(shouldDisplay, clubData = {clubs:[], terms:[]})
     {
         this.setState({
-            shouldDisplayList: true,
+            shouldDisplayList: shouldDisplay,
             clubData: clubData,
         });
     }

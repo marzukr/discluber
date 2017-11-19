@@ -17,6 +17,8 @@ export default class FormController extends React.Component
             error: "",
             showLoadIcon: false,
             disableSubmit: false,
+            resultsDisplayed: false,
+            lastClubData: {clubs:[], terms:[]},
         };
     }
 
@@ -35,15 +37,25 @@ export default class FormController extends React.Component
         }
         else
         {
+            if (this.state.resultsDisplayed)
+            {
+                this.props.resizeSpacer(true);
+                this.props.displayList(false, this.state.lastClubData);
+            }
+
             $.ajax({
                 url: "/api/recommend",
                 type: "GET",
                 data: {twitterUsername: data},
                 success: function(data) {
-                    this.setState({showLoadIcon: false});
-                    this.setState({disableSubmit: false});
-                    this.props.moveUp();
-                    this.props.displayList(data);
+                    this.setState({
+                        showLoadIcon: false, 
+                        disableSubmit: false, 
+                        resultsDisplayed: true, 
+                        lastClubData: data,
+                    });
+                    this.props.resizeSpacer(false);
+                    this.props.displayList(true, data);
                 }.bind(this),
                 error: (data) => {
                     console.log(data.responseJSON.message);

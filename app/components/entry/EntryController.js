@@ -6,15 +6,21 @@ import anime from 'animejs';
 
 export default class EntryController extends React.Component 
 {
-    moveUp()
+    resizeSpacer(shouldGrowSpacer)
     {
         let topSpacer = document.querySelector('#topSpacer');
 
-        if (topSpacer.style.height !== "7vh")
+        let heightArray = ["38.2vh", "7vh"];
+        if (shouldGrowSpacer)
+        {
+            heightArray.reverse();
+        }
+
+        if (topSpacer.style.height !== heightArray[1])
         {
             anime({
                 targets: topSpacer,
-                height: ["38.2vh", "7vh"],
+                height: heightArray,
                 easing: "easeInOutQuad",
                 duration: 750,
             });
@@ -36,7 +42,7 @@ export default class EntryController extends React.Component
                                         <h5>Want to join a club? Let Discluber find one to suit your interests...</h5>
                                     </div>
                                 </div>
-                                <FormController moveUp={this.moveUp.bind(this)} displayList={this.props.displayList}/>
+                                <FormController resizeSpacer={this.resizeSpacer.bind(this)} displayList={this.props.displayList}/>
                             </div>
                         </div>
                     </div>
