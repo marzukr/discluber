@@ -146,8 +146,6 @@ def returnResults(user):
         newClubDataObject = {"name": club, "handle": clubHandle, "imageURL": clubImageURL}
         clubData.append(newClubDataObject)
 
-    #Retreive the url of the club's Twitter image
-
     # calculate TFIDF stuff here for terms
     listWithCounts = tfidfEngine.freqCount(userTweets, False)
     totalTermCount = 0
