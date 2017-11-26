@@ -147,7 +147,7 @@ def returnResults(user):
         clubData.append(newClubDataObject)
 
     # calculate TFIDF stuff here for terms
-    listWithCounts = tfidfEngine.freqCount(userTweets)
+    listWithCounts = tfidfEngine.freqCount(userTweets, tfidfEngine.Token.TERM)
     totalTermCount = sum(listWithCounts.values())
     tfidfArray = []
     for term, documentFreq in listWithCounts.items():

@@ -1,12 +1,18 @@
-import operator
 from collections import Counter
 
-from nltk.tokenize import word_tokenize
 import re
 from nltk.corpus import stopwords
 import string
 
 import emoji
+
+from enum import Enum, auto
+
+class Token(Enum):
+    TERM = auto()
+    HASHTAG = auto()
+    USER = auto()
+    LINK = auto()
 
 # Define constants to filter and sort terms in Twitter strings
 punctuation = list(string.punctuation)
@@ -54,17 +60,9 @@ def isanumber(s):
         pass
 
     return False
- 
 
-# Returns the terms in a given aggregation of tweets
-def freqCount(userTweets):
-    count_all = Counter()
-
-    preprocessedTweets = preprocess(userTweets)
-    #terms_hash = [term for term in preprocessedTweets if term.startswith('#')]
-    #terms_users = [term for term in preprocessedTweets if term.startswith('@')]
-    #term_links = [term for term in preprocessedTweets if term.startswith('http')]
-
+# Returns complete list of terms (possibly more than one of each term) in a given aggregation of tweets
+def termList(preprocessedTweets):
     #Word terms (not in stoplist, not a hastag, not a user, not a link, not a number, not an emoticon and not an emoji)
     terms_only = [
         term.lower() for term in preprocessedTweets if term.lower() 
@@ -74,7 +72,36 @@ def freqCount(userTweets):
         not emoticon_re.match(term) and
         not term[0] in emoji.UNICODE_EMOJI
     ]
+    return terms_only
 
-    count_all.update(terms_only)
+# Returns complete list of hashtags (possibly more than one of each hashtag) in a given aggregation of tweets
+def hashtagList(preprocessedTweets):
+    terms_hash = [term for term in preprocessedTweets if term.startswith('#')]
+    return terms_hash
 
+# Returns complete list of users (possibly more than one of each user) in a given aggregation of tweets
+def userList(preprocessedTweets):
+    terms_users = [term for term in preprocessedTweets if term.startswith('@')]
+    return terms_users
+
+# Returns complete list of links (possibly more than one of each link) in a given aggregation of tweets
+def linkList(preprocessedTweets):
+    term_links = [term for term in preprocessedTweets if term.startswith('http')]
+    return term_links
+
+# Returns the frequencies of the specfied tokens in the given tweet aggregation
+def freqCount(userTweets, token=Token.TERM):
+    preprocessedTweets = preprocess(userTweets)
+    filteredTweets = []
+    if token == Token.TERM:
+        filteredTweets = termList(preprocessedTweets)
+    elif token == Token.HASHTAG:
+        filteredTweets = hashtagList(preprocessedTweets)
+    elif token == Token.USER:
+        filteredTweets = userList(preprocessedTweets)
+    elif token == Token.LINK:
+        filteredTweets = userList(preprocessedTweets)
+
+    count_all = Counter()
+    count_all.update(filteredTweets)
     return count_all
