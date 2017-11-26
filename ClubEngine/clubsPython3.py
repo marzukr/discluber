@@ -149,10 +149,6 @@ def returnResults(user):
     # calculate TFIDF stuff here for terms
     listWithCounts = tfidfEngine.freqCount(userTweets)
     totalTermCount = sum(listWithCounts.values())
-    # totalTermCount = 0
-    # for item in listWithCounts:
-    #     totalTermCount += item[1]
-    
     tfidfArray = []
     for term, documentFreq in listWithCounts.items():
         documentCollecData = documentCollection.find_one({'Term': term})
@@ -164,8 +160,8 @@ def returnResults(user):
             tfidfArray.append(arrayObject)
         else:
             continue
-    tfidfArray.sort(key=lambda tup: tup[1], reverse=True)
-    if len(tfidfArray) > 10:
+    tfidfArray.sort(key=lambda tup: tup[1], reverse=True) #Sort from lowest tfidf score to highest
+    if len(tfidfArray) > 10: #Only return 10 terms
         tfidfArray = tfidfArray[:10]
     
     # Format

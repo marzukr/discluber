@@ -39,15 +39,6 @@ def preprocess(s, lowercase=False):
         tokens = [token if emoticon_re.search(token) else token.lower() for token in tokens]
     return tokens
 
-# def isanumber(a):
-#     bool_a = True
-#     try:
-#         bool_a = float(repr(a))
-#     except:
-#         bool_a = False
-
-#     return bool_a
-
 def isanumber(s):
     try:
         float(s)
