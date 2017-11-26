@@ -147,17 +147,17 @@ def returnResults(user):
         clubData.append(newClubDataObject)
 
     # calculate TFIDF stuff here for terms
-    listWithCounts = tfidfEngine.freqCount(userTweets, False)
-    totalTermCount = 0
-    for item in listWithCounts:
-        totalTermCount += item[1]
+    listWithCounts = tfidfEngine.freqCount(userTweets)
+    totalTermCount = sum(listWithCounts.values())
+    # totalTermCount = 0
+    # for item in listWithCounts:
+    #     totalTermCount += item[1]
     
     tfidfArray = []
-    for i in range(0,len(listWithCounts)-1):
-        term = listWithCounts[i][0].lower()
+    for term, documentFreq in listWithCounts.items():
         documentCollecData = documentCollection.find_one({'Term': term})
         if documentCollecData is not None:
-            tf = listWithCounts[i][1]/totalTermCount
+            tf = documentFreq/totalTermCount
             df = 50/documentCollecData["df"]
             tfidfCalc = tf * log(df)
             arrayObject = (term, tfidfCalc)
@@ -165,8 +165,8 @@ def returnResults(user):
         else:
             continue
     tfidfArray.sort(key=lambda tup: tup[1], reverse=True)
-    if len(tfidfArray) >= 10:
-        tfidfArray = tfidfArray[0:9]
+    if len(tfidfArray) > 10:
+        tfidfArray = tfidfArray[:10]
     
     # Format
     # [

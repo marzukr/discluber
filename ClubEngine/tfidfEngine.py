@@ -6,6 +6,8 @@ import re
 from nltk.corpus import stopwords
 import string
 
+import emoji
+
 # Define constants to filter and sort terms in Twitter strings
 punctuation = list(string.punctuation)
 alphabet = list("qwertyuiopasdfghjklzxcvbnm")
@@ -64,36 +66,24 @@ def isanumber(s):
  
 
 # Returns the terms in a given aggregation of tweets
-def freqCount(userTweets, shouldReturnListOnly):
+def freqCount(userTweets):
     count_all = Counter()
 
     preprocessedTweets = preprocess(userTweets)
-    terms_hash = [term for term in preprocessedTweets if term.startswith('#')]
-    terms_users = [term for term in preprocessedTweets if term.startswith('@')]
-    term_links = [term for term in preprocessedTweets if term.startswith('http')]
+    #terms_hash = [term for term in preprocessedTweets if term.startswith('#')]
+    #terms_users = [term for term in preprocessedTweets if term.startswith('@')]
+    #term_links = [term for term in preprocessedTweets if term.startswith('http')]
 
-    #Word terms (not in stoplist, not a hastag, not a user, not a link, not a number, and not an emoticon and/or emoji)
+    #Word terms (not in stoplist, not a hastag, not a user, not a link, not a number, not an emoticon and not an emoji)
     terms_only = [
         term.lower() for term in preprocessedTweets if term.lower() 
         not in stop and 
         not term.startswith(('#', '@', 'http')) and 
         not isanumber(term) and
-        not emoticon_re.match(term)
+        not emoticon_re.match(term) and
+        not term[0] in emoji.UNICODE_EMOJI
     ]
 
     count_all.update(terms_only)
-    print(count_all)
 
-    #Array of the most common terms with usage numbers [(String, usage),]
-    countList = count_all.most_common(10)
-    # print(count_all.most_common(10))
-    # countList = count_all
-
-    #Whether or not to return the terms and list, or just terms
-    if shouldReturnListOnly:
-        saveList = []
-        for i in countList:
-            saveList.append(i[0])
-        return saveList
-    else:
-        return countList
+    return count_all
