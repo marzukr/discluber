@@ -144,54 +144,10 @@ def returnResults(user):
         newClubDataObject = {"name": club, "handle": clubHandle, "imageURL": clubImageURL}
         clubData.append(newClubDataObject)
 
-    # calculate TFIDF stuff here for terms
-    tfidfArray = tfidfEngine.tokenList(userTweets, tfidfEngine.Token.TERM, 10, documentCollection)
-    # listWithCounts = tfidfEngine.freqCount(userTweets, tfidfEngine.Token.TERM)
-    # totalTermCount = sum(listWithCounts.values())
-    # tfidfArray = []
-    # for term, documentFreq in listWithCounts.items():
-    #     documentCollecData = documentCollection.find_one({'Term': term})
-    #     if documentCollecData is not None:
-    #         tf = documentFreq/totalTermCount
-    #         df = 50/documentCollecData["df"]
-    #         tfidfCalc = tf * log(df)
-    #         arrayObject = (term, tfidfCalc)
-    #         tfidfArray.append(arrayObject)
-    #     else:
-    #         continue
-    # tfidfArray.sort(key=lambda tup: tup[1], reverse=True) #Sort from lowest tfidf score to highest
-    # if len(tfidfArray) > 10: #Only return 10 terms
-    #     tfidfArray = tfidfArray[:10]
+    #Get results from the TFIDF engine
+    formattedTerms = tfidfEngine.tokenResults(userTweets, [tfidfEngine.Token.TERM], 10, documentCollection)
     
-    # Format
-    # [
-    #     {
-    #         "name": "Terms", 
-    #         "list": [
-    #             {
-    #                 "text": "test", 
-    #                 "url": "test.com", 
-    #                 "tfidfScore": "0.3"
-    #             },
-    #             ...
-    #         ]
-    #     },
-    #     ...
-    # ]
-    termsNewFormat = []
-
-    # add url for terms
-    vanillaTermsObject = {"name": "Terms"}
-    vanillaTermList = []
-    for term in tfidfArray:
-        termURL = "https://twitter.com/search?q=" + term[0]
-        termURLObject = {"text": term[0], "url": termURL, "tfidfScore": term[1]}
-        vanillaTermList.append(termURLObject)
-    vanillaTermsObject["list"] = vanillaTermList
-
-    termsNewFormat.append(vanillaTermsObject)
-    
-    return {"clubs": clubData, "terms": termsNewFormat}
+    return {"clubs": clubData, "terms": formattedTerms}
 
 # ----> LEGACY CODE BELOW THIS POINT <----
 

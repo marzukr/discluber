@@ -6,15 +6,15 @@ import string
 
 import emoji
 
-from enum import Enum, auto
+from enum import Enum
 
 from math import log
 
 class Token(Enum):
-    TERM = auto()
-    HASHTAG = auto()
-    USER = auto()
-    LINK = auto()
+    TERM = "Terms"
+    HASHTAG = "Hashtags"
+    USER = "Users"
+    LINK = "Links"
 
 # Define constants to filter and sort terms in Twitter strings
 punctuation = list(string.punctuation)
@@ -126,3 +126,58 @@ def tokenList(userTweets, tokenType, maxItems, mongoCollection):
     if len(tfidfArray) > maxItems: #Only return up to maxItems terms
         tfidfArray = tfidfArray[:maxItems]
     return tfidfArray
+
+# Format the results outputted by tokenList
+def formatResults(tfidfResults, tokenType):
+    tokenObject = {"name": tokenType.value}
+    tokenList = []
+    for token in tfidfResults:
+        tokenURL = "https://twitter.com/search?q=" + token[0]
+        tokenURLObject = {"text": token[0], "url": tokenURL, "tfidfScore": token[1]}
+        tokenList.append(tokenURLObject)
+    tokenObject["list"] = tokenList
+    # Format
+    # {
+    #     "name": "Terms", 
+    #     "list": [
+    #         {
+    #             "text": "test", 
+    #             "url": "test.com", 
+    #             "tfidfScore": "0.3"
+    #         },
+    #         ...
+    #     ]
+    # }
+    return tokenObject
+
+# Return formatted results for a list of token types
+def tokenResults(userTweets, tokenTypes, maxItems, mongoCollection):
+    #Get a list of unformatted result lists
+    unformattedResults = {}
+    for tokenType in tokenTypes:
+        unformatTokens = tokenList(userTweets, tokenType, maxItems, mongoCollection)
+        unformattedResults[tokenType] = unformatTokens
+    
+    #Format the unformatted results and store them in a list
+    formattedResults = []
+    for tokenType, unformatTokens in unformattedResults.items():
+        formattedObject = formatResults(unformatTokens, tokenType)
+        formattedResults.append(formattedObject)
+        
+    # Format
+    # [
+    #     {
+    #         "name": "Terms", 
+    #         "list": [
+    #             {
+    #                 "text": "test", 
+    #                 "url": "test.com", 
+    #                 "tfidfScore": "0.3"
+    #             },
+    #             ...
+    #         ]
+    #     },
+    #     ...
+    # ]
+    
+    return formattedResults
