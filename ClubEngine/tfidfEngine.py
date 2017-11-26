@@ -8,6 +8,8 @@ import emoji
 
 from enum import Enum, auto
 
+from math import log
+
 class Token(Enum):
     TERM = auto()
     HASHTAG = auto()
@@ -105,3 +107,22 @@ def freqCount(userTweets, token=Token.TERM):
     count_all = Counter()
     count_all.update(filteredTweets)
     return count_all
+
+# Returns a list of tokens using the tf-idf algorithm on the given tweet aggregation
+def tokenList(userTweets, tokenType, maxItems, mongoCollection):
+    listWithCounts = freqCount(userTweets, tokenType)
+    totalTermCount = sum(listWithCounts.values())
+    tfidfArray = [] # Array of tuples -> (term, tfidfScore)
+    for term, documentFreq in listWithCounts.items():
+        documentCollecData = mongoCollection.find_one({'Term': term})
+        if documentCollecData is not None:
+            tf = documentFreq/totalTermCount
+            df = 50/documentCollecData["df"]
+            tfidfCalc = tf * log(df)
+            tfidfArray.append((term, tfidfCalc))
+        else:
+            continue
+    tfidfArray.sort(key=lambda tup: tup[1], reverse=True) #Sort from highest tfidf score to lowest
+    if len(tfidfArray) > maxItems: #Only return up to maxItems terms
+        tfidfArray = tfidfArray[:maxItems]
+    return tfidfArray

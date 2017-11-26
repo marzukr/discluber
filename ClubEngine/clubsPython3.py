@@ -18,8 +18,6 @@ import requests
 import json
 import tweepy
 
-from math import log
-
 es = ElasticSearch()
 currentDataBaseTerm = "dva" # Used: elvis, club, clubs, holahola, fourK, gold, diamond, mercury, dva
 currentURL = "http://localhost:9200/" + currentDataBaseTerm + "/tweets" # DO NOT USE A "/" AT THE END
@@ -147,22 +145,23 @@ def returnResults(user):
         clubData.append(newClubDataObject)
 
     # calculate TFIDF stuff here for terms
-    listWithCounts = tfidfEngine.freqCount(userTweets, tfidfEngine.Token.TERM)
-    totalTermCount = sum(listWithCounts.values())
-    tfidfArray = []
-    for term, documentFreq in listWithCounts.items():
-        documentCollecData = documentCollection.find_one({'Term': term})
-        if documentCollecData is not None:
-            tf = documentFreq/totalTermCount
-            df = 50/documentCollecData["df"]
-            tfidfCalc = tf * log(df)
-            arrayObject = (term, tfidfCalc)
-            tfidfArray.append(arrayObject)
-        else:
-            continue
-    tfidfArray.sort(key=lambda tup: tup[1], reverse=True) #Sort from lowest tfidf score to highest
-    if len(tfidfArray) > 10: #Only return 10 terms
-        tfidfArray = tfidfArray[:10]
+    tfidfArray = tfidfEngine.tokenList(userTweets, tfidfEngine.Token.TERM, 10, documentCollection)
+    # listWithCounts = tfidfEngine.freqCount(userTweets, tfidfEngine.Token.TERM)
+    # totalTermCount = sum(listWithCounts.values())
+    # tfidfArray = []
+    # for term, documentFreq in listWithCounts.items():
+    #     documentCollecData = documentCollection.find_one({'Term': term})
+    #     if documentCollecData is not None:
+    #         tf = documentFreq/totalTermCount
+    #         df = 50/documentCollecData["df"]
+    #         tfidfCalc = tf * log(df)
+    #         arrayObject = (term, tfidfCalc)
+    #         tfidfArray.append(arrayObject)
+    #     else:
+    #         continue
+    # tfidfArray.sort(key=lambda tup: tup[1], reverse=True) #Sort from lowest tfidf score to highest
+    # if len(tfidfArray) > 10: #Only return 10 terms
+    #     tfidfArray = tfidfArray[:10]
     
     # Format
     # [
