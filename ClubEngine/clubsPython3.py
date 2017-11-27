@@ -18,8 +18,6 @@ import requests
 import json
 import tweepy
 
-from math import log
-
 es = ElasticSearch()
 currentDataBaseTerm = "dva" # Used: elvis, club, clubs, holahola, fourK, gold, diamond, mercury, dva
 currentURL = "http://localhost:9200/" + currentDataBaseTerm + "/tweets" # DO NOT USE A "/" AT THE END
@@ -146,57 +144,10 @@ def returnResults(user):
         newClubDataObject = {"name": club, "handle": clubHandle, "imageURL": clubImageURL}
         clubData.append(newClubDataObject)
 
-    # calculate TFIDF stuff here for terms
-    listWithCounts = tfidfEngine.freqCount(userTweets)
-    totalTermCount = sum(listWithCounts.values())
-    # totalTermCount = 0
-    # for item in listWithCounts:
-    #     totalTermCount += item[1]
+    #Get results from the TFIDF engine
+    formattedTerms = tfidfEngine.tokenResults(userTweets, [tfidfEngine.Token.TERM], 10, documentCollection)
     
-    tfidfArray = []
-    for term, documentFreq in listWithCounts.items():
-        documentCollecData = documentCollection.find_one({'Term': term})
-        if documentCollecData is not None:
-            tf = documentFreq/totalTermCount
-            df = 50/documentCollecData["df"]
-            tfidfCalc = tf * log(df)
-            arrayObject = (term, tfidfCalc)
-            tfidfArray.append(arrayObject)
-        else:
-            continue
-    tfidfArray.sort(key=lambda tup: tup[1], reverse=True)
-    if len(tfidfArray) > 10:
-        tfidfArray = tfidfArray[:10]
-    
-    # Format
-    # [
-    #     {
-    #         "name": "Terms", 
-    #         "list": [
-    #             {
-    #                 "text": "test", 
-    #                 "url": "test.com", 
-    #                 "tfidfScore": "0.3"
-    #             },
-    #             ...
-    #         ]
-    #     },
-    #     ...
-    # ]
-    termsNewFormat = []
-
-    # add url for terms
-    vanillaTermsObject = {"name": "Terms"}
-    vanillaTermList = []
-    for term in tfidfArray:
-        termURL = "https://twitter.com/search?q=" + term[0]
-        termURLObject = {"text": term[0], "url": termURL, "tfidfScore": term[1]}
-        vanillaTermList.append(termURLObject)
-    vanillaTermsObject["list"] = vanillaTermList
-
-    termsNewFormat.append(vanillaTermsObject)
-    
-    return {"clubs": clubData, "terms": termsNewFormat}
+    return {"clubs": clubData, "terms": formattedTerms}
 
 # ----> LEGACY CODE BELOW THIS POINT <----
 

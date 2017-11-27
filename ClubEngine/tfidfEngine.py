@@ -1,12 +1,20 @@
-import operator
 from collections import Counter
 
-from nltk.tokenize import word_tokenize
 import re
 from nltk.corpus import stopwords
 import string
 
 import emoji
+
+from enum import Enum
+
+from math import log
+
+class Token(Enum):
+    TERM = "Terms"
+    HASHTAG = "Hashtags"
+    USER = "Users"
+    LINK = "Links"
 
 # Define constants to filter and sort terms in Twitter strings
 punctuation = list(string.punctuation)
@@ -39,15 +47,6 @@ def preprocess(s, lowercase=False):
         tokens = [token if emoticon_re.search(token) else token.lower() for token in tokens]
     return tokens
 
-# def isanumber(a):
-#     bool_a = True
-#     try:
-#         bool_a = float(repr(a))
-#     except:
-#         bool_a = False
-
-#     return bool_a
-
 def isanumber(s):
     try:
         float(s)
@@ -63,17 +62,9 @@ def isanumber(s):
         pass
 
     return False
- 
 
-# Returns the terms in a given aggregation of tweets
-def freqCount(userTweets):
-    count_all = Counter()
-
-    preprocessedTweets = preprocess(userTweets)
-    #terms_hash = [term for term in preprocessedTweets if term.startswith('#')]
-    #terms_users = [term for term in preprocessedTweets if term.startswith('@')]
-    #term_links = [term for term in preprocessedTweets if term.startswith('http')]
-
+# Returns complete list of terms (possibly more than one of each term) in a given aggregation of tweets
+def termList(preprocessedTweets):
     #Word terms (not in stoplist, not a hastag, not a user, not a link, not a number, not an emoticon and not an emoji)
     terms_only = [
         term.lower() for term in preprocessedTweets if term.lower() 
@@ -83,7 +74,110 @@ def freqCount(userTweets):
         not emoticon_re.match(term) and
         not term[0] in emoji.UNICODE_EMOJI
     ]
+    return terms_only
 
-    count_all.update(terms_only)
+# Returns complete list of hashtags (possibly more than one of each hashtag) in a given aggregation of tweets
+def hashtagList(preprocessedTweets):
+    terms_hash = [term for term in preprocessedTweets if term.startswith('#')]
+    return terms_hash
 
+# Returns complete list of users (possibly more than one of each user) in a given aggregation of tweets
+def userList(preprocessedTweets):
+    terms_users = [term for term in preprocessedTweets if term.startswith('@')]
+    return terms_users
+
+# Returns complete list of links (possibly more than one of each link) in a given aggregation of tweets
+def linkList(preprocessedTweets):
+    term_links = [term for term in preprocessedTweets if term.startswith('http')]
+    return term_links
+
+# Returns the frequencies of the specfied tokens in the given tweet aggregation
+def freqCount(userTweets, token=Token.TERM):
+    preprocessedTweets = preprocess(userTweets)
+    filteredTweets = []
+    if token == Token.TERM:
+        filteredTweets = termList(preprocessedTweets)
+    elif token == Token.HASHTAG:
+        filteredTweets = hashtagList(preprocessedTweets)
+    elif token == Token.USER:
+        filteredTweets = userList(preprocessedTweets)
+    elif token == Token.LINK:
+        filteredTweets = userList(preprocessedTweets)
+
+    count_all = Counter()
+    count_all.update(filteredTweets)
     return count_all
+
+# Returns a list of tokens using the tf-idf algorithm on the given tweet aggregation
+def tokenList(userTweets, tokenType, maxItems, mongoCollection):
+    listWithCounts = freqCount(userTweets, tokenType)
+    totalTermCount = sum(listWithCounts.values())
+    tfidfArray = [] # Array of tuples -> (term, tfidfScore)
+    for term, documentFreq in listWithCounts.items():
+        documentCollecData = mongoCollection.find_one({'Term': term})
+        if documentCollecData is not None:
+            tf = documentFreq/totalTermCount
+            df = 50/documentCollecData["df"]
+            tfidfCalc = tf * log(df)
+            tfidfArray.append((term, tfidfCalc))
+        else:
+            continue
+    tfidfArray.sort(key=lambda tup: tup[1], reverse=True) #Sort from highest tfidf score to lowest
+    if len(tfidfArray) > maxItems: #Only return up to maxItems terms
+        tfidfArray = tfidfArray[:maxItems]
+    return tfidfArray
+
+# Format the results outputted by tokenList
+def formatResults(tfidfResults, tokenType):
+    tokenObject = {"name": tokenType.value}
+    tokenList = []
+    for token in tfidfResults:
+        tokenURL = "https://twitter.com/search?q=" + token[0]
+        tokenURLObject = {"text": token[0], "url": tokenURL, "tfidfScore": token[1]}
+        tokenList.append(tokenURLObject)
+    tokenObject["list"] = tokenList
+    # Format
+    # {
+    #     "name": "Terms", 
+    #     "list": [
+    #         {
+    #             "text": "test", 
+    #             "url": "test.com", 
+    #             "tfidfScore": "0.3"
+    #         },
+    #         ...
+    #     ]
+    # }
+    return tokenObject
+
+# Return formatted results for a list of token types
+def tokenResults(userTweets, tokenTypes, maxItems, mongoCollection):
+    #Get a list of unformatted result lists
+    unformattedResults = {}
+    for tokenType in tokenTypes:
+        unformatTokens = tokenList(userTweets, tokenType, maxItems, mongoCollection)
+        unformattedResults[tokenType] = unformatTokens
+    
+    #Format the unformatted results and store them in a list
+    formattedResults = []
+    for tokenType, unformatTokens in unformattedResults.items():
+        formattedObject = formatResults(unformatTokens, tokenType)
+        formattedResults.append(formattedObject)
+        
+    # Format
+    # [
+    #     {
+    #         "name": "Terms", 
+    #         "list": [
+    #             {
+    #                 "text": "test", 
+    #                 "url": "test.com", 
+    #                 "tfidfScore": "0.3"
+    #             },
+    #             ...
+    #         ]
+    #     },
+    #     ...
+    # ]
+    
+    return formattedResults
