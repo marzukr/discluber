@@ -33,7 +33,7 @@ auth.set_access_token(access_key, access_secret)
 
 api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
-dbFunctions.runFunction(tweetsCollection)
+dbFunctions.runFunction(db.testFreqs, tweetsCollection)
 
 def search(uri, term):
     #Take the term and run it through elasticsearch
