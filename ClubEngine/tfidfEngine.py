@@ -102,7 +102,7 @@ def freqCount(userTweets, token=Token.TERM):
     elif token == Token.USER:
         filteredTweets = userList(preprocessedTweets)
     elif token == Token.LINK:
-        filteredTweets = userList(preprocessedTweets)
+        filteredTweets = linkList(preprocessedTweets)
 
     count_all = Counter()
     count_all.update(filteredTweets)

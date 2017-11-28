@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import tfidfEngine, dbFunctions
+from ClubEngine import tfidfEngine
 
 from pymongo import MongoClient
 client = MongoClient()
@@ -10,7 +10,8 @@ tweetsCollection = db.tweetsList
 tweetsUsers = db.tweetsUsers
 tweetsUsersNew = db.tweetsUsersNew
 
-documentCollection = db.documentCollection
+# documentCollection = db.documentCollection
+documentCollection = db.testFreqs
 
 # from elasticsearch import Elasticsearch, exceptions
 from pyelasticsearch import ElasticSearch
@@ -32,8 +33,6 @@ auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_key, access_secret)
 
 api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
-
-dbFunctions.runFunction(db.testFreqs, tweetsCollection)
 
 def search(uri, term):
     #Take the term and run it through elasticsearch
