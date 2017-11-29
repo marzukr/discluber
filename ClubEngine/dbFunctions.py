@@ -9,6 +9,8 @@ configCollection = db["config"]
 from tqdm import tqdm
 from collections import Counter
 
+from timeit import default_timer as timer
+
 def getConfig(key):
     return configCollection.find_one()[key]
 
@@ -39,6 +41,7 @@ def getFollowers(twitterAccount, twitterAPI):
     followersTwitters = (user.screen_name for i, user in enumerate(followersPages))
     return followersTwitters
 
+#There appears to be a significant delay between some iterations of the cursor, faster internet could help?
 def getTweets(twitterAccount, maxTweets, twitterAPI):
     try:
         tweetCursor = tweepy.Cursor(twitterAPI.user_timeline, screen_name=twitterAccount).items(limit=maxTweets)
@@ -47,6 +50,7 @@ def getTweets(twitterAccount, maxTweets, twitterAPI):
     except tweepy.error.TweepError:
         return None
 
+#Faster internet could speed this?
 def addClubMongo(clubName, twitterAccount, tweetCollection, twitterAPI):
     #Get config parameters
     maxTweets = getConfig("tweetsPerFollower")
