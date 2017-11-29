@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from ClubEngine import tfidfEngine
+# from ClubEngine import tfidfEngine, dbFunctions
+import tfidfEngine, dbFunctions
 
 from pymongo import MongoClient
 client = MongoClient()
@@ -33,6 +34,8 @@ auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_key, access_secret)
 
 api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
+
+dbFunctions.addClubMongo({"twitterAccount": "realdonaldtrump"}, None, api)
 
 def search(uri, term):
     #Take the term and run it through elasticsearch

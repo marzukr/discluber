@@ -1,4 +1,10 @@
-import tfidfEngine
+from ClubEngine import tfidfEngine
+
+import tweepy
+from pymongo import MongoClient
+client = MongoClient()
+db = client["clubsDatabase"]
+
 from tqdm import tqdm
 from collections import Counter
 
@@ -21,3 +27,14 @@ def storeDocumentFreq(tweetCollection, freqCollection):
         freqCollection.insert_one({"Term": token, "df": freq})
         pbar.update(1)
     pbar.close()
+
+# def function():
+#     none = None
+
+def getFollowers(twitterAccount, maxUsers, twitterAPI):
+    followersPages = tweepy.Cursor(twitterAPI.followers_ids, screen_name=twitterAccount).items(limit=maxUsers)
+    followersTwitters = [user.screen_name for i, user in enumerate(followersPages)]
+    return followersTwitters
+
+def addClubMongo(clubConfig, tweetCollection, twitterAPI):
+    followers = getFollowers(clubConfig["twitterAccount"], 200, twitterAPI)
