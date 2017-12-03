@@ -9,7 +9,7 @@ configCollection = db["config"]
 from tqdm import tqdm
 from collections import Counter
 
-from timeit import default_timer as timer
+# from timeit import default_timer as timer
 
 def getConfig(key):
     return configCollection.find_one()[key]
@@ -56,6 +56,7 @@ def addClubMongo(clubName, twitterAccount, tweetCollection, twitterAPI):
     maxTweets = getConfig("tweetsPerFollower")
     maxFollowers = getConfig("followersPerClub")
 
+    #Get club's followers, and their tweets
     tweets = []
     followers = []
     followerTweets = {}
@@ -71,6 +72,7 @@ def addClubMongo(clubName, twitterAccount, tweetCollection, twitterAPI):
             break
     pbar.close()
 
+    #Store the data in mongo
     tweetCollection.insert_one({
         "twitterAccount": twitterAccount,
         "clubName": clubName,
