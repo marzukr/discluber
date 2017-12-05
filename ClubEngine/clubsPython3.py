@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-# from ClubEngine import tfidfEngine, dbFunctions
-import tfidfEngine, dbFunctions
+from ClubEngine import tfidfEngine, dbFunctions, twitterUtil
+# import tfidfEngine, dbFunctions, twiterUtil
 
 from pymongo import MongoClient
 client = MongoClient()
@@ -36,9 +36,7 @@ auth.set_access_token(access_key, access_secret)
 api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
 def search(uri, term):
-    #Take the term and run it through elasticsearch
-
-    """Simple Elasticsearch Query"""
+    #Take the term and run it through elasticsearch - simple elastic search query
     query = json.dumps({
         "query": {
             "match": {
@@ -48,41 +46,11 @@ def search(uri, term):
     })
     response = requests.get(uri, data=query)
     results = json.loads(response.text)
-
     return results
-
-def mlt(uri, user):
-    tweepyCursor = tweepy.Cursor(api.user_timeline, screen_name=user, count=200).items()
-    hola = ""
-    n = 0
-    for tweet in tweepyCursor:
-        hola = hola + tweet.text
-        n = n + 1
-        if n >= 200:
-            break
-    query = json.dumps({
-        "query":
-        {
-            "more_like_this" :
-            {
-                "fields" : ["Tweets"],
-                "like" : hola,
-                "min_term_freq" : 1,
-                "max_query_terms" : 12,
-                "max_word_length" : 12
-            }
-        }
-    })
-    response = requests.get(uri, data=query)
-    print("hola")
-    results = json.loads(response.text)
-    print("bob")
-    print(results)
 
 def format_results(results, ouputParam):
     #Takes elasticsearch output and makes it into a list of clubs, some of which repeat
     #LOOK INTO THIS TO OPTIMIZE RESULTS
-
     data = [doc for doc in results['hits']['hits']]
     prettyA = []
     for doc in data:
@@ -99,14 +67,7 @@ def create_doc(uri, doc_data):
 
 def returnResults(user):
     # Gather the last 200 tweets of the user and combine them into a string
-    tweepyCursor = tweepy.Cursor(api.user_timeline, screen_name=user, count=200).items()
-    userTweets = ""
-    n = 0
-    for tweet in tweepyCursor:
-        userTweets = userTweets + tweet.text
-        n = n + 1
-        if n >= 200:
-            break
+    userTweets = twitterUtil.getTweets(user, dbFunctions.getConfig("tweetsPerUser"), api)
 
     #Take the combined tweet string and feed it into elastic search, then make the result into a pretty list of clubs
     rawElasticSearchResults = search(uri=currentURL + "/_search?", term=userTweets)
@@ -153,7 +114,7 @@ def returnResults(user):
 
 # ----> LEGACY CODE BELOW THIS POINT <----
 
-# LEGACY CODE UNKNOWN FUNCTION
+# # LEGACY CODE UNKNOWN FUNCTION
 # def newIndex():
 #     cursor = tweetsUsers.find({})
 #     for item in cursor:
@@ -161,7 +122,7 @@ def returnResults(user):
 #         print(item["Club Name"])
 #         create_doc(uri=currentURL, doc_data=dataToSearch)
 
-# LEGACY CODE TO UPDATE/ADD TO DATABASE
+# # LEGACY CODE TO UPDATE/ADD TO DATABASE
 # def addTwitterUser(user, clubName):
 #     followersCursor = tweepy.Cursor(api.followers, screen_name=user, count=300).items()
 #     fabio = []
@@ -219,3 +180,32 @@ def returnResults(user):
 #         data3 = {"Club Name": clubName, "Tweets": clubTweets[n], "User": followers[n]}
 #         tweetsUsersNew.insert_one(data3)
 #         create_doc(uri=currentURL, doc_data={"Club Name": clubName, "Tweets": clubTweets[n], "User": followers[n]})
+
+# # LEGACY CODE FOR ELASTICSEARCH MLT QUERY
+# def mlt(uri, user):
+#     tweepyCursor = tweepy.Cursor(api.user_timeline, screen_name=user, count=200).items()
+#     hola = ""
+#     n = 0
+#     for tweet in tweepyCursor:
+#         hola = hola + tweet.text
+#         n = n + 1
+#         if n >= 200:
+#             break
+#     query = json.dumps({
+#         "query":
+#         {
+#             "more_like_this" :
+#             {
+#                 "fields" : ["Tweets"],
+#                 "like" : hola,
+#                 "min_term_freq" : 1,
+#                 "max_query_terms" : 12,
+#                 "max_word_length" : 12
+#             }
+#         }
+#     })
+#     response = requests.get(uri, data=query)
+#     print("hola")
+#     results = json.loads(response.text)
+#     print("bob")
+#     print(results)

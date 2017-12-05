@@ -33,3 +33,4 @@ The database is called "clubsDatabase"
 + "followersPerClub": How many followers to retreive per club
 + "tweetsPerFollower": How many tweets per follower to retrieve
 + "clubs": A dictionary, keys are club twitter handle, values are club names
++ "tweetsPerUser": The number of tweets to retreive when a user enters a twitter into Discluber
