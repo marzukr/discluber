@@ -20,6 +20,8 @@ import requests
 import json
 import tweepy
 
+from collections import Counter
+
 es = ElasticSearch()
 currentDataBaseTerm = "dva" # Used: elvis, club, clubs, holahola, fourK, gold, diamond, mercury, dva
 currentURL = "http://localhost:9200/" + currentDataBaseTerm + "/tweets" # DO NOT USE A "/" AT THE END
@@ -35,8 +37,8 @@ auth.set_access_token(access_key, access_secret)
 
 api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
+#Take the term and run it through elasticsearch - simple elastic search query
 def search(uri, term):
-    #Take the term and run it through elasticsearch - simple elastic search query
     query = json.dumps({
         "query": {
             "match": {
@@ -48,16 +50,19 @@ def search(uri, term):
     results = json.loads(response.text)
     return results
 
-def format_results(results, ouputParam):
-    #Takes elasticsearch output and makes it into a list of clubs, some of which repeat
+# Search elasticsearch and makes it into a list of maxClubs clubs in order
+def formatSearch(uri, term, maxClubs):
+    results = search(uri, term)
+
     #LOOK INTO THIS TO OPTIMIZE RESULTS
     data = [doc for doc in results['hits']['hits']]
+
     prettyA = []
     for doc in data:
-        # CHANGE THIS for different outputs
-        pretty = "%s" % (doc['_source'][ouputParam])
+        # pretty = (doc['_source']["Club Name"], "test")
+        pretty = doc['_source']["Club Name"]
         prettyA.append(pretty)
-    return prettyA
+    return [x[0] for x in Counter(prettyA).most_common(maxClubs)]
 
 def create_doc(uri, doc_data):
     """Create new document."""
@@ -70,40 +75,13 @@ def returnResults(user):
     userTweets = twitterUtil.getTweets(user, dbFunctions.getConfig("tweetsPerUser"), api)
 
     #Take the combined tweet string and feed it into elastic search, then make the result into a pretty list of clubs
-    rawElasticSearchResults = search(uri=currentURL + "/_search?", term=userTweets)
-    clubsArray = format_results(results=rawElasticSearchResults, ouputParam="Club Name")
-
-    points = []
-    uPoints = []
-    uniqueClubs = []
-    #Assign points such that the clubs that come first have more
-    for n in range(0,len(clubsArray)):
-        points.append(len(clubsArray) - n)
-
-    #Get a list of unique clubs
-    for club in clubsArray:
-        if club not in uniqueClubs:
-            uniqueClubs.append(club)
-
-    #Add the points of duplicate clubs together so that each unique club has only one point value
-    for uClub in uniqueClubs:
-        for cClub in clubsArray:
-            if cClub == uClub:
-                uIndex = uniqueClubs.index(uClub)
-                cindex = clubsArray.index(cClub)
-                if 0 <= uIndex < len(uPoints):
-                    uPoints[uIndex] = uPoints[uIndex] + points[cindex]
-                else:
-                    uPoints.append(points[cindex])
-
-    #Sort the list of unique clubs by the point value so that the highest points are first
-    sortedArray = [x for (y, x) in sorted(zip(uPoints, uniqueClubs), reverse=True)][0:3]
+    sortedArray = formatSearch(uri=currentURL + "/_search?", term=userTweets, maxClubs=dbFunctions.getConfig("clubsToReturn"))
 
     #Get the profile image URLS for the clubs and reorganize the data
     clubData = []
     for club in sortedArray:
         clubHandle = collection.find_one({"Club Name": club})["Twitter Account"]
-        clubImageURL = api.get_user(clubHandle).profile_image_url_https.replace("_normal", "_200x200")
+        clubImageURL = twitterUtil.getImageURL(clubHandle, api)
         newClubDataObject = {"name": club, "handle": clubHandle, "imageURL": clubImageURL}
         clubData.append(newClubDataObject)
 

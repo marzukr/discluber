@@ -13,3 +13,6 @@ def getTweets(twitterAccount, maxTweets, twitterAPI):
         return " ".join(tweets)
     except tweepy.error.TweepError:
         return None
+
+def getImageURL(twitterAccount, twitterAPI):
+    return twitterAPI.get_user(twitterAccount).profile_image_url_https.replace("_normal", "_200x200")
