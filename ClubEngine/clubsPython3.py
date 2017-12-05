@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from ClubEngine import tfidfEngine
+# from ClubEngine import tfidfEngine, dbFunctions
+import tfidfEngine, dbFunctions
 
 from pymongo import MongoClient
 client = MongoClient()
@@ -10,7 +11,8 @@ tweetsCollection = db.tweetsList
 tweetsUsers = db.tweetsUsers
 tweetsUsersNew = db.tweetsUsersNew
 
-documentCollection = db.documentCollection
+# documentCollection = db.documentCollection
+documentCollection = db.testFreqs
 
 # from elasticsearch import Elasticsearch, exceptions
 from pyelasticsearch import ElasticSearch
