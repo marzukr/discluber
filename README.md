@@ -28,3 +28,8 @@ The database is called "clubsDatabase"
 **documentCollection**
 + "Term": A term that was used the tweets of a follower of a club
 + "df": How many clubs that term appeared in
+
+**config**
++ "followersPerClub": How many followers to retreive per club
++ "tweetsPerFollower": How many tweets per follower to retrieve
++ "clubs": A dictionary, keys are club twitter handle, values are club names

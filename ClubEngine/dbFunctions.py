@@ -1,6 +1,5 @@
-import tfidfEngine
+import tfidfEngine, twitterUtil
 
-import tweepy
 from pymongo import MongoClient
 client = MongoClient()
 db = client["clubsDatabase"]
@@ -9,12 +8,14 @@ configCollection = db["config"]
 from tqdm import tqdm
 from collections import Counter
 
+import csv
+
 # from timeit import default_timer as timer
 
 def getConfig(key):
     return configCollection.find_one()[key]
 
-#Calculate and store the document frequencies of the given tweets in the given mongo collection
+# Calculate and store the document frequencies of the given tweets in the given mongo collection
 def storeDocumentFreq(tweetCollection, freqCollection):
     #Get the tweets from the database and find tokens and their document frequencies
     tokenCounter = Counter()
@@ -36,21 +37,7 @@ def storeDocumentFreq(tweetCollection, freqCollection):
         pbar.update(1)
     pbar.close()
 
-def getFollowers(twitterAccount, twitterAPI):
-    followersPages = tweepy.Cursor(twitterAPI.followers, screen_name=twitterAccount).items()
-    followersTwitters = (user.screen_name for i, user in enumerate(followersPages))
-    return followersTwitters
-
-#There appears to be a significant delay between some iterations of the cursor, faster internet could help?
-def getTweets(twitterAccount, maxTweets, twitterAPI):
-    try:
-        tweetCursor = tweepy.Cursor(twitterAPI.user_timeline, screen_name=twitterAccount).items(limit=maxTweets)
-        tweets = [tweet.text for i, tweet in enumerate(tweetCursor)]
-        return " ".join(tweets)
-    except tweepy.error.TweepError:
-        return None
-
-#Faster internet could speed this?
+# Faster internet could speed this?
 def addClubMongo(clubName, twitterAccount, tweetCollection, twitterAPI):
     #Get config parameters
     maxTweets = getConfig("tweetsPerFollower")
@@ -61,8 +48,8 @@ def addClubMongo(clubName, twitterAccount, tweetCollection, twitterAPI):
     followers = []
     followerTweets = {}
     pbar = tqdm(total=maxFollowers, desc="    Adding " + clubName)
-    for follower in getFollowers(twitterAccount, twitterAPI):
-        userTweets = getTweets(follower, maxTweets, twitterAPI)
+    for follower in twitterUtil.getFollowers(twitterAccount, twitterAPI):
+        userTweets = twitterUtil.getTweets(follower, maxTweets, twitterAPI)
         if userTweets is not None and userTweets != "":
             tweets.append(userTweets)
             followers.append(follower)
@@ -80,3 +67,15 @@ def addClubMongo(clubName, twitterAccount, tweetCollection, twitterAPI):
         "followers": followers,
         "followerTweets": followerTweets,
     })
+
+# Open CSV file and store clubs in config collection in database
+def storeCSV_Config(filename):
+    with open(filename, "r") as csvFile:
+        csvReader = csv.reader(csvFile)
+        next(csvReader)
+        for club in csvReader:
+            try:
+                if club[5] == "1":
+                    configCollection.update_one({}, {"$set": {"clubs."+club[1]: club[0]}})
+            except IndexError:
+                continue
