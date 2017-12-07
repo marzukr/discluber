@@ -1,10 +1,10 @@
 import tweepy
-from ClubEngine import dbFunctions
+from ClubEngine import config
 
-consumer_key = dbFunctions.getConfig("consumerKey")
-consumer_secret = dbFunctions.getConfig("consumerSecret")
-access_key = dbFunctions.getConfig("accessKey")
-access_secret = dbFunctions.getConfig("accessSecret")
+consumer_key = config.getConfig("consumerKey")
+consumer_secret = config.getConfig("consumerSecret")
+access_key = config.getConfig("accessKey")
+access_secret = config.getConfig("accessSecret")
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_key, access_secret)
 twitterAPI = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
@@ -26,5 +26,16 @@ def getTweets(twitterAccount, maxTweets):
 def getImageURL(twitterAccount):
     return twitterAPI.get_user(twitterAccount).profile_image_url_https.replace("_normal", "_200x200")
 
-# def getFollowerTweets(twitterAccount):
-#     followerTweets = {}
+def getFollowerTweets(twitterAccount):
+    maxTweets = config.getConfig("tweetsPerFollower")
+    maxFollowers = config.getConfig("followersPerClub")
+
+    followerTweets = {}
+    for follower in getFollowers(twitterAccount):
+        userTweets = getTweets(follower, maxTweets)
+        if userTweets is not None and userTweets != "":
+            followerTweets[follower] = userTweets
+        if len(followerTweets) >= maxFollowers:
+            break
+
+    return followerTweets
