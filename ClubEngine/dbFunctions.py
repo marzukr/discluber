@@ -39,7 +39,7 @@ def storeDocumentFreq(tweetCollection, freqCollection):
     pbar.close()
 
 # Faster internet could speed this?
-def addClubMongo(clubName, twitterAccount, tweetCollection, twitterAPI):
+def addClubMongo(clubName, twitterAccount, tweetCollection):
     #Get config parameters
     maxTweets = getConfig("tweetsPerFollower")
     maxFollowers = getConfig("followersPerClub")
@@ -49,8 +49,8 @@ def addClubMongo(clubName, twitterAccount, tweetCollection, twitterAPI):
     followers = []
     followerTweets = {}
     pbar = tqdm(total=maxFollowers, desc="    Adding " + clubName)
-    for follower in twitterUtil.getFollowers(twitterAccount, twitterAPI):
-        userTweets = twitterUtil.getTweets(follower, maxTweets, twitterAPI)
+    for follower in twitterUtil.getFollowers(twitterAccount):
+        userTweets = twitterUtil.getTweets(follower, maxTweets)
         if userTweets is not None and userTweets != "":
             tweets.append(userTweets)
             followers.append(follower)

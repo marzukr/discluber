@@ -18,24 +18,12 @@ documentCollection = db.testFreqs
 from pyelasticsearch import ElasticSearch
 import requests
 import json
-import tweepy
 
 from collections import Counter
 
 es = ElasticSearch()
 currentDataBaseTerm = "dva" # Used: elvis, club, clubs, holahola, fourK, gold, diamond, mercury, dva
 currentURL = "http://localhost:9200/" + currentDataBaseTerm + "/tweets" # DO NOT USE A "/" AT THE END
-
-consumer_key = "LsAwFJvshsac0oV1MWPT5SPdP"
-consumer_secret = "HtOBG7Lv66RUIvmtffEe5LYN0RRVncuQp7p1bXoyGdNu3coYkw"
-
-access_key = "2183673402-AvddwhaVAuB8lngOqVbtX31kQMpnTnbfhSOs7iO"
-access_secret = "1Ar33ZPEeyEOs1gdn7aZLYq5tTyW4E3JyQaQBJyo4gUzf"
-
-auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-auth.set_access_token(access_key, access_secret)
-
-api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
 #Take the term and run it through elasticsearch - simple elastic search query
 def search(uri, term):
@@ -64,15 +52,15 @@ def formatSearch(uri, term, maxClubs):
         prettyA.append(pretty)
     return [x[0] for x in Counter(prettyA).most_common(maxClubs)]
 
+# Add a document to elasticsearch
 def create_doc(uri, doc_data):
-    """Create new document."""
     query = json.dumps(doc_data)
     response = requests.post(uri, data=query)
     print(response)
 
 def returnResults(user):
     # Gather the last 200 tweets of the user and combine them into a string
-    userTweets = twitterUtil.getTweets(user, dbFunctions.getConfig("tweetsPerUser"), api)
+    userTweets = twitterUtil.getTweets(user, dbFunctions.getConfig("tweetsPerUser"))
 
     #Take the combined tweet string and feed it into elastic search, then make the result into a pretty list of clubs
     sortedArray = formatSearch(uri=currentURL + "/_search?", term=userTweets, maxClubs=dbFunctions.getConfig("clubsToReturn"))
@@ -81,7 +69,7 @@ def returnResults(user):
     clubData = []
     for club in sortedArray:
         clubHandle = collection.find_one({"Club Name": club})["Twitter Account"]
-        clubImageURL = twitterUtil.getImageURL(clubHandle, api)
+        clubImageURL = twitterUtil.getImageURL(clubHandle)
         newClubDataObject = {"name": club, "handle": clubHandle, "imageURL": clubImageURL}
         clubData.append(newClubDataObject)
 
