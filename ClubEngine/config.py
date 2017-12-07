@@ -26,6 +26,5 @@ def storeCSV_Config(filename):
             except IndexError:
                 continue
 
-def dbCol(collectionType):
-    coDate = getConfig("coDate")
-    return db[collectionType + "_" + coDate]
+def dbCol(collectionType, coDate=getConfig("coDate")):
+    return db[collectionType.value + "_" + coDate]
