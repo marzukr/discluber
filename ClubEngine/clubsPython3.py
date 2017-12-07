@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from ClubEngine import tfidfEngine, twitterUtil, config
-# import tfidfEngine, dbFunctions, twiterUtil
+# from ClubEngine import tfidfEngine, twitterUtil, config
+import tfidfEngine, twitterUtil, config
 
 from pymongo import MongoClient
 client = MongoClient()
@@ -106,17 +106,28 @@ def storeDocumentFreq():
     pbar.close()
 
 # Faster internet could speed this?
-def addClubMongo(clubName, twitterAccount):
+def addClubMongo(clubName, twitterAccount, date):
     #Get club's followers, and their tweets
     followerTweets = twitterUtil.getFollowerTweets(twitterAccount)
     tweets = followerTweets.values()
     followers = followerTweets.keys()
 
     #Store the data in mongo
-    config.dbCol(config.Collections.CLUB_DATA).insert_one({
+    config.dbCol(config.Collections.CLUB_DATA, coDate=date).insert_one({
         "twitterAccount": twitterAccount,
         "clubName": clubName,
         "tweets": tweets,
         "followers": followers,
         "followerTweets": followerTweets,
     })
+
+def addNewClubs(date):
+    clubs = config.getConfig("clubs")
+    total = len(clubs)
+    prog = 0
+    for account, name in clubs.items():
+        addClubMongo(name, account, date)
+        prog += 1
+        print(int(prog/total*10000)/100,"%", sep='')
+
+addNewClubs("12_7_17")
