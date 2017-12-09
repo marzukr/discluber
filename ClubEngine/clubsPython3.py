@@ -131,4 +131,4 @@ def addNewClubs(date):
         prog += 1
         print(int(prog/total*10000)/100,"%", sep='')
 
-addNewClubs("12_7_17")
+# addNewClubs("12_7_17")

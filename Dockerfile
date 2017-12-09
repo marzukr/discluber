@@ -5,7 +5,7 @@ FROM python:3
 WORKDIR /clubReccomendationNU
 
 # Copy the current directory contents into the container at /clubReccomendationNU
-ADD ./
+ADD . /clubReccomendationNU
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --trusted-host pypi.python.org -r requirements.txt
@@ -14,7 +14,7 @@ RUN pip install --trusted-host pypi.python.org -r requirements.txt
 EXPOSE 5000
 
 # Define environment variable
-ENV NAME World
+# ENV NAME World
 
 # Run app.py when the container launches
 CMD ["python", "webInterface.py"]
