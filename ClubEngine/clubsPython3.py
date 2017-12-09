@@ -109,8 +109,9 @@ def storeDocumentFreq():
 def addClubMongo(clubName, twitterAccount, date):
     #Get club's followers, and their tweets
     followerTweets = twitterUtil.getFollowerTweets(twitterAccount)
-    tweets = followerTweets.values()
-    followers = followerTweets.keys()
+    # followerTweets = {"Hello world": "test", "wow": "bob"}
+    tweets = list(followerTweets.values())
+    followers = list(followerTweets.keys())
 
     #Store the data in mongo
     config.dbCol(config.Collections.CLUB_DATA, coDate=date).insert_one({
@@ -122,7 +123,7 @@ def addClubMongo(clubName, twitterAccount, date):
     })
 
 def addNewClubs(date):
-    clubs = config.getConfig("clubs")
+    clubs = {**config.getConfig("clubs")}
     total = len(clubs)
     prog = 0
     for account, name in clubs.items():
