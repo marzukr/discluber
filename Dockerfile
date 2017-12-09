@@ -10,7 +10,10 @@ ADD . /clubReccomendationNU
 # Install any needed packages specified in requirements.txt
 RUN pip install --trusted-host pypi.python.org -r requirements.txt
 
-# Make port 80 available to the world outside this container
+# Install the stopwords for the tfidf calculations
+RUN python -m nltk.downloader stopwords
+
+# Make port 5000 available to the world outside this container
 EXPOSE 5000
 
 # Define environment variable

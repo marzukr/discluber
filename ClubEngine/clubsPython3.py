@@ -7,7 +7,7 @@ from pymongo import MongoClient
 client = MongoClient()
 db = client.clubsDatabase
 
-from pyelasticsearch import ElasticSearch
+# from pyelasticsearch import ElasticSearch
 import requests
 import json
 
@@ -15,9 +15,10 @@ from collections import Counter
 
 from tqdm import tqdm
 
-es = ElasticSearch()
+# es = ElasticSearch()
 currentDataBaseTerm = "dva" # Used: elvis, club, clubs, holahola, fourK, gold, diamond, mercury, dva
-currentURL = "http://localhost:9200/" + currentDataBaseTerm + "/tweets" # DO NOT USE A "/" AT THE END
+baseURL = "http://localhost:9200/"
+currentURL = baseURL + currentDataBaseTerm + "/tweets" # DO NOT USE A "/" AT THE END
 
 def returnResults(user):
     # Gather the last 200 tweets of the user and combine them into a string
@@ -36,7 +37,7 @@ def returnResults(user):
         clubData.append(newClubDataObject)
 
     #Get results from the TFIDF engine
-    formattedTerms = tfidfEngine.tokenResults(userTweets, [tfidfEngine.Token.TERM], 10, config.dbCol("testFreqs"))
+    formattedTerms = tfidfEngine.tokenResults(userTweets, [tfidfEngine.Token.TERM], config.getConfig("tokensToReturn"), config.dbCol(config.Collections.TOKENS))
     
     return {"clubs": clubData, "terms": formattedTerms}
 
@@ -44,6 +45,10 @@ def returnResults(user):
 """====>ELASTICSEARCH<===="""
 """====>ELASTICSEARCH<===="""
 """====>ELASTICSEARCH<===="""
+
+# Get the elasticsearch url
+def elasticsearchURL(date=config.getConfig("coDate")):
+    return baseURL + date + "/tweets" # DO NOT USE A "/" AT THE END
 
 #Take the term and run it through elasticsearch - simple elastic search query
 def search(uri, term):
@@ -76,7 +81,7 @@ def formatSearch(uri, term, maxClubs):
 def create_doc(uri, doc_data):
     query = json.dumps(doc_data)
     response = requests.post(uri, data=query)
-    print(response)
+    return response
 
 """====>MONGODB<===="""
 """====>MONGODB<===="""
@@ -84,11 +89,11 @@ def create_doc(uri, doc_data):
 """====>MONGODB<===="""
 
 # Calculate and store the document frequencies of the given tweets in the given mongo collection
-def storeDocumentFreq():
+def storeDocumentFreq(date):
     #Get the tweets from the database and find tokens and their document frequencies
     tokenCounter = Counter()
-    pbar = tqdm(total=config.dbCol(config.Collections.CLUB_DATA).count(), desc="    Getting tokens (1/2)")
-    for clubItem in config.dbCol(config.Collections.CLUB_DATA).find({}):
+    pbar = tqdm(total=config.dbCol(config.Collections.CLUB_DATA, coDate=date).count(), desc="    Getting tokens (1/2)")
+    for clubItem in config.dbCol(config.Collections.CLUB_DATA, coDate=date).find({}):
         tokens = []
         for tweetAgg in clubItem["tweets"]:
             tokens += tfidfEngine.preprocess(tweetAgg, True)
@@ -100,8 +105,9 @@ def storeDocumentFreq():
 
     #Store the tokens and their frequencies in mongo
     pbar = tqdm(total=len(tokenCounter), desc="    Adding to database (2/2)")
+    tokenCollection = config.dbCol(config.Collections.TOKENS, coDate=date)
     for token, freq in tokenCounter.items():
-        config.dbCol(config.Collections.TOKENS).insert_one({"Term": token, "df": freq})
+        tokenCollection.insert_one({"Term": token, "df": freq})
         pbar.update(1)
     pbar.close()
 
@@ -109,7 +115,6 @@ def storeDocumentFreq():
 def addClubMongo(clubName, twitterAccount, date):
     #Get club's followers, and their tweets
     followerTweets = twitterUtil.getFollowerTweets(twitterAccount)
-    # followerTweets = {"Hello world": "test", "wow": "bob"}
     tweets = list(followerTweets.values())
     followers = list(followerTweets.keys())
 
@@ -122,6 +127,7 @@ def addClubMongo(clubName, twitterAccount, date):
         "followerTweets": followerTweets,
     })
 
+# Run addClubMongo for every club in the config
 def addNewClubs(date):
     clubs = {**config.getConfig("clubs")}
     total = len(clubs)
@@ -131,4 +137,19 @@ def addNewClubs(date):
         prog += 1
         print(int(prog/total*10000)/100,"%", sep='')
 
-# addNewClubs("12_7_17")
+# Get and store follower data from the club data
+def storeFollowerData(date):
+    pbar = tqdm(total=config.dbCol(config.Collections.CLUB_DATA, coDate=date).count(), desc="    Store Follower Data")
+    followerCollection = config.dbCol(config.Collections.FOLLOWER_DATA, coDate=date)
+    for clubItem in config.dbCol(config.Collections.CLUB_DATA, coDate=date).find({}):
+        twitterAccount = clubItem["twitterAccount"]
+        clubName = clubItem["clubName"]
+        for follower, tweets in clubItem["followerTweets"].items():
+            followerCollection.insert_one({
+                "twitterAccount": twitterAccount,
+                "clubName": clubName,
+                "tweets": tweets,
+                "follower": follower,
+            })
+        pbar.update(1)
+    pbar.close()
