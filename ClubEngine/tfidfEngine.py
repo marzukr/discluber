@@ -78,17 +78,17 @@ def termList(preprocessedTweets):
 
 # Returns complete list of hashtags (possibly more than one of each hashtag) in a given aggregation of tweets
 def hashtagList(preprocessedTweets):
-    terms_hash = [term for term in preprocessedTweets if term.startswith('#')]
+    terms_hash = [term for term in preprocessedTweets if term.startswith('#') and term != "#"]
     return terms_hash
 
 # Returns complete list of users (possibly more than one of each user) in a given aggregation of tweets
 def userList(preprocessedTweets):
-    terms_users = [term for term in preprocessedTweets if term.startswith('@')]
+    terms_users = [term for term in preprocessedTweets if term.startswith('@') and term != "@"]
     return terms_users
 
 # Returns complete list of links (possibly more than one of each link) in a given aggregation of tweets
 def linkList(preprocessedTweets):
-    term_links = [term for term in preprocessedTweets if term.startswith('http')]
+    term_links = [term for term in preprocessedTweets if term.startswith('http') and term != "http"]
     return term_links
 
 # Returns the frequencies of the specfied tokens in the given tweet aggregation
@@ -113,15 +113,13 @@ def tokenList(userTweets, tokenType, maxItems, mongoCollection):
     listWithCounts = freqCount(userTweets, tokenType)
     totalTermCount = sum(listWithCounts.values())
     tfidfArray = [] # Array of tuples -> (term, tfidfScore)
-    for term, documentFreq in listWithCounts.items():
-        documentCollecData = mongoCollection.find_one({'Term': term})
-        if documentCollecData is not None:
-            tf = documentFreq/totalTermCount
-            df = 50/documentCollecData["df"]
-            tfidfCalc = tf * log(df)
-            tfidfArray.append((term, tfidfCalc))
-        else:
-            continue
+    for tokenItem in mongoCollection.find({"Term": {"$in": list(listWithCounts.keys())}}):
+        term = tokenItem["Term"]
+        documentFreq = listWithCounts[term]
+        tf = documentFreq/totalTermCount
+        df = 50/tokenItem["df"]
+        tfidfCalc = tf * log(df)
+        tfidfArray.append((term, tfidfCalc))
     tfidfArray.sort(key=lambda tup: tup[1], reverse=True) #Sort from highest tfidf score to lowest
     if len(tfidfArray) > maxItems: #Only return up to maxItems terms
         tfidfArray = tfidfArray[:maxItems]

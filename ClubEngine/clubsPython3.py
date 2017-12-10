@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from ClubEngine import tfidfEngine, twitterUtil, config
 # import tfidfEngine, twitterUtil, config
 
@@ -14,15 +12,27 @@ from collections import Counter
 
 from tqdm import tqdm
 
+import time
+
 def returnResults(user):
     # Gather the last 200 tweets of the user and combine them into a string
+    tweetTime = time.time()
     userTweets = twitterUtil.getTweets(user, config.getConfig("tweetsPerUser"))
+    totalTweetTime = time.time() - tweetTime
 
     #Take the combined tweet string and feed it into elastic search, then make the result into a pretty list of clubs
+    searchTime = time.time()
     clubData = formatSearch(uri=elasticsearchURL() + "/_search?", term=userTweets, maxClubs=config.getConfig("clubsToReturn"))
+    totalSearchTime = time.time() - searchTime
 
     #Get results from the TFIDF engine
-    formattedTerms = tfidfEngine.tokenResults(userTweets, [tfidfEngine.Token.TERM], config.getConfig("tokensToReturn"), config.dbCol(config.Collections.TOKENS))
+    tokenTime = time.time()
+    formattedTerms = tfidfEngine.tokenResults(userTweets, [tfidfEngine.Token.TERM, tfidfEngine.Token.HASHTAG, tfidfEngine.Token.USER], config.getConfig("tokensToReturn"), config.dbCol(config.Collections.TOKENS))
+    totalTokenTime = time.time() - tokenTime
+
+    print("tweet:", str(totalTweetTime) + "s")
+    print("search:", str(totalSearchTime) + "s")
+    print("token:", str(totalTokenTime) + "s")
     
     return {"clubs": clubData, "terms": formattedTerms}
 
