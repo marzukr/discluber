@@ -1,0 +1,13 @@
+version: "3"
+services:
+    flask:
+        build: .
+        ports:
+            - "5000:5000"
+        depends_on:
+            - mongo
+    
+    mongo:
+        image: mongo
+        volumes:
+            - /Users/marzukrashid/Documents/dockerMongo/data/db:/data/db

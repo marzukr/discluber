@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-client = MongoClient()
+client = MongoClient(host="mongodb://mongo:27017")
 db = client["clubsDatabase"]
 configCollection = db["config"]
 
