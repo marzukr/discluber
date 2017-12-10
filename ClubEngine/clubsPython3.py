@@ -44,7 +44,7 @@ def returnResults(user):
 # Get the elasticsearch url
 def elasticsearchURL(date=config.getConfig("coDate")):
     # Used: elvis, club, clubs, holahola, fourK, gold, diamond, mercury, dva
-    return "http://localhost:9200/" + date + "/tweets" # DO NOT USE A "/" AT THE END
+    return "http://elasticsearch:9200/" + date + "/tweets" # DO NOT USE A "/" AT THE END
 
 #Take the term and run it through elasticsearch - simple elastic search query
 def search(uri, term):
