@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-client = MongoClient()
+client = MongoClient(host="mongodb://mongo:27017")
 db = client["clubsDatabase"]
 configCollection = db["config"]
 
@@ -22,7 +22,7 @@ def storeCSV_Config(filename):
         for club in csvReader:
             try:
                 if club[5] == "1":
-                    configCollection.update_one({}, {"$set": {"clubs."+club[1]: club[0]}})
+                    configCollection.update_one({}, {"$set": {"clubsFull."+club[1]: club[0]}})
             except IndexError:
                 continue
 

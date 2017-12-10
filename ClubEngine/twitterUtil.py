@@ -1,6 +1,6 @@
 import tweepy
-# from ClubEngine import config
-import config
+from ClubEngine import config
+# import config
 
 from tqdm import tqdm
 
@@ -16,9 +16,9 @@ def getFollowers(twitterAccount):
     while True:
         try:
             followersPages = tweepy.Cursor(twitterAPI.followers, screen_name=twitterAccount).items()
-            followersTwitters = (user.screen_name for user in followersPages)
-            return followersTwitters
-        except tweepy.TweepError:
+            # followersTwitters = (user.screen_name for user in followersPages)
+            return followersPages
+        except (tweepy.error.TweepError, tweepy.TweepError):
             pass
 
 #There appears to be a significant delay between some iterations of the cursor, faster internet could help?
@@ -39,7 +39,8 @@ def getFollowerTweets(twitterAccount):
 
     pbar = tqdm(total=maxFollowers, desc="    Adding " + twitterAccount)
     followerTweets = {}
-    for follower in getFollowers(twitterAccount):
+    for followerItem in getFollowers(twitterAccount):
+        follower = followerItem.screen_name
         if follower in followerTweets.keys():
             continue
         userTweets = getTweets(follower, maxTweets)

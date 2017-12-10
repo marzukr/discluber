@@ -11,6 +11,7 @@ The database is called "clubsDatabase"
 + "clubs": A dictionary, keys are club twitter handle, values are club names
 + "tweetsPerUser": The number of tweets to retreive when a user enters a twitter into Discluber
 + "clubsToReturn": The number of clubs to return when using Discluber
++ "tokensToReturn": The number of tokens to return when using Discluber
 + "coDate": The suffix to add to the collection names to get the correct collection
 
 **clubData**

@@ -1,0 +1,20 @@
+version: "3"
+services:
+    flask:
+        build: .
+        ports:
+            - "5000:5000"
+        depends_on:
+            - mongo
+            - elasticsearch
+    
+    mongo:
+        image: mongo
+        volumes:
+            - /Users/marzukrashid/Documents/docker/dockerMongo/data/db:/data/db
+
+    elasticsearch:
+        image: elasticsearch
+        volumes:
+            - /Users/marzukrashid/Documents/docker/dockerElasticsearch/config:/usr/share/elasticsearch/config
+            - /Users/marzukrashid/Documents/docker/dockerElasticsearch/data:/usr/share/elasticsearch/data
