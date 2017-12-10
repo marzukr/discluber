@@ -1,6 +1,6 @@
 import tweepy
-# from ClubEngine import config
-import config
+from ClubEngine import config
+# import config
 
 from tqdm import tqdm
 
