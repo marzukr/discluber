@@ -36,10 +36,12 @@ def returnResults(user):
     
     return {"clubs": clubData, "terms": formattedTerms}
 
-"""====>ELASTICSEARCH<===="""
-"""====>ELASTICSEARCH<===="""
-"""====>ELASTICSEARCH<===="""
-"""====>ELASTICSEARCH<===="""
+"""
+====>ELASTICSEARCH<====
+====>ELASTICSEARCH<====
+====>ELASTICSEARCH<====
+====>ELASTICSEARCH<====
+"""
 
 # Get the elasticsearch url
 def elasticsearchURL(date=config.getConfig("coDate")):
@@ -96,10 +98,12 @@ def addFollowerDataES(dateD):
         pbar.update(1)
     pbar.close()
 
-"""====>MONGODB<===="""
-"""====>MONGODB<===="""
-"""====>MONGODB<===="""
-"""====>MONGODB<===="""
+"""
+====>MONGODB<====
+====>MONGODB<====
+====>MONGODB<====
+====>MONGODB<====
+"""
 
 # Calculate and store the document frequencies of the given tweets in the given mongo collection
 def storeDocumentFreq(date):
