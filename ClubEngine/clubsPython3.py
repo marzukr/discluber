@@ -172,4 +172,14 @@ def storeFollowerData(date):
         pbar.update(1)
     pbar.close()
 
-twitterUtil.getTestFollowers()
+def storeValidationData():
+    clubCollection = config.dbCol(config.Collections.CLUB_DATA)
+    validationCollection = config.dbCol(config.Collections.VALIDATION)
+    clubs = []
+    for club in clubCollection.find():
+        clubs.append((club["twitterAccount"], club["testers"]))
+    validationData = []
+    for club in clubs:
+        for tester in club[1]:
+            validationData.append({"tester": tester, "twitterAccount": club[0]})
+    validationCollection.insert(validationData)

@@ -23,22 +23,29 @@ def getFollowers(twitterAccount):
 
 # Retrieves accounts that are not part of the model for each club, tends to crash after a few accounts
 def getTestFollowers():
+    #Store all the club twitter account and follwer in an array
     clubCollection = config.dbCol(config.Collections.CLUB_DATA)
     finished = 0
     clubs = []
     for club in clubCollection.find({"testers": {"$exists": False}}):
         clubs.append((club["twitterAccount"], club["followers"]))
+
+    #Loop through each club and get the test accounts
     for club in clubs:
         twitterAccount = club[0]
         followers = club[1]
         testFollowers = []
         followersPages = None
+
+        #Gets the tweepy cursor, tends to lose connection, crash, so inside try/except
         while True:
             try:
                 followersPages = getFollowers(twitterAccount)
                 break
             except:
                 pass
+        
+        #Test each follower to see if in model, if not, add them to testers
         for followerItem in followersPages:
             testFollower = followerItem.screen_name
             if testFollower in followers:
@@ -47,6 +54,8 @@ def getTestFollowers():
                 testFollowers.append(testFollower)
             if len(testFollowers) >= 100:
                 break
+
+        #Add the testers into mongo
         clubCollection.update({"twitterAccount": twitterAccount}, {"$set": {"testers": testFollowers}})
         finished += 1
         print(finished)

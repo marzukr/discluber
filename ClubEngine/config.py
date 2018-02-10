@@ -11,6 +11,7 @@ class Collections(Enum):
     CLUB_DATA = "clubData"
     FOLLOWER_DATA = "followerData"
     TOKENS = "tokens"
+    VALIDATION = "validation"
 
 def getConfig(key):
     return configCollection.find_one()[key]
