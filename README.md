@@ -20,6 +20,7 @@ The database is called "clubsDatabase"
 + "tweets": An array of concatenated follower tweets.
 + "followers": An array of the usernames of the followers of the club (no "@" prefix)
 + "followersTweets": A dictionary, keys are followers (no "@" prefix), values are their concatenated tweets
++ "testers": An array of usernames of up to 100 followers of the club not in the "followers" list
 
 **followerData**
 + "clubName": The readable string name of the club. (Same as "clubData" collection)

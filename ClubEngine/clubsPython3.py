@@ -1,8 +1,9 @@
-from ClubEngine import tfidfEngine, twitterUtil, config
-# import tfidfEngine, twitterUtil, config
+# from ClubEngine import tfidfEngine, twitterUtil, config
+import tfidfEngine, twitterUtil, config
 
 from pymongo import MongoClient
-client = MongoClient(host="mongodb://mongo:27017")
+# client = MongoClient(host="mongodb://mongo:27017")
+client = MongoClient(host="localhost:27017")
 db = client.clubsDatabase
 
 import requests
@@ -170,3 +171,5 @@ def storeFollowerData(date):
             })
         pbar.update(1)
     pbar.close()
+
+twitterUtil.getTestFollowers()

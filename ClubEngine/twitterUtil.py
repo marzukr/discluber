@@ -1,6 +1,6 @@
 import tweepy
-from ClubEngine import config
-# import config
+# from ClubEngine import config
+import config
 
 from tqdm import tqdm
 
@@ -18,8 +18,38 @@ def getFollowers(twitterAccount):
             followersPages = tweepy.Cursor(twitterAPI.followers, screen_name=twitterAccount).items()
             # followersTwitters = (user.screen_name for user in followersPages)
             return followersPages
-        except (tweepy.error.TweepError, tweepy.TweepError):
+        except:
             pass
+
+# Retrieves accounts that are not part of the model for each club, tends to crash after a few accounts
+def getTestFollowers():
+    clubCollection = config.dbCol(config.Collections.CLUB_DATA)
+    finished = 0
+    clubs = []
+    for club in clubCollection.find({"testers": {"$exists": False}}):
+        clubs.append((club["twitterAccount"], club["followers"]))
+    for club in clubs:
+        twitterAccount = club[0]
+        followers = club[1]
+        testFollowers = []
+        followersPages = None
+        while True:
+            try:
+                followersPages = getFollowers(twitterAccount)
+                break
+            except:
+                pass
+        for followerItem in followersPages:
+            testFollower = followerItem.screen_name
+            if testFollower in followers:
+                continue
+            else:
+                testFollowers.append(testFollower)
+            if len(testFollowers) >= 100:
+                break
+        clubCollection.update({"twitterAccount": twitterAccount}, {"$set": {"testers": testFollowers}})
+        finished += 1
+        print(finished)
 
 #There appears to be a significant delay between some iterations of the cursor, faster internet could help?
 def getTweets(twitterAccount, maxTweets):
