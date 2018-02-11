@@ -6,6 +6,9 @@ from pymongo import MongoClient
 client = MongoClient(host="localhost:27017")
 db = client.clubsDatabase
 
+esURL = "http://localhost:9200/" # Development
+# esURL = "http://elasticsearch:9200/" # Docker Production
+
 import requests
 import json
 
@@ -31,9 +34,9 @@ def returnResults(user):
     formattedTerms = tfidfEngine.tokenResults(userTweets, [tfidfEngine.Token.TERM, tfidfEngine.Token.HASHTAG, tfidfEngine.Token.USER], config.getConfig("tokensToReturn"), config.dbCol(config.Collections.TOKENS))
     totalTokenTime = time.time() - tokenTime
 
-    print("tweet:", str(totalTweetTime) + "s")
-    print("search:", str(totalSearchTime) + "s")
-    print("token:", str(totalTokenTime) + "s")
+    # print("tweet:", str(totalTweetTime) + "s")
+    # print("search:", str(totalSearchTime) + "s")
+    # print("token:", str(totalTokenTime) + "s")
     
     return {"clubs": clubData, "terms": formattedTerms}
 
@@ -47,7 +50,7 @@ def returnResults(user):
 # Get the elasticsearch url
 def elasticsearchURL(date=config.getConfig("coDate")):
     # Used: elvis, club, clubs, holahola, fourK, gold, diamond, mercury, dva
-    return "http://elasticsearch:9200/" + date + "/tweets" # DO NOT USE A "/" AT THE END
+    return esURL + date + "/tweets" # DO NOT USE A "/" AT THE END
 
 #Take the term and run it through elasticsearch - simple elastic search query
 def search(uri, term):
@@ -172,6 +175,7 @@ def storeFollowerData(date):
         pbar.update(1)
     pbar.close()
 
+# Get and store validation data from the club data
 def storeValidationData():
     clubCollection = config.dbCol(config.Collections.CLUB_DATA)
     validationCollection = config.dbCol(config.Collections.VALIDATION)
@@ -183,3 +187,19 @@ def storeValidationData():
         for tester in club[1]:
             validationData.append({"tester": tester, "twitterAccount": club[0]})
     validationCollection.insert(validationData)
+
+def validate():
+    validationCollection = config.dbCol(config.Collections.VALIDATION)
+    pbar = tqdm(total=validationCollection.count(), desc="    Validate Each User")
+    for tester in validationCollection.find({"results": {"$exists": False}}):
+        clubs = returnResults(tester["tester"])["clubs"]
+        results = [club["handle"] for club in clubs]
+        mongoID = tester["_id"]
+        validationCollection.update({"_id": mongoID}, {"$set": {"results": results}})
+        pbar.update(1)
+    pbar.close()
+
+def removeKey(collection, key):
+    collection.update({}, {"$unset": {key: 1}}, multi=True)
+
+twitterUtil.getTestFollowers()

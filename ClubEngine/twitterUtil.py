@@ -45,15 +45,14 @@ def getTestFollowers():
             except:
                 pass
         
-        #Test each follower to see if in model, if not, add them to testers
+        #Test each follower to see if in model or is blank/protected, if not, add them to testers
         for followerItem in followersPages:
             testFollower = followerItem.screen_name
-            if testFollower in followers:
-                continue
-            else:
+            userTweets = getTweets(testFollower, 1)
+            if testFollower not in followers and userTweets is not None and userTweets != "":
                 testFollowers.append(testFollower)
-            if len(testFollowers) >= 100:
-                break
+                if len(testFollowers) >= 100:
+                    break
 
         #Add the testers into mongo
         clubCollection.update({"twitterAccount": twitterAccount}, {"$set": {"testers": testFollowers}})
