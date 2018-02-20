@@ -152,9 +152,12 @@ def formatResults(tfidfResults, tokenType):
 def tokenResults(userTweets, tokenTypes, maxItems, mongoCollection):
     #Get a list of unformatted result lists
     unformattedResults = {}
-    for tokenType in tokenTypes:
-        unformatTokens = tokenList(userTweets, tokenType, maxItems, mongoCollection)
-        unformattedResults[tokenType] = unformatTokens
+    try:
+        for tokenType in tokenTypes:
+            unformatTokens = tokenList(userTweets, tokenType, maxItems, mongoCollection)
+            unformattedResults[tokenType] = unformatTokens
+    except:
+        pass
     
     #Format the unformatted results and store them in a list
     formattedResults = []

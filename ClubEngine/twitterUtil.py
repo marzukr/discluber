@@ -21,43 +21,54 @@ def getFollowers(twitterAccount):
         except:
             pass
 
-# Retrieves accounts that are not part of the model for each club, tends to crash after a few accounts
-def getTestFollowers():
-    #Store all the club twitter account and follwer in an array
-    clubCollection = config.dbCol(config.Collections.CLUB_DATA)
-    finished = 0
-    clubs = []
-    for club in clubCollection.find({"testers": {"$exists": False}}):
-        clubs.append((club["twitterAccount"], club["followers"]))
+# # Retrieves accounts that are not part of the model for each club, tends to crash after a few accounts
+# def getTestFollowers():
+#     #Store all the club twitter account and follwer in an array
+#     clubCollection = config.dbCol(config.Collections.CLUB_DATA)
+#     finished = 0
+#     clubs = []
+#     for club in clubCollection.find({"testers": {"$exists": False}}):
+#         clubs.append((club["twitterAccount"], club["followers"]))
 
-    #Loop through each club and get the test accounts
-    for club in clubs:
-        twitterAccount = club[0]
-        followers = club[1]
-        testFollowers = []
-        followersPages = None
+#     #Loop through each club and get the test accounts
+#     for club in clubs:
+#         twitterAccount = club[0]
+#         followers = club[1]
+#         testFollowers = []
+#         followersPages = None
 
-        #Gets the tweepy cursor, tends to lose connection, crash, so inside try/except
-        while True:
-            try:
-                followersPages = getFollowers(twitterAccount)
-                break
-            except:
-                pass
+#         #Gets the tweepy cursor, tends to lose connection, crash, so inside try/except
+#         while True:
+#             try:
+#                 followersPages = getFollowers(twitterAccount)
+#                 break
+#             except:
+#                 pass
         
-        #Test each follower to see if in model or is blank/protected, if not, add them to testers
-        for followerItem in followersPages:
-            testFollower = followerItem.screen_name
-            userTweets = getTweets(testFollower, 1)
-            if testFollower not in followers and userTweets is not None and userTweets != "":
-                testFollowers.append(testFollower)
-                if len(testFollowers) >= 100:
-                    break
+#         #Test each follower to see if in model or is blank/protected, if not, add them to testers
+#         for followerItem in followersPages:
+#             testFollower = followerItem.screen_name
+#             userTweets = getTweets(testFollower, 1)
+#             if testFollower not in followers and userTweets is not None and userTweets != "":
+#                 testFollowers.append(testFollower)
+#                 if len(testFollowers) >= 100:
+#                     break
 
-        #Add the testers into mongo
-        clubCollection.update({"twitterAccount": twitterAccount}, {"$set": {"testers": testFollowers}})
-        finished += 1
-        print(finished)
+#         #Add the testers into mongo
+#         clubCollection.update({"twitterAccount": twitterAccount}, {"$set": {"testers": testFollowers}})
+#         finished += 1
+#         print(finished)
+
+def replaceTestFollowers():
+    clubCollection = config.dbCol(config.Collections.CLUB_DATA)
+    validationCollection = config.dbCol(config.Collections.VALIDATION)
+    for club in clubCollection.find():
+        filteredTesters = []
+        for tester in club["testers"]:
+            if len(validationCollection.find_one({"tester": tester})["results"]) >= 3:
+                filteredTesters.append(tester)
+        clubCollection.update({"twitterAccount": club["twitterAccount"]}, {"$set": {"testers2": filteredTesters}})
+            
 
 #There appears to be a significant delay between some iterations of the cursor, faster internet could help?
 def getTweets(twitterAccount, maxTweets):

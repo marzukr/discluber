@@ -17,6 +17,7 @@ from collections import Counter
 from tqdm import tqdm
 
 import time
+import csv
 
 def returnResults(user):
     # Gather the last 200 tweets of the user and combine them into a string
@@ -68,22 +69,24 @@ def search(uri, term):
 # Search elasticsearch and makes it into a list of maxClubs clubs in order
 def formatSearch(uri, term, maxClubs):
     results = search(uri, term)
+    try:
+        #LOOK INTO THIS TO OPTIMIZE RESULTS
+        data = [doc for doc in results['hits']['hits']]
 
-    #LOOK INTO THIS TO OPTIMIZE RESULTS
-    data = [doc for doc in results['hits']['hits']]
-
-    prettyA = []
-    for doc in data:
-        # pretty = (doc['_source']["Club Name"], "test")
-        docData = doc['_source']
-        clubImageURL = twitterUtil.getImageURL(docData["twitterAccount"])
-        pretty = (docData["clubName"], docData["twitterAccount"], clubImageURL) # Tuple (clubName, twitterAccount, clubImageURL)
-        prettyA.append(pretty)
-    topClubs = [x[0] for x in Counter(prettyA).most_common(maxClubs)]
-    formattedData = []
-    for club in topClubs:
-        formattedData.append({"name": club[0], "handle": club[1], "imageURL": club[2]})
-    return formattedData
+        prettyA = []
+        for doc in data:
+            # pretty = (doc['_source']["Club Name"], "test")
+            docData = doc['_source']
+            clubImageURL = twitterUtil.getImageURL(docData["twitterAccount"])
+            pretty = (docData["clubName"], docData["twitterAccount"], clubImageURL) # Tuple (clubName, twitterAccount, clubImageURL)
+            prettyA.append(pretty)
+        topClubs = [x[0] for x in Counter(prettyA).most_common(maxClubs)]
+        formattedData = []
+        for club in topClubs:
+            formattedData.append({"name": club[0], "handle": club[1], "imageURL": club[2]})
+        return formattedData
+    except KeyError:
+        return []
 
 # Add a document to elasticsearch
 def create_doc(uri, doc_data):
@@ -175,6 +178,68 @@ def storeFollowerData(date):
         pbar.update(1)
     pbar.close()
 
+# Retrieves accounts that are not part of the model for each club, tends to crash after a few accounts
+def getTestFollowers():
+    #Store all the club twitter account and follwer in an array
+    clubCollection = config.dbCol(config.Collections.CLUB_DATA)
+    validationCollection = config.dbCol(config.Collections.VALIDATION2)
+
+    clubs = []
+    for club in clubCollection.find({"doneFlag": {"$exists": False}}):
+        clubs.append((club["twitterAccount"], club["followers"], club["testers"], club["testers2"]))
+    pbar = tqdm(total=len(clubs), desc="    Validate Test Users")
+    #Loop through each club and get the test accounts
+    for club in clubs:
+        twitterAccount = club[0]
+        followers = club[1]
+        testers = club[2]
+        testers2 = club[3]
+        newTesters = []
+        followersPages = None
+
+        #Gets the tweepy cursor, tends to lose connection, crash, so inside try/except
+        while True:
+            try:
+                followersPages = twitterUtil.getFollowers(twitterAccount)
+                break
+            except:
+                pass
+        
+        #Test each follower to see if in model or is blank/protected, if not, add them to testers
+        for followerItem in followersPages:
+            testFollower = followerItem.screen_name
+            if testFollower not in testers and testFollower not in followers:
+                clubs = returnResults(testFollower)["clubs"]
+                results = [club["handle"] for club in clubs]
+                if len(results) >= 3:
+                    newTesters.append((testFollower, results))
+                    if len(testers2) + len(newTesters) >= 100:
+                        break
+
+        #Add the testers into mongo
+        validationDocuments = []
+        testFollowers = []
+        for tester in newTesters:
+            validationData = {"tester": tester[0], "twitterAccount": twitterAccount, "results": tester[1]}
+            validationDocuments.append(validationData)
+            testFollowers.append(tester[0])
+        if len(testFollowers) != 0:
+            validationCollection.insert(validationDocuments)
+        clubCollection.update({"twitterAccount": twitterAccount}, {"$set": {"testers2": testFollowers+testers2, "doneFlag": "foo"}})
+        pbar.update(1)
+    pbar.close()
+
+def transferValidation():
+    clubCollection = config.dbCol(config.Collections.CLUB_DATA)
+    validation1 = config.dbCol(config.Collections.VALIDATION)
+    validation2 = config.dbCol(config.Collections.VALIDATION2)
+
+    validations = []
+    for tester in validation1.find():
+        if tester["tester"] in clubCollection.find_one({"twitterAccount": tester["twitterAccount"]})["testers2"]:
+            validations.append(tester)
+    validation2.insert(validations)
+
 # Get and store validation data from the club data
 def storeValidationData():
     clubCollection = config.dbCol(config.Collections.CLUB_DATA)
@@ -190,8 +255,8 @@ def storeValidationData():
 
 def validate():
     validationCollection = config.dbCol(config.Collections.VALIDATION)
-    pbar = tqdm(total=validationCollection.count(), desc="    Validate Each User")
-    for tester in validationCollection.find({"results": {"$exists": False}}):
+    pbar = tqdm(total=validationCollection.count({"results": {"$exists": False}}), desc="    Validate Each User")
+    for tester in validationCollection.find({"results": {"$exists": False}}).batch_size(20):
         clubs = returnResults(tester["tester"])["clubs"]
         results = [club["handle"] for club in clubs]
         mongoID = tester["_id"]
@@ -199,7 +264,45 @@ def validate():
         pbar.update(1)
     pbar.close()
 
+def calculateValidations():
+    correct3 = 0
+    correct2 = 0
+    correct1 = 0
+    for tester in config.dbCol(config.Collections.VALIDATION2).find():
+        if tester["twitterAccount"] in tester["results"][:3]:
+            correct3 += 1
+            if tester["twitterAccount"] in tester["results"][:2]:
+                correct2 += 1
+                if tester["twitterAccount"] in tester["results"][:1]:
+                    correct1 += 1
+    totalCount = config.dbCol(config.Collections.VALIDATION2).count()
+    print("Correct1: {}".format(correct1/totalCount))
+    print("Correct2: {}".format(correct2/totalCount))
+    print("Correct3: {}".format(correct3/totalCount))
+
+def clubAccuracy():
+    accuracy = {}
+    for club in config.dbCol(config.Collections.CLUB_DATA).find():
+        accuracy[club["twitterAccount"]] = {"c1": 0, "c2": 0, "c3": 0, "total": 0}
+    for tester in config.dbCol(config.Collections.VALIDATION).find():
+        if tester["twitterAccount"] in tester["results"][:3]:
+            accuracy[tester["twitterAccount"]]["c3"] += 1
+            if tester["twitterAccount"] in tester["results"][:2]:
+                accuracy[tester["twitterAccount"]]["c2"] += 1
+                if tester["twitterAccount"] in tester["results"][:1]:
+                    accuracy[tester["twitterAccount"]]["c1"] += 1
+        accuracy[tester["twitterAccount"]]["total"] += 1
+    for club in accuracy:
+        accuracy[club]["c1"] = accuracy[club]["c1"] / accuracy[club]["total"]
+        accuracy[club]["c2"] = accuracy[club]["c2"] / accuracy[club]["total"]
+        accuracy[club]["c3"] = accuracy[club]["c3"] / accuracy[club]["total"]
+    print(accuracy)
+    
+def testerCount():
+    for tester in config.dbCol(config.Collections.CLUB_DATA).find():
+        print("{}".format(len(tester["testers"])))
+
 def removeKey(collection, key):
     collection.update({}, {"$unset": {key: 1}}, multi=True)
 
-twitterUtil.getTestFollowers()
+calculateValidations()
