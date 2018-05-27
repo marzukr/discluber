@@ -21,6 +21,7 @@ The database is called "clubsDatabase"
 + "followers": An array of the usernames of the followers of the club (no "@" prefix)
 + "followersTweets": A dictionary, keys are followers (no "@" prefix), values are their concatenated tweets
 + "testers": An array of usernames of up to 100 followers of the club not in the "followers" list
++ "testers2": Same as "testers" but only for testers where there are 3 club results
 
 **followerData**
 + "clubName": The readable string name of the club. (Same as "clubData" collection)
@@ -31,6 +32,17 @@ The database is called "clubsDatabase"
 **tokens**
 + "Term": A term that was used the tweets of a follower of a club
 + "df": How many clubs that term appeared in
+
+**validation**
++ "tester": The tester from "testers" in "clubData"
++ "twitterAccount": Which club twitter account the "tester" is from.
++ "results": A list of up to 3 club twitter accounts reccomended
+
+**validation2**
+
+Same as "validation", but only includes testers where there are 3 club results.
+
+---
 
 **[DEPRECATED] followersList**
 + "Twitter Account": The twitter username of the club (with "@" prefix)

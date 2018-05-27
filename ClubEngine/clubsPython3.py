@@ -264,18 +264,18 @@ def validate():
         pbar.update(1)
     pbar.close()
 
-def calculateValidations():
+def calculateValidations(collection):
     correct3 = 0
     correct2 = 0
     correct1 = 0
-    for tester in config.dbCol(config.Collections.VALIDATION2).find():
+    for tester in config.dbCol(collection).find():
         if tester["twitterAccount"] in tester["results"][:3]:
             correct3 += 1
             if tester["twitterAccount"] in tester["results"][:2]:
                 correct2 += 1
                 if tester["twitterAccount"] in tester["results"][:1]:
                     correct1 += 1
-    totalCount = config.dbCol(config.Collections.VALIDATION2).count()
+    totalCount = config.dbCol(collection).count()
     print("Correct1: {}".format(correct1/totalCount))
     print("Correct2: {}".format(correct2/totalCount))
     print("Correct3: {}".format(correct3/totalCount))
@@ -305,4 +305,4 @@ def testerCount():
 def removeKey(collection, key):
     collection.update({}, {"$unset": {key: 1}}, multi=True)
 
-calculateValidations()
+calculateValidations(config.Collections.VALIDATION2)
