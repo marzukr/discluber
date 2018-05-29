@@ -30,4 +30,9 @@ def storeCSV_Config(filename):
                 continue
 
 def dbCol(collectionType, coDate=getConfig("coDate")):
-    return db[collectionType.value + "_" + coDate]
+    value = ""
+    if type(collectionType) is str:
+        value = collectionType
+    else:
+        value = collectionType.value
+    return db[value + "_" + coDate]

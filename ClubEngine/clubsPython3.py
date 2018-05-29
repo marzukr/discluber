@@ -77,6 +77,7 @@ def formatSearch(uri, term, maxClubs):
         for doc in data:
             # pretty = (doc['_source']["Club Name"], "test")
             docData = doc['_source']
+            # if docData["twitterAccount"] != "thedailynu":
             clubImageURL = twitterUtil.getImageURL(docData["twitterAccount"])
             pretty = (docData["clubName"], docData["twitterAccount"], clubImageURL) # Tuple (clubName, twitterAccount, clubImageURL)
             prettyA.append(pretty)
@@ -241,9 +242,9 @@ def transferValidation():
     validation2.insert(validations)
 
 # Get and store validation data from the club data
-def storeValidationData():
+def storeValidationData(vCol):
     clubCollection = config.dbCol(config.Collections.CLUB_DATA)
-    validationCollection = config.dbCol(config.Collections.VALIDATION)
+    validationCollection = config.dbCol(vCol)
     clubs = []
     for club in clubCollection.find():
         clubs.append((club["twitterAccount"], club["testers"]))
@@ -253,8 +254,8 @@ def storeValidationData():
             validationData.append({"tester": tester, "twitterAccount": club[0]})
     validationCollection.insert(validationData)
 
-def validate():
-    validationCollection = config.dbCol(config.Collections.VALIDATION)
+def validate(vCol):
+    validationCollection = config.dbCol(vCol)
     pbar = tqdm(total=validationCollection.count({"results": {"$exists": False}}), desc="    Validate Each User")
     for tester in validationCollection.find({"results": {"$exists": False}}).batch_size(20):
         clubs = returnResults(tester["tester"])["clubs"]
@@ -305,4 +306,13 @@ def testerCount():
 def removeKey(collection, key):
     collection.update({}, {"$unset": {key: 1}}, multi=True)
 
-calculateValidations(config.Collections.VALIDATION2)
+def replaceValue(collection, key, value, newValue):
+    mCollection = config.dbCol(collection)
+    for entry in mCollection.find():
+        if entry[key] == value:
+            mCollection.update({"_id": entry["_id"]}, {"$set": {key: newValue}})
+
+# validate("validation3")
+# replaceValue("validation3", "twitterAccount", "tufaan2018", "tufaan2019")
+# calculateValidations("validation3")
+# addFollowerDataES("12_7_17")
