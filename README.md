@@ -42,6 +42,14 @@ The database is called "clubsDatabase"
 
 Same as "validation", but only includes testers where there are 3 club results.
 
+**validation3**
+
+Same as "validation", w/ data from 5-27-18. Baseline for validation4.
+
+1. 0.249
+2. 0.309
+3. 0.336
+
 ---
 
 **[DEPRECATED] followersList**

@@ -77,7 +77,6 @@ def formatSearch(uri, term, maxClubs):
         for doc in data:
             # pretty = (doc['_source']["Club Name"], "test")
             docData = doc['_source']
-            # if docData["twitterAccount"] != "thedailynu":
             clubImageURL = twitterUtil.getImageURL(docData["twitterAccount"])
             pretty = (docData["clubName"], docData["twitterAccount"], clubImageURL) # Tuple (clubName, twitterAccount, clubImageURL)
             prettyA.append(pretty)
@@ -100,10 +99,11 @@ def addFollowerDataES(dateD):
     esURL = elasticsearchURL(date=dateD)
     pbar = tqdm(total=config.dbCol(config.Collections.FOLLOWER_DATA, coDate=dateD).count(), desc="    Adding to ES")
     for followerItem in config.dbCol(config.Collections.FOLLOWER_DATA, coDate=dateD).find({}):
-        modifyData = followerItem.copy()
-        modifyData.pop("_id", None) # Remove the "_id" property that Mongo adds
-        create_doc(esURL, modifyData)
-        pbar.update(1)
+        if followerItem["twitterAccount"] != "thedailynu": # dailyNU removed
+            modifyData = followerItem.copy()
+            modifyData.pop("_id", None) # Remove the "_id" property that Mongo adds
+            create_doc(esURL, modifyData)
+            pbar.update(1)
     pbar.close()
 
 """
@@ -315,5 +315,5 @@ def replaceValue(collection, key, value, newValue):
 
 # validate("validation3")
 # calculateValidations("validation3")
-# addFollowerDataES("12_7_17")
-storeValidationData("validation4")
+addFollowerDataES("12_7_17")
+# storeValidationData("validation4")
