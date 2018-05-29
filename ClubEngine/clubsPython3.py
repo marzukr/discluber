@@ -55,14 +55,21 @@ def elasticsearchURL(date=config.getConfig("coDate")):
 
 #Take the term and run it through elasticsearch - simple elastic search query
 def search(uri, term):
-    query = json.dumps({
+    # query = json.dumps({
+    #     "query": {
+    #         "match": {
+    #             "tweets": term
+    #         }
+    #     }
+    # })
+    query = {
         "query": {
             "match": {
                 "tweets": term
             }
         }
-    })
-    response = requests.get(uri, data=query)
+    }
+    response = requests.get(uri, json=query)
     results = json.loads(response.text)
     return results
 
@@ -315,5 +322,5 @@ def replaceValue(collection, key, value, newValue):
 
 # validate("validation3")
 # calculateValidations("validation3")
-addFollowerDataES("12_7_17")
-# storeValidationData("validation4")
+# addFollowerDataES("12_7_17")
+storeValidationData("validation4")
