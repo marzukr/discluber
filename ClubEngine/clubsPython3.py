@@ -90,8 +90,8 @@ def formatSearch(uri, term, maxClubs):
 
 # Add a document to elasticsearch
 def create_doc(uri, doc_data):
-    query = json.dumps(doc_data)
-    response = requests.post(uri, data=None, json=query)
+    # query = json.dumps(doc_data)
+    response = requests.post(uri, json=doc_data)
     return response
 
 # Add the follower data to elasticsearch
