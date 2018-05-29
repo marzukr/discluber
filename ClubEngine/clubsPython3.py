@@ -251,7 +251,8 @@ def storeValidationData(vCol):
     validationData = []
     for club in clubs:
         for tester in club[1]:
-            validationData.append({"tester": tester, "twitterAccount": club[0]})
+            if club[0] != "thedailynu": #daily NU removed
+                validationData.append({"tester": tester, "twitterAccount": club[0]})
     validationCollection.insert(validationData)
 
 def validate(vCol):
@@ -313,6 +314,6 @@ def replaceValue(collection, key, value, newValue):
             mCollection.update({"_id": entry["_id"]}, {"$set": {key: newValue}})
 
 # validate("validation3")
-# replaceValue("validation3", "twitterAccount", "tufaan2018", "tufaan2019")
 # calculateValidations("validation3")
 # addFollowerDataES("12_7_17")
+storeValidationData("validation4")
