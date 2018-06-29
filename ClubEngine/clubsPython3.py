@@ -265,8 +265,8 @@ def storeValidationData(vCol):
     validationData = []
     for club in clubs:
         for tester in club[1]:
-            if club[0] != "thedailynu": #daily NU removed
-                validationData.append({"tester": tester, "twitterAccount": club[0]})
+            # if club[0] != "thedailynu": #dailyNU removed
+            validationData.append({"tester": tester, "twitterAccount": club[0]})
     validationCollection.insert(validationData)
 
 def validate(vCol):
@@ -342,9 +342,4 @@ def find_duplicates():
     print(len(c))
     # print(c.most_common(10))
 
-find_duplicates()
-
-# validate("validation3")
-# calculateValidations("validation3")
-# addFollowerDataES("12_7_17")
-# storeValidationData("validation4")
+# storeValidationData("validation5")

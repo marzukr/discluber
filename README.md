@@ -58,6 +58,13 @@ Data from 5-27-18, dailynu removed from model
 2. 0.311
 3. 0.342
 
+**validation5**
+
+Data from INSERT_DATE, storing tweets instead of results
+
+**duplicates**
+8333 unique users in the model, 1117 appear in more than one club
+
 ---
 
 **[DEPRECATED] followersList**
