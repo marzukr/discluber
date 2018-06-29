@@ -186,6 +186,13 @@ def storeFollowerData(date):
         pbar.update(1)
     pbar.close()
 
+"""
+====>VALIDATION<====
+====>VALIDATION<====
+====>VALIDATION<====
+====>VALIDATION<====
+"""
+
 # Retrieves accounts that are not part of the model for each club, tends to crash after a few accounts
 def getTestFollowers():
     #Store all the club twitter account and follwer in an array
@@ -320,7 +327,17 @@ def replaceValue(collection, key, value, newValue):
         if entry[key] == value:
             mCollection.update({"_id": entry["_id"]}, {"$set": {key: newValue}})
 
+def find_duplicates():
+    model_collection = config.dbCol(config.Collections.CLUB_DATA)
+    followers = []
+    for c in model_collection.find():
+        for f in c["followers"]:
+            followers.append(f)
+    c = Counter(followers)
+    c.most_common(10)
+
+
 # validate("validation3")
 # calculateValidations("validation3")
 # addFollowerDataES("12_7_17")
-storeValidationData("validation4")
+# storeValidationData("validation4")

@@ -50,6 +50,14 @@ Same as "validation", w/ data from 5-27-18. Baseline for validation4.
 2. 0.309
 3. 0.336
 
+**validation4**
+
+Data from 5-27-18, dailynu removed from model
+
+1. 0.251
+2. 0.311
+3. 0.342
+
 ---
 
 **[DEPRECATED] followersList**
