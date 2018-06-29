@@ -334,8 +334,15 @@ def find_duplicates():
         for f in c["followers"]:
             followers.append(f)
     c = Counter(followers)
-    c.most_common(10)
+    duplicate = 0
+    for i in c:
+        if c[i] > 1:
+            duplicate += 1
+    print(duplicate)
+    print(len(c))
+    # print(c.most_common(10))
 
+find_duplicates()
 
 # validate("validation3")
 # calculateValidations("validation3")
