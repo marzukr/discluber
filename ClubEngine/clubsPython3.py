@@ -280,6 +280,16 @@ def validate(vCol):
         pbar.update(1)
     pbar.close()
 
+def validate_with_tweets(vCol):
+    validationCollection = config.dbCol(vCol)
+    pbar = tqdm(total=validationCollection.count({"tweets": {"$exists": False}}), desc="    Validate Each User")
+    for tester in validationCollection.find({"results": {"$exists": False}}).batch_size(20):
+        tweets = twitterUtil.getTweets(user, config.getConfig("tweetsPerUser"))
+        mongoID = tester["_id"]
+        validationCollection.update({"_id": mongoID}, {"$set": {"tweets": tweets}})
+        pbar.update(1)
+    pbar.close()
+
 def calculateValidations(collection):
     correct3 = 0
     correct2 = 0
@@ -342,4 +352,4 @@ def find_duplicates():
     print(len(c))
     # print(c.most_common(10))
 
-# storeValidationData("validation5")
+# validate_with_tweets("validation5")

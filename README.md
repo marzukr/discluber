@@ -38,29 +38,25 @@ The database is called "clubsDatabase"
 + "twitterAccount": Which club twitter account the "tester" is from.
 + "results": A list of up to 3 club twitter accounts reccomended
 
-**validation2**
+**validation2** - Same as "validation", but only includes testers where there are 3 club results.
 
-Same as "validation", but only includes testers where there are 3 club results.
-
-**validation3**
-
-Same as "validation", w/ data from 5-27-18. Baseline for validation4.
+**validation3** - Same as "validation", w/ data from 5-27-18. Baseline for validation4.
 
 1. 0.249
 2. 0.309
 3. 0.336
 
-**validation4**
-
-Data from 5-27-18, dailynu removed from model
+**validation4** - Data from 5-27-18, dailynu removed from model
 
 1. 0.251
 2. 0.311
 3. 0.342
 
-**validation5**
+**validation5** - Data from INSERT_DATE, storing tweets instead of results
 
-Data from INSERT_DATE, storing tweets instead of results
++ "tester": The tester from "testers" in "clubData"
++ "twitterAccount": Which club twitter account the "tester" is from.
++ "tweets": Concatenated tweets of the tester.
 
 **duplicates**
 8333 unique users in the model, 1117 appear in more than one club
