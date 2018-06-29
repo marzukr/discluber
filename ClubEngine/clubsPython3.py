@@ -282,12 +282,21 @@ def validate(vCol):
 
 def validate_with_tweets(vCol):
     validationCollection = config.dbCol(vCol)
-    pbar = tqdm(total=validationCollection.count({"tweets": {"$exists": False}}), desc="    Validate Each User")
-    for tester in validationCollection.find({"results": {"$exists": False}}).batch_size(20):
-        tweets = twitterUtil.getTweets(tester["tester"], config.getConfig("tweetsPerUser"))
-        mongoID = tester["_id"]
-        validationCollection.update({"_id": mongoID}, {"$set": {"tweets": tweets}})
-        pbar.update(1)
+    total = validationCollection.count({"tweets": {"$exists": False}})
+    count = 0
+    pbar = tqdm(total=total, desc="    Validate Each User")
+    while True:
+        try:
+            for tester in validationCollection.find({"results": {"$exists": False}}).batch_size(20):
+                tweets = twitterUtil.getTweets(tester["tester"], config.getConfig("tweetsPerUser"))
+                mongoID = tester["_id"]
+                validationCollection.update({"_id": mongoID}, {"$set": {"tweets": tweets}})
+                pbar.update(1)
+                count += 1
+        except:
+            pass
+        if count >= total:
+            break
     pbar.close()
 
 def calculateValidations(collection):
