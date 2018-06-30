@@ -21,27 +21,27 @@ import csv
 
 def returnResults(user, tweets=None, calc_tokens=True):
     # Gather the last 200 tweets of the user and combine them into a string
-    tweetTime = time.time()
+    # tweetTime = time.time()
     userTweets = tweets
     if tweets == None:
         userTweets = twitterUtil.getTweets(user, config.getConfig("tweetsPerUser"))
-    totalTweetTime = time.time() - tweetTime
+    # totalTweetTime = time.time() - tweetTime
 
     #Take the combined tweet string and feed it into elastic search, then make the result into a pretty list of clubs
-    searchTime = time.time()
+    # searchTime = time.time()
     clubData = formatSearch(uri=elasticsearchURL() + "/_search?", term=userTweets, maxClubs=config.getConfig("clubsToReturn"))
-    totalSearchTime = time.time() - searchTime
+    # totalSearchTime = time.time() - searchTime
 
     #Get results from the TFIDF engine
-    tokenTime = time.time()
+    # tokenTime = time.time()
     formattedTerms = []
     if calc_tokens:
         formattedTerms = tfidfEngine.tokenResults(userTweets, [tfidfEngine.Token.TERM, tfidfEngine.Token.HASHTAG, tfidfEngine.Token.USER], config.getConfig("tokensToReturn"), config.dbCol(config.Collections.TOKENS))
-    totalTokenTime = time.time() - tokenTime
+    # totalTokenTime = time.time() - tokenTime
 
-    print("tweet:", str(totalTweetTime) + "s")
-    print("search:", str(totalSearchTime) + "s")
-    print("token:", str(totalTokenTime) + "s")
+    # print("tweet:", str(totalTweetTime) + "s")
+    # print("search:", str(totalSearchTime) + "s")
+    # print("token:", str(totalTokenTime) + "s")
     
     return {"clubs": clubData, "terms": formattedTerms}
 
@@ -319,25 +319,29 @@ def calculateValidations(collection):
     print("Correct2: {}".format(correct2/totalCount))
     print("Correct3: {}".format(correct3/totalCount))
 
-def calc_validation_with_tweets(collection):
+def calc_validation_with_tweets(collection, trial):
+    collection_object = config.dbCol(collection)
+    pbar = tqdm(total=collection_object.count({trial: {"$exists": False}}), desc="Calculate Validations")
+    for tester in collection_object.find({trial: {"$exists": False}}):
+        results = returnResults(tester["twitterAccount"], tester["tweets"], False)["clubs"]
+        mongoID = tester["_id"]
+        collection_object.update({"_id": mongoID}, {"$set": {trial: results}})
+        pbar.update(1)
+    pbar.close()
+
     correct3 = 0
     correct2 = 0
     correct1 = 0
 
-    collection_object = config.dbCol(collection)
-    total = collection_object.count()
-    pbar = tqdm(total=total, desc="    Calculate Validations")
     for tester in collection_object.find():
-        results = returnResults(tester["twitterAccount"], tester["tweets"], False)["clubs"]
-        if tester["twitterAccount"] in results[:3]:
+        if tester["twitterAccount"] in tester[trial][:3]:
             correct3 += 1
-            if tester["twitterAccount"] in results[:2]:
+            if tester["twitterAccount"] in tester[trial][:2]:
                 correct2 += 1
-                if tester["twitterAccount"] in results[:1]:
+                if tester["twitterAccount"] in tester[trial][:1]:
                     correct1 += 1
-        pbar.update(1)
-    pbar.close()
-    
+
+    total = collection_object.count()
     print("Correct1: {}".format(correct1/total))
     print("Correct2: {}".format(correct2/total))
     print("Correct3: {}".format(correct3/total))
