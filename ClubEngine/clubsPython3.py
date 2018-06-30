@@ -322,12 +322,12 @@ def calc_validation_with_tweets(collection):
     correct2 = 0
     correct1 = 0
     for tester in config.dbCol(collection).find():
-        results = returnResults(tester["twitterAccount"], tester["tweets"])
-        if tester["twitterAccount"] in results["clubs"][:3]:
+        results = returnResults(tester["twitterAccount"], tester["tweets"])["clubs"]
+        if tester["twitterAccount"] in results[:3]:
             correct3 += 1
-            if tester["twitterAccount"] in results["clubs"][:2]:
+            if tester["twitterAccount"] in results[:2]:
                 correct2 += 1
-                if tester["twitterAccount"] in results["clubs"][:1]:
+                if tester["twitterAccount"] in results[:1]:
                     correct1 += 1
     totalCount = config.dbCol(collection).count()
     print("Correct1: {}".format(correct1/totalCount))
