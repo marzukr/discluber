@@ -19,27 +19,29 @@ from tqdm import tqdm
 import time
 import csv
 
-def returnResults(user, tweets=None):
+def returnResults(user, tweets=None, calc_tokens=True):
     # Gather the last 200 tweets of the user and combine them into a string
-    # tweetTime = time.time()
+    tweetTime = time.time()
     userTweets = tweets
-    if tweets != None:
+    if tweets == None:
         userTweets = twitterUtil.getTweets(user, config.getConfig("tweetsPerUser"))
-    # totalTweetTime = time.time() - tweetTime
+    totalTweetTime = time.time() - tweetTime
 
     #Take the combined tweet string and feed it into elastic search, then make the result into a pretty list of clubs
-    # searchTime = time.time()
+    searchTime = time.time()
     clubData = formatSearch(uri=elasticsearchURL() + "/_search?", term=userTweets, maxClubs=config.getConfig("clubsToReturn"))
-    # totalSearchTime = time.time() - searchTime
+    totalSearchTime = time.time() - searchTime
 
     #Get results from the TFIDF engine
-    # tokenTime = time.time()
-    formattedTerms = tfidfEngine.tokenResults(userTweets, [tfidfEngine.Token.TERM, tfidfEngine.Token.HASHTAG, tfidfEngine.Token.USER], config.getConfig("tokensToReturn"), config.dbCol(config.Collections.TOKENS))
-    # totalTokenTime = time.time() - tokenTime
+    tokenTime = time.time()
+    formattedTerms = []
+    if calc_tokens:
+        formattedTerms = tfidfEngine.tokenResults(userTweets, [tfidfEngine.Token.TERM, tfidfEngine.Token.HASHTAG, tfidfEngine.Token.USER], config.getConfig("tokensToReturn"), config.dbCol(config.Collections.TOKENS))
+    totalTokenTime = time.time() - tokenTime
 
-    # print("tweet:", str(totalTweetTime) + "s")
-    # print("search:", str(totalSearchTime) + "s")
-    # print("token:", str(totalTokenTime) + "s")
+    print("tweet:", str(totalTweetTime) + "s")
+    print("search:", str(totalSearchTime) + "s")
+    print("token:", str(totalTokenTime) + "s")
     
     return {"clubs": clubData, "terms": formattedTerms}
 
@@ -326,7 +328,7 @@ def calc_validation_with_tweets(collection):
     total = collection_object.count()
     pbar = tqdm(total=total, desc="    Calculate Validations")
     for tester in collection_object.find():
-        results = returnResults(tester["twitterAccount"], tester["tweets"])["clubs"]
+        results = returnResults(tester["twitterAccount"], tester["tweets"], False)["clubs"]
         if tester["twitterAccount"] in results[:3]:
             correct3 += 1
             if tester["twitterAccount"] in results[:2]:
