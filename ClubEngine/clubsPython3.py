@@ -217,7 +217,7 @@ def getTestFollowers():
             try:
                 followersPages = twitterUtil.getFollowers(twitterAccount)
                 break
-            except:
+            except Exception:
                 pass
         
         #Test each follower to see if in model or is blank/protected, if not, add them to testers
@@ -293,7 +293,7 @@ def validate_with_tweets(vCol):
                 validationCollection.update({"_id": mongoID}, {"$set": {"tweets": tweets}})
                 pbar.update(1)
                 count += 1
-        except:
+        except Exception:
             pass
         if count >= total:
             break
