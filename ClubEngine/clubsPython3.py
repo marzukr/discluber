@@ -321,7 +321,11 @@ def calc_validation_with_tweets(collection):
     correct3 = 0
     correct2 = 0
     correct1 = 0
-    for tester in config.dbCol(collection).find():
+
+    collection_object = config.dbCol(collection)
+    total = collection_object.count()
+    pbar = tqdm(total=total, desc="    Calculate Validations")
+    for tester in collection_object.find():
         results = returnResults(tester["twitterAccount"], tester["tweets"])["clubs"]
         if tester["twitterAccount"] in results[:3]:
             correct3 += 1
@@ -329,10 +333,12 @@ def calc_validation_with_tweets(collection):
                 correct2 += 1
                 if tester["twitterAccount"] in results[:1]:
                     correct1 += 1
-    totalCount = config.dbCol(collection).count()
-    print("Correct1: {}".format(correct1/totalCount))
-    print("Correct2: {}".format(correct2/totalCount))
-    print("Correct3: {}".format(correct3/totalCount))
+        pbar.update(1)
+    pbar.close()
+    
+    print("Correct1: {}".format(correct1/total))
+    print("Correct2: {}".format(correct2/total))
+    print("Correct3: {}".format(correct3/total))
 
 def clubAccuracy():
     accuracy = {}
