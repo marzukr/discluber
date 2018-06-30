@@ -19,21 +19,23 @@ from tqdm import tqdm
 import time
 import csv
 
-def returnResults(user):
+def returnResults(user, tweets=None):
     # Gather the last 200 tweets of the user and combine them into a string
-    tweetTime = time.time()
-    userTweets = twitterUtil.getTweets(user, config.getConfig("tweetsPerUser"))
-    totalTweetTime = time.time() - tweetTime
+    # tweetTime = time.time()
+    userTweets = tweets
+    if tweets != None:
+        userTweets = twitterUtil.getTweets(user, config.getConfig("tweetsPerUser"))
+    # totalTweetTime = time.time() - tweetTime
 
     #Take the combined tweet string and feed it into elastic search, then make the result into a pretty list of clubs
-    searchTime = time.time()
+    # searchTime = time.time()
     clubData = formatSearch(uri=elasticsearchURL() + "/_search?", term=userTweets, maxClubs=config.getConfig("clubsToReturn"))
-    totalSearchTime = time.time() - searchTime
+    # totalSearchTime = time.time() - searchTime
 
     #Get results from the TFIDF engine
-    tokenTime = time.time()
+    # tokenTime = time.time()
     formattedTerms = tfidfEngine.tokenResults(userTweets, [tfidfEngine.Token.TERM, tfidfEngine.Token.HASHTAG, tfidfEngine.Token.USER], config.getConfig("tokensToReturn"), config.dbCol(config.Collections.TOKENS))
-    totalTokenTime = time.time() - tokenTime
+    # totalTokenTime = time.time() - tokenTime
 
     # print("tweet:", str(totalTweetTime) + "s")
     # print("search:", str(totalSearchTime) + "s")
@@ -315,6 +317,23 @@ def calculateValidations(collection):
     print("Correct2: {}".format(correct2/totalCount))
     print("Correct3: {}".format(correct3/totalCount))
 
+def calc_validation_with_tweets(collection):
+    correct3 = 0
+    correct2 = 0
+    correct1 = 0
+    for tester in config.dbCol(collection).find():
+        results = returnResults(tester["twitterAccount"], tester["tweets"])
+        if tester["twitterAccount"] in results["clubs"][:3]:
+            correct3 += 1
+            if tester["twitterAccount"] in results["clubs"][:2]:
+                correct2 += 1
+                if tester["twitterAccount"] in results["clubs"][:1]:
+                    correct1 += 1
+    totalCount = config.dbCol(collection).count()
+    print("Correct1: {}".format(correct1/totalCount))
+    print("Correct2: {}".format(correct2/totalCount))
+    print("Correct3: {}".format(correct3/totalCount))
+
 def clubAccuracy():
     accuracy = {}
     for club in config.dbCol(config.Collections.CLUB_DATA).find():
@@ -361,4 +380,4 @@ def find_duplicates():
     print(len(c))
     # print(c.most_common(10))
 
-# validate_with_tweets("validation5")
+# calc_validation_with_tweets("validation5")
