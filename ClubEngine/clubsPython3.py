@@ -110,11 +110,11 @@ def addFollowerDataES(dateD):
     esURL = elasticsearchURL(date=dateD)
     pbar = tqdm(total=config.dbCol(config.Collections.FOLLOWER_DATA, coDate=dateD).count(), desc="    Adding to ES")
     for followerItem in config.dbCol(config.Collections.FOLLOWER_DATA, coDate=dateD).find({}):
-        if followerItem["twitterAccount"] != "thedailynu": # dailyNU removed
-            modifyData = followerItem.copy()
-            modifyData.pop("_id", None) # Remove the "_id" property that Mongo adds
-            create_doc(esURL, modifyData)
-            pbar.update(1)
+        # if followerItem["twitterAccount"] != "thedailynu": # dailyNU removed
+        modifyData = followerItem.copy()
+        modifyData.pop("_id", None) # Remove the "_id" property that Mongo adds
+        create_doc(esURL, modifyData)
+        pbar.update(1)
     pbar.close()
 
 """
