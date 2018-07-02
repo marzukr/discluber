@@ -324,6 +324,7 @@ def calc_validation_with_tweets(collection, trial):
     pbar = tqdm(total=collection_object.count({trial: {"$exists": False}}), desc="Calculate Validations")
     for tester in collection_object.find({trial: {"$exists": False}}):
         results = returnResults(tester["twitterAccount"], tester["tweets"], False)["clubs"]
+        results = [i["handle"] for i in results]
         mongoID = tester["_id"]
         collection_object.update({"_id": mongoID}, {"$set": {trial: results}})
         pbar.update(1)
@@ -392,4 +393,4 @@ def find_duplicates():
     print(len(c))
     # print(c.most_common(10))
 
-# calc_validation_with_tweets("validation5")
+# calc_validation_with_tweets("validation5", "trial1")
