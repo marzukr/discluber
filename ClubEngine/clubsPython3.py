@@ -387,19 +387,22 @@ def replaceValue(collection, key, value, newValue):
         if entry[key] == value:
             mCollection.update({"_id": entry["_id"]}, {"$set": {key: newValue}})
 
-def find_duplicates():
+# Finds duplicates across different clubs in the given user group (like followers or testers)
+def find_duplicates(group):
     model_collection = config.dbCol(config.Collections.CLUB_DATA)
     followers = []
     for c in model_collection.find():
-        for f in c["followers"]:
+        for f in c[group]:
             followers.append(f)
     c = Counter(followers)
     duplicate = 0
     for i in c:
         if c[i] > 1:
             duplicate += 1
-    print(duplicate)
-    print(len(c))
-    # print(c.most_common(10))
+    print("{duplicates}/{total} are duplicates in the {group_name} group".format(
+        duplicates = duplicate,
+        total = len(c),
+        group_name = group
+    ))
 
 # validate_with_tweets("validation5", "trial1")
