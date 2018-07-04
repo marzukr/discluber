@@ -284,7 +284,8 @@ def validate(vCol):
         pbar.update(1)
     pbar.close()
 
-def validate_with_tweets(vCol):
+# Download and store the tweets of each tester in the given validation collection
+def store_validation_tweets(vCol):
     validationCollection = config.dbCol(vCol)
     total = validationCollection.count({"tweets": {"$exists": False}})
     count = 0
@@ -303,37 +304,36 @@ def validate_with_tweets(vCol):
             break
     pbar.close()
 
-def calculateValidations(collection):
-    correct3 = 0
-    correct2 = 0
-    correct1 = 0
-    for tester in config.dbCol(collection).find():
-        if tester["twitterAccount"] in tester["results"][:3]:
-            correct3 += 1
-            if tester["twitterAccount"] in tester["results"][:2]:
-                correct2 += 1
-                if tester["twitterAccount"] in tester["results"][:1]:
-                    correct1 += 1
-    totalCount = config.dbCol(collection).count()
-    print("Correct1: {}".format(correct1/totalCount))
-    print("Correct2: {}".format(correct2/totalCount))
-    print("Correct3: {}".format(correct3/totalCount))
-
-def calc_validation_with_tweets(collection, trial):
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# Run each tester's stored tweets through the model and store their results   #
+# in the given collection under the given trial name                          #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+def validate_with_tweets(collection, trial):
     collection_object = config.dbCol(collection)
-    pbar = tqdm(total=collection_object.count({trial: {"$exists": False}}), desc="Calculate Validations")
-    for tester in collection_object.find({trial: {"$exists": False}}):
-        results = returnResults(tester["twitterAccount"], tester["tweets"], False)["clubs"]
-        results = [i["handle"] for i in results]
-        mongoID = tester["_id"]
-        collection_object.update({"_id": mongoID}, {"$set": {trial: results}})
-        pbar.update(1)
+    unvalidated_total = collection_object.count({trial: {"$exists": False}})
+    count = 0
+    pbar = tqdm(total=unvalidated_total, desc="Calculate Validations")
+    while True:
+        try:
+            for tester in collection_object.find({trial: {"$exists": False}}):
+                results = returnResults(tester["twitterAccount"], tester["tweets"], False)["clubs"]
+                results = [i["handle"] for i in results]
+                mongoID = tester["_id"]
+                collection_object.update({"_id": mongoID}, {"$set": {trial: results}})
+                count += 1
+                pbar.update(1)
+        except Exception:
+            pass
+        if count >= unvalidated_total:
+            break
     pbar.close()
 
+def calc_validation(collection, trial):
+    collection_object = config.dbCol(collection)
+
     correct3 = 0
     correct2 = 0
     correct1 = 0
-
     for tester in collection_object.find():
         if tester["twitterAccount"] in tester[trial][:3]:
             correct3 += 1
@@ -393,4 +393,4 @@ def find_duplicates():
     print(len(c))
     # print(c.most_common(10))
 
-# calc_validation_with_tweets("validation5", "trial1")
+# validate_with_tweets("validation5", "trial1")
