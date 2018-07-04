@@ -316,7 +316,7 @@ def validate_with_tweets(collection, trial):
     collection_object = config.dbCol(collection)
     unvalidated_total = collection_object.count({trial: {"$exists": False}})
     count = 0
-    pbar = tqdm(total=unvalidated_total, desc=" Calculate Validations")
+    pbar = tqdm(total=unvalidated_total, desc="  Calculate Validations")
     while True:
         try:
             for tester in collection_object.find({trial: {"$exists": False}}):
@@ -351,18 +351,23 @@ def calc_validation(collection, trial):
     print("Correct2: {}".format(correct2/total))
     print("Correct3: {}".format(correct3/total))
 
-def clubAccuracy():
+# Calculate the accuracies of each club in the given validation dataset and trial
+def club_accuracy(collection, trial):
+    validation_collection = config.dbCol(collection)
+
     accuracy = {}
     for club in config.dbCol(config.Collections.CLUB_DATA).find():
         accuracy[club["twitterAccount"]] = {"c1": 0, "c2": 0, "c3": 0, "total": 0}
-    for tester in config.dbCol(config.Collections.VALIDATION).find():
-        if tester["twitterAccount"] in tester["results"][:3]:
+
+    for tester in validation_collection.find():
+        if tester["twitterAccount"] in tester[trial][:3]:
             accuracy[tester["twitterAccount"]]["c3"] += 1
-            if tester["twitterAccount"] in tester["results"][:2]:
+            if tester["twitterAccount"] in tester[trial][:2]:
                 accuracy[tester["twitterAccount"]]["c2"] += 1
-                if tester["twitterAccount"] in tester["results"][:1]:
+                if tester["twitterAccount"] in tester[trial][:1]:
                     accuracy[tester["twitterAccount"]]["c1"] += 1
         accuracy[tester["twitterAccount"]]["total"] += 1
+
     for club in accuracy:
         accuracy[club]["c1"] = accuracy[club]["c1"] / accuracy[club]["total"]
         accuracy[club]["c2"] = accuracy[club]["c2"] / accuracy[club]["total"]
