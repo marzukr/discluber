@@ -19,7 +19,9 @@ from tqdm import tqdm
 import time
 import csv
 
-def returnResults(user, tweets=None, calc_tokens=True):
+# Return the results of the model, clubs_only only returns accurate data for the
+# reccomended clubs and ignores terms, club image url, etc.
+def returnResults(user, tweets=None, clubs_only=False):
     # Gather the last 200 tweets of the user and combine them into a string
     # tweetTime = time.time()
     userTweets = tweets
@@ -29,13 +31,13 @@ def returnResults(user, tweets=None, calc_tokens=True):
 
     #Take the combined tweet string and feed it into elastic search, then make the result into a pretty list of clubs
     # searchTime = time.time()
-    clubData = formatSearch(uri=elasticsearchURL() + "/_search?", term=userTweets, maxClubs=config.getConfig("clubsToReturn"))
+    clubData = formatSearch(uri=elasticsearchURL() + "/_search?", term=userTweets, maxClubs=config.getConfig("clubsToReturn"), clubs_only=clubs_only)
     # totalSearchTime = time.time() - searchTime
 
     #Get results from the TFIDF engine
     # tokenTime = time.time()
     formattedTerms = []
-    if calc_tokens:
+    if not clubs_only:
         formattedTerms = tfidfEngine.tokenResults(userTweets, [tfidfEngine.Token.TERM, tfidfEngine.Token.HASHTAG, tfidfEngine.Token.USER], config.getConfig("tokensToReturn"), config.dbCol(config.Collections.TOKENS))
     # totalTokenTime = time.time() - tokenTime
 
@@ -78,7 +80,7 @@ def search(uri, term):
     return results
 
 # Search elasticsearch and makes it into a list of maxClubs clubs in order
-def formatSearch(uri, term, maxClubs):
+def formatSearch(uri, term, maxClubs, clubs_only=False):
     results = search(uri, term)
     try:
         #LOOK INTO THIS TO OPTIMIZE RESULTS
@@ -88,8 +90,10 @@ def formatSearch(uri, term, maxClubs):
         for doc in data:
             # pretty = (doc['_source']["Club Name"], "test")
             docData = doc['_source']
-            clubImageURL = twitterUtil.getImageURL(docData["twitterAccount"])
-            pretty = (docData["clubName"], docData["twitterAccount"], clubImageURL) # Tuple (clubName, twitterAccount, clubImageURL)
+            club_image_url = ""
+            if not clubs_only:
+                club_image_url = twitterUtil.getImageURL(docData["twitterAccount"])
+            pretty = (docData["clubName"], docData["twitterAccount"], club_image_url) # Tuple (clubName, twitterAccount, club_image_url)
             prettyA.append(pretty)
         topClubs = [x[0] for x in Counter(prettyA).most_common(maxClubs)]
         formattedData = []
@@ -312,11 +316,11 @@ def validate_with_tweets(collection, trial):
     collection_object = config.dbCol(collection)
     unvalidated_total = collection_object.count({trial: {"$exists": False}})
     count = 0
-    pbar = tqdm(total=unvalidated_total, desc="Calculate Validations")
+    pbar = tqdm(total=unvalidated_total, desc=" Calculate Validations")
     while True:
         try:
             for tester in collection_object.find({trial: {"$exists": False}}):
-                results = returnResults(tester["twitterAccount"], tester["tweets"], False)["clubs"]
+                results = returnResults(tester["twitterAccount"], tester["tweets"], clubs_only=True)["clubs"]
                 results = [i["handle"] for i in results]
                 mongoID = tester["_id"]
                 collection_object.update({"_id": mongoID}, {"$set": {trial: results}})
