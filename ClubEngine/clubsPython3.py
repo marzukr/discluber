@@ -395,16 +395,17 @@ def find_duplicates(group):
         for f in c[group]:
             followers.append(f)
     c = Counter(followers)
-    duplicate = 0
-    for i in c:
-        if c[i] > 1:
-            duplicate += 1
+    duplicate = [u for u in c if c[u] > 1]
+    # duplicate = 0
+    # for i in c:
+    #     if c[i] > 1:
+    #         duplicate += 1
     print("{duplicates}/{total} are duplicates in the \"{group_name}\" group".format(
-        duplicates = duplicate,
+        duplicates = len(duplicate),
         total = len(c),
         group_name = group
     ))
-    return c
+    return duplicate
 
 # Returns what the group (followers or testers) model would look like without users that are
 # in more than one club
