@@ -399,10 +399,26 @@ def find_duplicates(group):
     for i in c:
         if c[i] > 1:
             duplicate += 1
-    print("{duplicates}/{total} are duplicates in the {group_name} group".format(
+    print("{duplicates}/{total} are duplicates in the \"{group_name}\" group".format(
         duplicates = duplicate,
         total = len(c),
         group_name = group
     ))
+    return c
+
+# Returns what the group (followers or testers) model would look like without users that are
+# in more than one club
+def clubs_without_duplicates(group):
+    model_collection = config.dbCol(config.Collections.CLUB_DATA)
+    duplicate_users = find_duplicates(group)
+    clubs = {}
+    for club in model_collection.find():
+        clubs[club["twitterAccount"]] = {"len_dup": len(club[group]), "len_no_dup": 0}
+        dups = 0
+        for u in club[group]:
+            if u in duplicate_users:
+                dups += 1
+        clubs[club["twitterAccount"]]["len_no_dup"] = clubs[club["twitterAccount"]]["len_dup"] - dups
+    print(clubs)
 
 # validate_with_tweets("validation5", "trial1")
