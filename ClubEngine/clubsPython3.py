@@ -435,6 +435,6 @@ def clubs_without_duplicates(group):
 #     "NSTV","Mee_Ow","NorthwesternASG","NorthwesternPHA","NUIFC","nuflipside","thedailynu","aoproductions",
 #     "SHAPEatNU","f15acappella","asteriknu","NUHomecoming","THUNKacappella","TheWaaMuShow","ShireiNU"
 # ]
-# user_blacklist = find_duplicates("followers")
-# add_follower_data_ES("12_7_17", club_blacklist=club_blacklist, user_blacklist=user_blacklist)
-# 
+# model_blacklist = find_duplicates("followers")
+# test_blacklist = find_duplicates("testers")
+# validate_with_tweets("validation5", "trial2", club_blacklist=club_blacklist, user_blacklist=test_blacklist) 
