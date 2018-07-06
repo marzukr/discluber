@@ -110,14 +110,15 @@ def create_doc(uri, doc_data):
     return response
 
 # Add the follower data to elasticsearch
-def addFollowerDataES(dateD):
+def add_follower_data_ES(dateD, club_blacklist=[], user_blacklist=[]):
     esURL = elasticsearchURL(date=dateD)
-    pbar = tqdm(total=config.dbCol(config.Collections.FOLLOWER_DATA, coDate=dateD).count(), desc="    Adding to ES")
+    pbar = tqdm(total=config.dbCol(config.Collections.FOLLOWER_DATA, coDate=dateD).count(), desc="  Adding to ES")
     for followerItem in config.dbCol(config.Collections.FOLLOWER_DATA, coDate=dateD).find({}):
-        # if followerItem["twitterAccount"] != "thedailynu": # dailyNU removed
-        modifyData = followerItem.copy()
-        modifyData.pop("_id", None) # Remove the "_id" property that Mongo adds
-        create_doc(esURL, modifyData)
+        if ((len(club_blacklist) == 0 or followerItem["twitterAccount"] not in club_blacklist) and
+            (len(user_blacklist) == 0 or followerItem["follower"] not in user_blacklist)):
+            modifyData = followerItem.copy()
+            modifyData.pop("_id", None) # Remove the "_id" property that Mongo adds
+            create_doc(esURL, modifyData)
         pbar.update(1)
     pbar.close()
 
@@ -423,3 +424,12 @@ def clubs_without_duplicates(group):
     print(clubs)
 
 # validate_with_tweets("validation5", "trial1")
+
+# club_blacklist = [
+#     "StudentsActNU","NUHelicon","NUJTE","nuaia1","NUpurplecrayon","XFactorsNU","NU_ODPhi",
+#     "SAIBeta","NUGreekBuild","NUMcSA","BrownSugarNU","nutreblemakers","Boomshaka_NU","NUDM","nupurplehaze",
+#     "NSTV","Mee_Ow","NorthwesternASG","NorthwesternPHA","NUIFC","nuflipside","thedailynu","aoproductions",
+#     "SHAPEatNU","f15acappella","asteriknu","NUHomecoming","THUNKacappella","TheWaaMuShow","ShireiNU"
+# ]
+# user_blacklist = find_duplicates("followers")
+# add_follower_data_ES("12_7_17", club_blacklist=club_blacklist, user_blacklist=user_blacklist)
