@@ -313,7 +313,7 @@ def store_validation_tweets(vCol):
 # Run each tester's stored tweets through the model and store their results   #
 # in the given collection under the given trial name                          #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
-def validate_with_tweets(collection, trial):
+def validate_with_tweets(collection, trial, club_blacklist=[], user_blacklist=[]):
     collection_object = config.dbCol(collection)
     unvalidated_total = collection_object.count({trial: {"$exists": False}})
     count = 0
@@ -321,10 +321,14 @@ def validate_with_tweets(collection, trial):
     while True:
         try:
             for tester in collection_object.find({trial: {"$exists": False}}):
-                results = returnResults(tester["twitterAccount"], tester["tweets"], clubs_only=True)["clubs"]
-                results = [i["handle"] for i in results]
                 mongoID = tester["_id"]
-                collection_object.update({"_id": mongoID}, {"$set": {trial: results}})
+                if ((len(club_blacklist) == 0 or tester["twitterAccount"] not in club_blacklist) and
+                    (len(user_blacklist) == 0 or tester["tester"] not in user_blacklist)):
+                    results = returnResults(tester["tester"], tester["tweets"], clubs_only=True)["clubs"]
+                    results = [i["handle"] for i in results] # Get only club twitter account, not name or image
+                    collection_object.update({"_id": mongoID}, {"$set": {trial: results}})
+                else:
+                    collection_object.update({"_id": mongoID}, {"$set": {trial: "N/A"}})
                 count += 1
                 pbar.update(1)
         except Exception:
@@ -433,3 +437,4 @@ def clubs_without_duplicates(group):
 # ]
 # user_blacklist = find_duplicates("followers")
 # add_follower_data_ES("12_7_17", club_blacklist=club_blacklist, user_blacklist=user_blacklist)
+# 
