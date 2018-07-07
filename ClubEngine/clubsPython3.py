@@ -344,14 +344,14 @@ def calc_validation(collection, trial):
     correct2 = 0
     correct1 = 0
     for tester in collection_object.find():
-        if tester["twitterAccount"] in tester[trial][:3]:
+        if tester[trial] != "N/A" and tester["twitterAccount"] in tester[trial][:3]:
             correct3 += 1
             if tester["twitterAccount"] in tester[trial][:2]:
                 correct2 += 1
                 if tester["twitterAccount"] in tester[trial][:1]:
                     correct1 += 1
 
-    total = collection_object.count()
+    total = collection_object.count({"trial2": {"$ne": "N/A"}})
     print("Correct1: {}".format(correct1/total))
     print("Correct2: {}".format(correct2/total))
     print("Correct3: {}".format(correct3/total))
@@ -437,4 +437,5 @@ def clubs_without_duplicates(group):
 # ]
 # model_blacklist = find_duplicates("followers")
 # test_blacklist = find_duplicates("testers")
-# validate_with_tweets("validation5", "trial2", club_blacklist=club_blacklist, user_blacklist=test_blacklist) 
+# validate_with_tweets("validation5", "trial2", club_blacklist=club_blacklist, user_blacklist=test_blacklist)
+# calc_validation("validation5", "trial2")
