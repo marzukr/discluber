@@ -365,7 +365,7 @@ def club_accuracy(collection, trial):
         accuracy[club["twitterAccount"]] = {"c1": 0, "c2": 0, "c3": 0, "total": 0}
 
     for tester in validation_collection.find():
-        if tester["twitterAccount"] in tester[trial][:3]:
+        if tester[trial] != "N/A" and tester["twitterAccount"] in tester[trial][:3]:
             accuracy[tester["twitterAccount"]]["c3"] += 1
             if tester["twitterAccount"] in tester[trial][:2]:
                 accuracy[tester["twitterAccount"]]["c2"] += 1
@@ -374,9 +374,10 @@ def club_accuracy(collection, trial):
         accuracy[tester["twitterAccount"]]["total"] += 1
 
     for club in accuracy:
-        accuracy[club]["c1"] = accuracy[club]["c1"] / accuracy[club]["total"]
-        accuracy[club]["c2"] = accuracy[club]["c2"] / accuracy[club]["total"]
-        accuracy[club]["c3"] = accuracy[club]["c3"] / accuracy[club]["total"]
+        if accuracy[club]["total"] != 0:
+            accuracy[club]["c1"] = accuracy[club]["c1"] / accuracy[club]["total"]
+            accuracy[club]["c2"] = accuracy[club]["c2"] / accuracy[club]["total"]
+            accuracy[club]["c3"] = accuracy[club]["c3"] / accuracy[club]["total"]
     print(accuracy)
     
 def testerCount():
