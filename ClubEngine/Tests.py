@@ -1,4 +1,4 @@
-import tfidfEngine, twitterUtil, config, clubsPython3
+from . import tfidfEngine, twitterUtil, config, clubsPython3
 
 from collections import Counter
 

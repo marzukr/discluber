@@ -1,5 +1,5 @@
 # from ClubEngine import tfidfEngine, twitterUtil, config
-import tfidfEngine, twitterUtil, config
+from . import tfidfEngine, twitterUtil, config
 
 from pymongo import MongoClient
 # client = MongoClient(host="mongodb://mongo:27017")

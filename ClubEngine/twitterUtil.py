@@ -1,6 +1,6 @@
 import tweepy
 # from ClubEngine import config
-import config
+from . import config
 
 from tqdm import tqdm
 
@@ -80,7 +80,10 @@ def getTweets(twitterAccount, maxTweets):
         return None
 
 def getImageURL(twitterAccount):
-    return twitterAPI.get_user(twitterAccount).profile_image_url_https.replace("_normal", "_200x200")
+    try:
+        return twitterAPI.get_user(twitterAccount).profile_image_url_https.replace("_normal", "_200x200")
+    except tweepy.error.TweepError:
+        return "https://cdn1.iconfinder.com/data/icons/modifiers-add-on-1-1/48/Sed-24-512.png"
 
 def getFollowerTweets(twitterAccount):
     maxTweets = config.getConfig("tweetsPerFollower")

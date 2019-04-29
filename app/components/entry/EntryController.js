@@ -43,6 +43,12 @@ export default class EntryController extends React.Component
                                     </div>
                                 </div>
                                 <FormController resizeSpacer={this.resizeSpacer.bind(this)} displayList={this.props.displayList}/>
+                                <br/>
+                                <div className="row">
+                                    <div className="col" style={{ textAlign: "center" }}>
+                                        Created by <b>Marzuk Rashid</b> under the guidance of Professor Larry Birnbaum at Northwestern University's Infolab.
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

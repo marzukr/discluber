@@ -8,6 +8,7 @@ WORKDIR /clubReccomendationNU
 ADD . /clubReccomendationNU
 
 # Install any needed packages specified in requirements.txt
+RUN pip install --upgrade pip
 RUN pip install --trusted-host pypi.python.org -r requirements.txt
 
 # Install the stopwords for the tfidf calculations
